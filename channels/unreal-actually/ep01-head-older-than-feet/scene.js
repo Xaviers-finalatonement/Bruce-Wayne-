@@ -187,7 +187,7 @@ const pxR = (R, wp) => { const d = camera.position.distanceTo(wp), h = 2 * d * M
 const anchorOf = (obj, R) => { const wp = new THREE.Vector3(); obj.getWorldPosition(wp); const p = proj(wp); return { x: p[0], y: p[1], r: pxR(R, wp) }; };
 const spot = (c, k, pos, tgt, ang, shadow) => { const l = new THREE.SpotLight(c, k, 40, ang, .6, 1.2); l.position.set(...pos); const tg = new THREE.Object3D(); tg.position.set(...tgt); l.target = tg; l.castShadow = !!shadow; if (shadow) { l.shadow.mapSize.set(1024, 1024); l.shadow.bias = -.0005; } const gg = new THREE.Group(); gg.add(l, tg); return gg; };
 const dir = (c, k, pos, tgt) => { const l = new THREE.DirectionalLight(c, k); l.position.set(...pos); l.target.position.set(...tgt); const gg = new THREE.Group(); gg.add(l, l.target); return gg; };
-const floorMesh = (r, y, rough) => { const m = new THREE.Mesh(new THREE.CircleGeometry(r, 64), mat({ color: 0x14102a, roughness: rough == null ? .42 : rough, metalness: .7, envMap, envMapIntensity: .8, roughnessMap: scratchTex(9) })); m.rotation.x = -Math.PI / 2; m.position.y = y; m.receiveShadow = true; return m; };
+const floorMesh = (r, y, rough) => { const m = new THREE.Mesh(new THREE.CircleGeometry(r, 64), mat({ color: 0x14102a, roughness: rough == null ? .42 : rough, metalness: .7, envMap, envMapIntensity: .25, roughnessMap: scratchTex(9) })); m.rotation.x = -Math.PI / 2; m.position.y = y; m.receiveShadow = true; return m; };
 
 // ===== A: the figure with head and feet clocks (b01, b02, b05, b15) =====
 const A = shot("A", [0x08070d, .035]);
@@ -404,7 +404,7 @@ G.g.add(lightCone(TXT.clone(), 8, .2, 2.4, .08)); G.g.children[G.g.children.leng
 G.g.add(dustField(150, [8, 5, 5], 0xffd9b0, .04, 61));
 const dialS = t => { let a = 0; for (let s = S("b12") + .6; s < t; s += 1 / 30) { const k = smooth((s - T.tSlow0) / (T.tSlow1 - T.tSlow0)); a += lerp(5.2, 1.0, k) / 30; } return a; };
 G.update = t => { const ka = smooth((t - T.tSlow0) / (T.tSlow1 - T.tSlow0)); bigC.userData.set(dialS(t), { hot: 1 + .3 * (1 - ka) }); knob.rotation.z = ka * 2.6; const kp = anchorOf(knob, .4); G.A = { knob: kp }; };
-const pathG = [{ t: S("b12"), p: [.5, -.4, 10.5], l: [.3, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow0, p: [.3, -.4, 10], l: [.3, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow1, p: [.1, -.4, 9.6], l: [.3, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }, { t: T.th0, p: [.1, -.4, 9.4], l: [.3, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }];
+const pathG = [{ t: S("b12"), p: [.2, -.4, 11], l: [.2, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow0, p: [.2, -.4, 10.6], l: [.2, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow1, p: [.2, -.4, 10.2], l: [.2, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }, { t: T.th0, p: [.2, -.4, 10], l: [.2, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }];
 
 // ===== H: dark 3D city grid, the pin drifts and snaps back (b12 second half) =====
 const Hh = shot("H", [0x08070d, .018]);
@@ -486,7 +486,7 @@ function setShot(sh, path, t, tt) {
   sh.update(t);
 }
 window.__seek = function (t) {
-  if (COVER) { setShot(A, [{ t: 0, p: [.4, 1.2, 8.2], l: [.5, .85, 0], f: 50, fp: [.5, 1.2, 0], ap: .0004 }], 0.5); HC.userData.set(21.2, { angle: 54, hot: 1.4 }); FC.userData.set(15, { angle: 20, hot: .8 });
+  if (COVER) { setShot(A, [{ t: 0, p: [.6, 1.7, 10.5], l: [.6, 1.52, 0], f: 60, fp: [.6, 1.2, 0], ap: .0002 }], 0.5); HC.userData.set(21.2, { angle: 54, hot: 1.4 }); FC.userData.set(15, { angle: 20, hot: .8 });
     A.A = { head: anchorOf(HC, .3), feet: anchorOf(FC, .3) }; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(A.A); return; }
   const shk = shakeAt(t);
   let cur = SH[SH.length - 1]; for (const s of SH) if (t >= s[0] && t < s[1]) { cur = s; break; }

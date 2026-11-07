@@ -105,9 +105,9 @@ export function createOverlay(T, TH, cv) {
       const sh0 = S("b10") + .15;
       if (A.gap) { const k = A.gap.s;
         const a1 = smooth((t - W("b09", "about ninety")) / .3) * (1 - smooth((t - sh0) / .3));
-        if (a1 > 0) { txt("≈ 0.000 000 09 s", A.gap.x, A.gap.y - 70 * k, { size: 72, color: HOT, glow: 20, a: a1 }); }
+        if (a1 > 0) { txt("≈ 0.000 000 09 s", A.gap.x, A.gap.y - 190 * k, { size: 72, color: HOT, glow: 20, a: a1 }); }
         const a2 = smooth((t - W("b09", "ninety")) / .3) * (1 - smooth((t - sh0) / .3));
-        if (a2 > 0) txt("90 billionths of a second", A.gap.x, A.gap.y + 100 * k, { f: BARL, w: 800, size: 40, color: TXT, ls: 1, a: a2, glow: 8, gcol: ABY }); }
+        if (a2 > 0) txt("90 billionths of a second", A.gap.x, A.gap.y + 210 * k, { f: BARL, w: 800, size: 40, color: TXT, ls: 1, a: a2, glow: 8, gcol: ABY }); }
       if (t >= W("b10", "But real")) { const u = (t - W("b10", "But real")) / 1.1; txt("REAL", 505, 560, { size: 250, color: HOT, glow: 40, a: smooth(u * 3) * (1 - smooth((t - E("b10") + .5) / .4)), sc: 1 + .12 * (1 - eo3(u * 1.6)) }); }
     }
     if (t >= S("b11") && t < S("b12")) { const g = W("b11", "GPS"); txt("GPS", 130, 330, { size: 150, color: TXT, glow: 24, gcol: HOT, align: "left", ls: 6, a: smooth((t - g) / .15), sc: 1 + .4 * (1 - eo3((t - g) / .16)) }); }
@@ -124,9 +124,10 @@ export function createOverlay(T, TH, cv) {
 
   function drawCover(A) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
-    [["YOUR HEAD IS", TXT, 840, 160, 330], ["OLDER", HOT, 820, 440, 625], ["THAN YOUR FEET", TXT, 840, 160, 770]].forEach(([s, c, w, mx, base]) => txt(s, 505, base, { size: fitSize(s, w, mx), color: c, glow: c === HOT ? 46 : 0, gcol: HOT, ls: 2 }));
+    ctx.save(); ctx.font = `400 100px ${ANTON}`; const capR = ctx.measureText("H").actualBoundingBoxAscent / 100; ctx.restore(); let yy = 290;
+    [["YOUR HEAD IS", TXT, 840, 150], ["OLDER", HOT, 780, 340], ["THAN YOUR FEET", TXT, 880, 150]].forEach(([s, c, w, mx]) => { const size = fitSize(s, w, mx), base = yy + capR * size; yy = base + 32; txt(s, 505, base, { size, color: c, glow: c === HOT ? 46 : 0, gcol: HOT, ls: 2 }); });
     ctx.save(); rrect(90, 178, 360, 62, 31); ctx.fillStyle = col(ABY, .85); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 3; ctx.stroke(); ctx.restore();
-    txt("UNREAL, ACTUALLY", 270, 222, { f: BARL, w: 800, size: 30, ls: 5 }); ctx.fillStyle = HOT; ctx.beginPath(); ctx.arc(120, 209, 6, 0, 6.3); ctx.fill();
+    txt("UNREAL, ACTUALLY", 282, 222, { f: BARL, w: 800, size: 30, ls: 5 }); ctx.fillStyle = HOT; ctx.beginPath(); ctx.arc(116, 209, 6, 0, 6.3); ctx.fill();
     if (A && A.head) { tag("HEAD", A.head.x - A.head.r - 20, A.head.y + 14, { color: HOT, align: "right", size: 34 }); tag("FEET", A.feet.x - A.feet.r - 20, A.feet.y + 14, { color: UV, align: "right", size: 30 }); }
   }
 
