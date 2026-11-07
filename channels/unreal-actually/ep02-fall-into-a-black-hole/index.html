@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1080,height=1920">
+<title>Unreal, Actually Ep 1</title>
+<style id="theme-css"></style>
+<style>
+  html,body{margin:0;padding:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  #gl,#fx{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #cap{position:absolute;white-space:nowrap;text-align:center;opacity:0;font-kerning:normal;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+  #cap .ln{display:block;margin:0}
+  #cap .bk{display:inline-block;white-space:nowrap}
+  #cap .key{color:var(--key)}
+  #cap .num{font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+</style>
+<script type="importmap">{"imports":{"three":"/engine/vendor/three/build/three.module.js","three/addons/":"/engine/vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<canvas id="fx" width="1080" height="1920"></canvas>
+<div id="cap"></div>
+<script src="theme.js"></script>
+<script type="module" src="scene.js"></script>
+</body></html>

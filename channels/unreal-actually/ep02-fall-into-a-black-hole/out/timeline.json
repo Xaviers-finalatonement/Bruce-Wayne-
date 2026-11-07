@@ -1,0 +1,383 @@
+{
+ "duration": 71.329,
+ "fps": 30,
+ "speed": 1.0,
+ "gap": 0.45,
+ "sample_rate": 24000,
+ "beats": [
+  {
+   "id": "b01",
+   "start": 0.2,
+   "end": 2.952,
+   "next": 3.402,
+   "captions": [
+    {
+     "text": "To everyone watching,",
+     "start": 0.2,
+     "end": 1.456,
+     "key": 1
+    },
+    {
+     "text": "you'd freeze at the edge.",
+     "start": 1.456,
+     "end": 2.952,
+     "key": 1
+    }
+   ],
+   "vo": "To everyone watching, you'd freeze at the edge.",
+   "screen": []
+  },
+  {
+   "id": "b02",
+   "start": 3.402,
+   "end": 8.373,
+   "next": 8.823,
+   "captions": [
+    {
+     "text": "Friends far away would watch you slow down.",
+     "start": 3.402,
+     "end": 6.178,
+     "key": 0
+    },
+    {
+     "text": "Then stop, just short of the edge.",
+     "start": 6.178,
+     "end": 8.373,
+     "key": 3
+    }
+   ],
+   "vo": "Friends far away would watch you slow down. Then stop, just short of the edge.",
+   "screen": [
+    "slows",
+    "stops"
+   ]
+  },
+  {
+   "id": "b03",
+   "start": 8.823,
+   "end": 14.199,
+   "next": 14.649,
+   "captions": [
+    {
+     "text": "That edge is the event horizon.",
+     "start": 8.823,
+     "end": 11.106,
+     "key": 5
+    },
+    {
+     "text": "Point of no return.",
+     "start": 11.106,
+     "end": 12.505,
+     "key": 3
+    },
+    {
+     "text": "Not even light escapes.",
+     "start": 12.505,
+     "end": 14.199,
+     "key": 3
+    }
+   ],
+   "vo": "That edge is the event horizon. Point of no return. Not even light escapes.",
+   "screen": [
+    "EVENT HORIZON",
+    "point of no return"
+   ]
+  },
+  {
+   "id": "b04",
+   "start": 14.649,
+   "end": 19.811,
+   "next": 20.261,
+   "captions": [
+    {
+     "text": "Why?",
+     "start": 14.649,
+     "end": 14.944,
+     "key": 0
+    },
+    {
+     "text": "Gravity bends space and time so hard,",
+     "start": 14.944,
+     "end": 17.672,
+     "key": 0
+    },
+    {
+     "text": "your picture slows to a stop.",
+     "start": 17.672,
+     "end": 19.811,
+     "key": 1
+    }
+   ],
+   "vo": "Why? Gravity bends space and time so hard, your picture slows to a stop.",
+   "screen": []
+  },
+  {
+   "id": "b05",
+   "start": 20.261,
+   "end": 25.211,
+   "next": 25.661,
+   "captions": [
+    {
+     "text": "On your own clock,",
+     "start": 20.261,
+     "end": 21.516,
+     "key": 3
+    },
+    {
+     "text": "NASA's simulation has the",
+     "start": 21.516,
+     "end": 23.259,
+     "key": 1
+    },
+    {
+     "text": "fall take about three hours.",
+     "start": 23.259,
+     "end": 25.211,
+     "key": 3
+    }
+   ],
+   "vo": "On your own clock, NASA's simulation has the fall take about three hours.",
+   "screen": [
+    "≈ 3 hours (NASA simulation)"
+   ]
+  },
+  {
+   "id": "b06",
+   "start": 25.661,
+   "end": 31.485,
+   "next": 31.935,
+   "captions": [
+    {
+     "text": "A giant black hole, about four million Suns.",
+     "start": 25.661,
+     "end": 28.864,
+     "key": 6
+    },
+    {
+     "text": "Like the one in our galaxy's center.",
+     "start": 28.864,
+     "end": 31.485,
+     "key": 5
+    }
+   ],
+   "vo": "A giant black hole, about four million Suns. Like the one in our galaxy's center.",
+   "screen": [
+    "≈ 4.3 million Suns"
+   ]
+  },
+  {
+   "id": "b07",
+   "start": 31.935,
+   "end": 36.031,
+   "next": 36.481,
+   "captions": [
+    {
+     "text": "Cross the edge,",
+     "start": 31.935,
+     "end": 32.942,
+     "key": 0
+    },
+    {
+     "text": "and space itself rushes inward at light speed.",
+     "start": 32.942,
+     "end": 36.031,
+     "key": 2
+    }
+   ],
+   "vo": "Cross the edge, and space itself rushes inward at light speed.",
+   "screen": [
+    "space flows inward at light speed"
+   ]
+  },
+  {
+   "id": "b08",
+   "start": 36.481,
+   "end": 39.745,
+   "next": 40.195,
+   "captions": [
+    {
+     "text": "Then the simulation gives you",
+     "start": 36.481,
+     "end": 38.171,
+     "key": 2
+    },
+    {
+     "text": "twelve point eight seconds.",
+     "start": 38.171,
+     "end": 39.745,
+     "key": 3
+    }
+   ],
+   "vo": "Then the simulation gives you twelve point eight seconds.",
+   "screen": [
+    "12.8 s"
+   ]
+  },
+  {
+   "id": "b09",
+   "start": 40.195,
+   "end": 44.141,
+   "next": 44.591,
+   "captions": [
+    {
+     "text": "The closer end of you gets pulled harder.",
+     "start": 40.195,
+     "end": 42.61,
+     "key": 1
+    },
+    {
+     "text": "You stretch like a noodle.",
+     "start": 42.61,
+     "end": 44.141,
+     "key": 1
+    }
+   ],
+   "vo": "The closer end of you gets pulled harder. You stretch like a noodle.",
+   "screen": []
+  },
+  {
+   "id": "b10",
+   "start": 44.591,
+   "end": 47.194,
+   "next": 47.644,
+   "captions": [
+    {
+     "text": "Scientists really call it spaghettification.",
+     "start": 44.591,
+     "end": 47.194,
+     "key": 4
+    }
+   ],
+   "vo": "Scientists really call it spaghettification.",
+   "screen": [
+    "SPAGHETTIFICATION"
+   ]
+  },
+  {
+   "id": "b11",
+   "start": 47.644,
+   "end": 51.996,
+   "next": 52.446,
+   "captions": [
+    {
+     "text": "A small black hole is worse.",
+     "start": 47.644,
+     "end": 49.49,
+     "key": 1
+    },
+    {
+     "text": "It can tear you apart before the edge.",
+     "start": 49.49,
+     "end": 51.996,
+     "key": 5
+    }
+   ],
+   "vo": "A small black hole is worse. It can tear you apart before the edge.",
+   "screen": [
+    "small black hole",
+    "tears you apart early"
+   ]
+  },
+  {
+   "id": "b12",
+   "start": 52.446,
+   "end": 57.715,
+   "next": 58.165,
+   "captions": [
+    {
+     "text": "At the center,",
+     "start": 52.446,
+     "end": 53.43,
+     "key": 2
+    },
+    {
+     "text": "math says a point of endless crush.",
+     "start": 53.43,
+     "end": 55.888,
+     "key": 5
+    },
+    {
+     "text": "Nobody knows if it's real.",
+     "start": 55.888,
+     "end": 57.715,
+     "key": 0
+    }
+   ],
+   "vo": "At the center, math says a point of endless crush. Nobody knows if it's real.",
+   "screen": [
+    "singularity = ?"
+   ]
+  },
+  {
+   "id": "b13",
+   "start": 58.165,
+   "end": 59.787,
+   "next": 61.037,
+   "captions": [
+    {
+     "text": "The verdict?",
+     "start": 58.165,
+     "end": 59.092,
+     "key": 1
+    },
+    {
+     "text": "Unproven.",
+     "start": 59.092,
+     "end": 59.787,
+     "key": 0
+    }
+   ],
+   "vo": "The verdict? Unproven.",
+   "screen": [
+    "CASE FILE 002",
+    "UNPROVEN"
+   ]
+  },
+  {
+   "id": "b14",
+   "start": 61.037,
+   "end": 65.133,
+   "next": 65.583,
+   "captions": [
+    {
+     "text": "Nothing from inside can reach us.",
+     "start": 61.037,
+     "end": 63.29,
+     "key": 0
+    },
+    {
+     "text": "This is math, not a memory.",
+     "start": 63.29,
+     "end": 65.133,
+     "key": 5
+    }
+   ],
+   "vo": "Nothing from inside can reach us. This is math, not a memory.",
+   "screen": [
+    "math, not a memory"
+   ]
+  },
+  {
+   "id": "b15",
+   "start": 65.583,
+   "end": 69.529,
+   "next": 71.329,
+   "captions": [
+    {
+     "text": "To the world, you'd freeze at the edge.",
+     "start": 65.583,
+     "end": 67.72,
+     "key": 4
+    },
+    {
+     "text": "To you, you'd fall right through.",
+     "start": 67.72,
+     "end": 69.529,
+     "key": 5
+    }
+   ],
+   "vo": "To the world, you'd freeze at the edge. To you, you'd fall right through.",
+   "screen": []
+  }
+ ]
+}
