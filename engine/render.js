@@ -56,14 +56,14 @@ function serve() {
     const tl = JSON.parse(fs.readFileSync(path.join(outDir, "timeline.json")));
     const audio = path.join(outDir, "audio.m4a");
     const name = (JSON.parse(fs.readFileSync(path.join(epDir, "script.json"))).slug || "episode").match(/^ep\d+/)[0] + ".mp4";
-    const outFile = path.join(outDir, name);
+    const outFile = path.join(outDir, name), partial = path.join(outDir, "." + name.replace(".mp4", ".partial.mp4"));
     const n = Math.round(tl.duration * FPS);
     const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
       ...(fs.existsSync(audio) ? ["-i", audio] : []),
       "-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "16", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
       "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart",
-      ...(fs.existsSync(audio) ? ["-c:a", "copy", "-t", String(n / FPS)] : []), outFile], { stdio: ["pipe", "inherit", "inherit"] });
-    const done = new Promise(r => ff.on("close", r));
+      ...(fs.existsSync(audio) ? ["-c:a", "copy", "-t", String(n / FPS)] : []), partial], { stdio: ["pipe", "inherit", "inherit"] });
+    const done = new Promise(r => ff.on("close", c => r(c)));
     const t0 = Date.now();
     for (let i = 0; i < n; i++) {
       await page.evaluate(t => window.__seek(t), i / FPS);
@@ -71,7 +71,7 @@ function serve() {
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
       if (i % 150 === 0) console.log(`frame ${i}/${n}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     }
-    ff.stdin.end(); await done;
+    ff.stdin.end(); const code = await done; if (code !== 0) throw new Error("ffmpeg failed " + code); fs.renameSync(partial, outFile);
     console.log(`rendered ${outFile} in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     // SRT from the timeline
     const ts = s => { const ms = Math.round(s * 1000), p = (v, l = 2) => String(v).padStart(l, "0"); return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`; };

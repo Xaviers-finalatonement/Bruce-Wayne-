@@ -83,24 +83,25 @@ const pathA3 = [
 // ===== B: gravity warps spacetime toward Earth (b03) =====
 const B = shot("B", [0x08070d, .02]);
 const earthB = makeEarth(6.8, V3(.5, .6, .3)); earthB.position.set(0, -9.8, -4); B.g.add(earthB);
+const limbHaze = glowSprite(0xb59cff, 15, .32); limbHaze.position.set(0, -3.0, -5); B.g.add(limbHaze); const limbWarm = glowSprite(HOT, 8, .22); limbWarm.position.set(1.8, -3.1, -5); B.g.add(limbWarm);
 const gridMats = [];
 function gridMesh(cols, rows, x0, x1, z0, z1, col, w) {
   const geos = [], segs = 90;
   const strip = (pts) => { const pos = [], idx = []; pts.forEach((p, i) => { pos.push(p[0], 0, p[1], p[0], 0, p[1]); }); const a = []; for (let i = 0; i < pts.length; i++) { a.push(pts[i][0], pts[i][1], -1, pts[i][0], pts[i][1], 1); } for (let i = 0; i < pts.length - 1; i++) { const k = i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); } return { a, idx }; };
-  const pos = [], idx = [], side = []; let base = 0;
-  const addLine = (pts, vertical) => { for (let i = 0; i < pts.length; i++) { for (const s of [-1, 1]) { pos.push(pts[i][0], 0, pts[i][1]); side.push(vertical ? s : 0, vertical ? 0 : s); } } for (let i = 0; i < pts.length - 1; i++) { const k = base + i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); } base += pts.length * 2; };
+  const pos = [], idx = [], side = [], la = []; let base = 0, lnum = 0;
+  const addLine = (pts, vertical) => { for (let i = 0; i < pts.length; i++) { for (const s of [-1, 1]) { pos.push(pts[i][0], 0, pts[i][1]); side.push(vertical ? s : 0, vertical ? 0 : s); la.push(lnum); } } for (let i = 0; i < pts.length - 1; i++) { const k = base + i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); } base += pts.length * 2; lnum++; };
   for (let i = 0; i <= cols; i++) { const x = lerp(x0, x1, i / cols), pts = []; for (let j = 0; j <= segs; j++) pts.push([x, lerp(z0, z1, j / segs)]); addLine(pts, true); }
   for (let j = 0; j <= rows; j++) { const z = lerp(z0, z1, j / rows), pts = []; for (let i = 0; i <= segs; i++) pts.push([lerp(x0, x1, i / segs), z]); addLine(pts, false); }
-  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("side", new THREE.Float32BufferAttribute(side, 2)); g.setIndex(idx);
+  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("side", new THREE.Float32BufferAttribute(side, 2)); g.setAttribute("la", new THREE.Float32BufferAttribute(la, 1)); g.setIndex(idx);
   const m = new THREE.ShaderMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, uniforms: { k: { value: 0 }, w: { value: w }, c: { value: col } },
-    vertexShader: `uniform float k,w; attribute vec2 side; varying float vD; varying float vZ;
+    vertexShader: `uniform float k,w; attribute vec2 side; attribute float la; varying float vD; varying float vZ; varying float vA;
       void main(){ vec3 p=position; p.x+=side.x*w; p.z+=side.y*w; float d=length(vec2(p.x,p.z+4.));
-        float well=exp(-d*d/26.); float dep=smoothstep(-14.,-2.,p.z); p.y-=k*3.4*well*dep; vec2 toC=normalize(vec2(-p.x,-4.-p.z)+1e-4); p.xz+=toC*k*1.1*well*dep; vD=well*k; vZ=p.z;
+        float well=exp(-d*d/26.); float dep=smoothstep(-14.,-2.,p.z); p.y-=k*3.4*well*dep; vec2 toC=normalize(vec2(-p.x,-4.-p.z)+1e-4); p.xz+=toC*k*1.1*well*dep; vD=well*k; vZ=p.z; vA=.12+.88*fract(sin(la*91.7)*437.5);
         gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.); }`,
-    fragmentShader: "uniform vec3 c; varying float vD; varying float vZ; void main(){ float f=smoothstep(-16.,-3.,vZ); gl_FragColor=vec4(mix(c,vec3(1.,.55,.2),vD*1.4)*(.5+vD*2.2)*f,1.); }" });
+    fragmentShader: "uniform vec3 c; varying float vD; varying float vZ; varying float vA; void main(){ float f=smoothstep(-16.,-2.,vZ); gl_FragColor=vec4(mix(c,vec3(1.,.55,.2),vD*1.1)*(.24+vD*1.1)*f*vA,1.); }" });
   const mesh = new THREE.Mesh(g, m); gridMats.push(m); return mesh;
 }
-const gridB = gridMesh(22, 28, -11, 11, -16, 4, UV.clone().multiplyScalar(1.2), .018); B.g.add(gridB);
+const gridB = gridMesh(22, 28, -11, 11, -16, 4, HAZE.clone().lerp(UV, .4), .007); B.g.add(gridB);
 const fall = []; for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.BoxGeometry(.02, .9, .02), emis(HOT, 2.5)); fall.push(m); B.g.add(m); }
 const lowC = makeClock(.5, HOT), highC = makeClock(.5, UV); B.g.add(lowC, highC); highC.position.set(-3.6, 1.5, -5); lowC.position.set(0, -.9, -2.2);
 B.g.add(dir(0xff8a2a, 1.2, [3, 4, -2], [0, -2, -4]), new THREE.HemisphereLight(0x3a2a70, 0x05040a, .6));
@@ -109,7 +110,7 @@ B.update = t => {
   const k = eio((t - (T.tSag - 1.5)) / 2.2) * .85 + smooth((t - S("b03")) / 3) * .15; gridMats[0].uniforms.k.value = k; earthB.userData.m.uniforms.t.value = t;
   const lt = t - S("b03"); lowC.userData.set(lt * .5, { hot: 1 }); highC.userData.set(lt * 1.7, { hot: .8 });
   const sp = smooth((t - T.tSag) / .4); lowC.scale.setScalar(.01 + sp); highC.scale.setScalar(.01 + sp);
-  lowC.position.y = -.9 - k * 2.0; lowC.position.z = -3.2;
+  lowC.position.y = -.2 - k * 1.2; lowC.position.z = -3.2;
   fall.forEach((m, i) => { const ph = (t * .5 + i * .31) % 1; const x = -4.5 + (i / 13) * 9, z = -4 + (hash(i) - .5) * 5; const d = Math.hypot(x, z + 4); const y = lerp(4, -2.4 - k * 1.2 * Math.exp(-d * d / 26), ph * ph); m.position.set(x * (1 - .25 * ph * ph), y, z); m.material.color.copy(HOT).multiplyScalar(2.5 * Math.sin(ph * 3.14)); });
   B.A = { high: anchorOf(highC, .5), low: anchorOf(lowC, .5) };
 };
@@ -182,30 +183,37 @@ D.update = t => {
 const pathD = [{ t: S("b06"), p: [.3, 1.2, 10], l: [.4, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 }, { t: END("b06"), p: [.5, 1.2, 9.4], l: [.6, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 },
   { t: S("b07"), p: [.7, 1.2, 9.8], l: [.8, .9, 0], f: 34, fp: [.6, .7, 0], ap: .0006 }, { t: S("b08"), p: [1.0, 1.2, 9.4], l: [1.0, .95, 0], f: 36, fp: [2.4, 1.0, 0], ap: .0008 }, { t: S("b09") - .1, p: [1.1, 1.2, 9.0], l: [1.1, 1.0, 0], f: 36, fp: [2.65, 1.1, 0], ap: .001 }];
 
-// ===== E: 79 years as a light trail; the gap (b09, b10) =====
-const Es = shot("E", [0x08070d, .03]);
-const LEN = 7;
-const barE = new THREE.Mesh(new THREE.BoxGeometry(1, .03, .03), new THREE.ShaderMaterial({ uniforms: { len: { value: LEN } }, vertexShader: "varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: "varying vec2 vUv; void main(){ gl_FragColor=vec4(mix(vec3(.55,.45,1.),vec3(.8,.4,.9),vUv.x)*1.1,1.); }" })); barE.geometry.translate(.5, 0, 0); Es.g.add(barE);
-const barGlow = new THREE.Mesh(new THREE.BoxGeometry(1, .2, .2), addMat(UV, { opacity: .12 })); barGlow.geometry.translate(.5, 0, 0); Es.g.add(barGlow);
-const tickE = new THREE.InstancedMesh(new THREE.BoxGeometry(.014, 1, .014), emis(TXT, .9), 80); Es.g.add(tickE);
-const gapMesh = new THREE.Mesh(new THREE.BoxGeometry(1, .1, .06), emis(HOT, 1.7)); gapMesh.geometry.translate(.5, 0, 0); Es.g.add(gapMesh);
-const gapGlow = glowSprite(HOT, .6, .35); Es.g.add(gapGlow);
-const bornM = new THREE.Mesh(new THREE.BoxGeometry(.03, .7, .03), emis(UV, 3)); Es.g.add(bornM);
-Es.g.add(dustField(260, [12, 4, 6], 0xc9b8ff, .03, 41), new THREE.HemisphereLight(0x3a2a70, 0x05040a, .5));
-const floorE = floorMesh(40, -.5, .25); Es.g.add(floorE);
+// ===== E: 79 years as a light filament receding in deep perspective; the microscopic gap at its end (b09, b10) =====
+const Es = shot("E", [0x08070d, .028]);
+const LZ = 36;
+const revU = { value: 0 };
+const fil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(V3(0, 0, 0), V3(0, 0, -LZ)), 1, .0035, 8), new THREE.ShaderMaterial({ uniforms: { rev: revU }, transparent: true,
+  vertexShader: "varying float vz; void main(){ vz=position.z; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }",
+  fragmentShader: "uniform float rev; varying float vz; void main(){ if(-vz>rev || -vz>" + (LZ - .006).toFixed(3) + ") discard; float u=clamp(-vz/" + LZ.toFixed(1) + ",0.,1.); gl_FragColor=vec4(mix(vec3(.62,.52,1.),vec3(1.,.46,.1),pow(u,1.4))*(1.6+u*1.2),1.); }" })); Es.g.add(fil);
+const haloN = 420, haloPos = new Float32Array(haloN * 3), haloCol = new Float32Array(haloN * 3);
+for (let i = 0; i < haloN; i++) { const u = i / (haloN - 1), c = UV.clone().lerp(HOT, Math.pow(u, 1.4)); haloPos.set([(hash(i) - .5) * .02, (hash(i + 9) - .5) * .02, -u * LZ], i * 3); haloCol.set([c.r, c.g, c.b], i * 3); }
+const haloG = new THREE.BufferGeometry(); haloG.setAttribute("position", new THREE.BufferAttribute(haloPos, 3)); haloG.setAttribute("color", new THREE.BufferAttribute(haloCol, 3));
+const halo = new THREE.Points(haloG, new THREE.PointsMaterial({ map: glowTex, vertexColors: true, size: .34, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })); Es.g.add(halo);
+const ringsE = new THREE.InstancedMesh(new THREE.TorusGeometry(1, .02, 6, 40), emis(TXT, .55), 80); Es.g.add(ringsE);
+const bornE = new THREE.Mesh(new THREE.TorusGeometry(.32, .012, 8, 48), emis(UV, 3)); Es.g.add(bornE);
+const gapMesh = new THREE.Mesh(new THREE.CylinderGeometry(.0035, .0035, 1, 12), emis(HOT, 3.2)); gapMesh.rotation.x = Math.PI / 2; Es.g.add(gapMesh);
+const gapGlow = glowSprite(HOT, .5, .55); Es.g.add(gapGlow);
+const dustE = dustField(520, [7, 3.5, 46], 0xffd9b0, .05, 41); dustE.position.z = -18; Es.g.add(dustE);
+Es.g.add(new THREE.HemisphereLight(0x3a2a70, 0x05040a, .4));
 Es.update = t => {
-  const drawn = eo3((t - T.tl0) / (T.tl1 - T.tl0)), xe = LEN * drawn;
-  barE.scale.x = Math.max(.001, xe); barGlow.visible = false;
-  for (let y = 0; y < 80; y++) { const x = lerp(0, LEN - .05, y / 79), big = y % 10 === 0; dm.position.set(x, 0, 0); dm.scale.set(1, x > xe ? 0 : (big ? .16 : .07), 1); dm.rotation.z = 0; dm.updateMatrix(); tickE.setMatrixAt(y, dm.matrix); } dm.scale.set(1, 1, 1); tickE.instanceMatrix.needsUpdate = true;
-  const tGap = W("b09", "about ninety") - .6, sh0 = S("b10") + .15, sh1 = S("b10") + 1.4, k = smooth((t - sh0) / (sh1 - sh0)), L = .012 * (1 - k) + .0006;
-  gapMesh.position.set(LEN, 0, 0); gapMesh.scale.set(t >= tGap ? L : .0001, 1, 1); gapGlow.position.set(LEN + L / 2, 0, .02); gapGlow.scale.setScalar(.04 + .12 * (1 - k * .7) * (t >= tGap ? 1 : 0)); bornM.position.set(0, 0, 0);
-  const gp = V3(LEN, 0, 0); const p = proj(gp); Es.A = { gap: { x: p[0], y: p[1], s: 1 } };
+  const drawn = eo3((t - T.tl0) / (T.tl1 - T.tl0)); revU.value = LZ * drawn + .001; halo.geometry.setDrawRange(0, Math.max(1, Math.floor(haloN * drawn)));
+  for (let y = 0; y < 80; y++) { const big = y % 10 === 0, z = -y * (LZ / 79); dm.position.set(0, 0, z); dm.scale.setScalar(-z > LZ * drawn || -z > LZ - 2.5 ? 0 : (big ? .2 : .085)); dm.rotation.set(0, 0, 0); dm.updateMatrix(); ringsE.setMatrixAt(y, dm.matrix); } dm.scale.setScalar(1); ringsE.instanceMatrix.needsUpdate = true;
+  const tGap = W("b09", "about ninety") - .6, sh0 = S("b10") + .15, sh1 = S("b10") + 1.4, k = smooth((t - sh0) / (sh1 - sh0)), L = .014 * (1 - k) + .0004;
+  gapMesh.position.set(0, 0, -LZ + .002 - L / 2); gapMesh.scale.set(1, t >= tGap ? L : .0001, 1); gapGlow.position.set(0, 0, -LZ - L / 2); gapGlow.scale.setScalar((t >= tGap ? .09 : .0001) * (1 - k * .7) + .01);
+  const p = proj(V3(0, 0, -LZ - .007)); Es.A = { gap: { x: p[0], y: p[1], s: 1 } };
 };
-const pathE = [{ t: S("b09"), p: [3.6, .5, 10.5], l: [3.5, 0, 0], f: 35, fp: [3.5, 0, 0], ap: .0004 }, { t: T.tl1, p: [4.5, .5, 9.5], l: [4.2, 0, 0], f: 35, fp: [4.2, 0, 0], ap: .0004 },
-  { t: T.tl1 + .15, p: [4.5, .5, 9.5], l: [4.2, 0, 0], f: 35, fp: [4.2, 0, 0], ap: .0004 },
-  { t: W("b09", "ninety") + .4, p: [LEN - .3, .02, .95], l: [LEN - .03, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
-  { t: W("b10", "But real"), p: [LEN - .3, .02, .95], l: [LEN - .03, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
-  { t: W("b10", "But real") + 1.1, p: [LEN - 1, .3, 6.5], l: [LEN - 1.4, 0, 0], f: 50, fp: [LEN, 0, 0], ap: .0006 }];
+const pE = z => [.0, .12, z];
+const pathE = [{ t: S("b09"), p: [.45, .3, 7.5], l: [0, 0, -30], f: 32, fp: [0, 0, -6], ap: .0008 }, { t: T.tl1, p: [.4, .26, 6.5], l: [0, 0, -30], f: 32, fp: [0, 0, -8], ap: .0008 },
+  { t: T.tl1 + .15, p: [.4, .26, 6.5], l: [0, 0, -30], f: 32, fp: [0, 0, -8], ap: .0008 },
+  { t: W("b09", "ninety") - .5, p: [.3, .08, -LZ + 4], l: [0, 0, -LZ], f: 50, fp: [0, 0, -LZ], ap: .0016 },
+  { t: W("b09", "ninety") + .5, p: [.3, .045, -LZ + .8], l: [0, 0, -LZ], f: 85, fp: [0, 0, -LZ], ap: .0030 },
+  { t: W("b10", "But real") + .2, p: [.3, .045, -LZ + .8], l: [0, 0, -LZ], f: 85, fp: [0, 0, -LZ], ap: .0030 },
+  { t: W("b10", "But real") + 1.2, p: [.5, .08, -LZ + 2.2], l: [0, 0, -LZ], f: 70, fp: [0, 0, -LZ], ap: .0020 }];
 
 // ===== F: GPS satellite above Earth (b11) =====
 const F = shot("F", [0x08070d, .006]);

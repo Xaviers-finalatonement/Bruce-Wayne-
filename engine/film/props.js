@@ -113,9 +113,9 @@ function makeEarth(R, sun) {
         vec3 ocean=mix(vec3(.01,.02,.06),vec3(.03,.07,.2),pow(max(d,0.),.6)); vec3 ground=mix(vec3(.02,.015,.04),vec3(.12,.1,.2),fbm(p*3.)) ;
         vec3 c=mix(ocean,ground,land)*(.25+1.6*day);
         vec3 R=reflect(-sun,N); float spec=pow(max(dot(R,V),0.),50.)*(1.-land)*day; c+=vec3(1.,.7,.5)*spec*.9;
-        c+=vec3(.5,.5,.62)*cl*.55*day;
+        c+=vec3(.55,.55,.65)*cl*.38*day;
         float city=step(.62,fbm(p*9.))*land*(1.-day)*smoothstep(.55,.8,fbm(p*4.+3.)); c+=vec3(1.,.55,.18)*city*1.6;
-        float fr=pow(1.-max(dot(N,V),0.),3.); vec3 atm=mix(vec3(.45,.35,1.),vec3(1.,.45,.12),smoothstep(.2,.9,d)); c+=atm*fr*(.4+1.6*smoothstep(-.3,.7,d));
+        float fr=pow(1.-max(dot(N,V),0.),3.); vec3 atm=mix(vec3(.45,.35,1.),vec3(1.,.45,.12),smoothstep(.2,.9,d)); c+=atm*fr*(.3+1.3*smoothstep(-.3,.7,d));
         gl_FragColor=vec4(c,1.); }` });
   g.add(new THREE.Mesh(new THREE.SphereGeometry(R, 160, 96), m));
   const am = new THREE.ShaderMaterial({ transparent: true, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false, uniforms: { sun: { value: sun.clone().normalize() } },

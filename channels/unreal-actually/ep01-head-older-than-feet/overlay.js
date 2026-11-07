@@ -53,7 +53,7 @@ export function createOverlay(T, TH, cv) {
         const a1 = smooth((t - W("b09", "about ninety")) / .3) * (1 - smooth((t - sh0) / .3));
         if (a1 > 0) { txt("≈ 0.000 000 09 s", A.gap.x, A.gap.y - 270 * k, { size: 72, color: HOT, glow: 20, a: a1 }); }
         const a2 = smooth((t - W("b09", "ninety")) / .3) * (1 - smooth((t - sh0) / .3));
-        if (a2 > 0) txt("90 billionths of a second", A.gap.x, A.gap.y + 300 * k, { f: BARL, w: 800, size: 40, color: TXT, ls: 1, a: a2, glow: 8, gcol: ABY }); }
+        if (a2 > 0) txt("90 billionths of a second", A.gap.x, A.gap.y + 190 * k, { f: BARL, w: 800, size: 40, color: TXT, ls: 1, a: a2, glow: 8, gcol: ABY }); }
       if (t >= W("b10", "But real")) { const u = (t - W("b10", "But real")) / 1.1; txt("REAL", 505, 560, { size: 250, color: HOT, glow: 40, a: smooth(u * 3) * (1 - smooth((t - E("b10") + .5) / .4)), sc: 1 + .12 * (1 - eo3(u * 1.6)) }); }
     }
     if (t >= S("b11") && t < S("b12")) { const g = W("b11", "GPS"); txt("GPS", 130, 330, { size: 150, color: TXT, glow: 24, gcol: HOT, align: "left", ls: 6, a: smooth((t - g) / .15), sc: 1 + .4 * (1 - eo3((t - g) / .16)) }); }
