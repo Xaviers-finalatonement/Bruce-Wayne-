@@ -22,7 +22,7 @@ export function makeTiming(tl) {
   T.tFlip = W("b08", "Now the flip"); T.tPep = W("b08", "Peppers"); T.tToms = W("b08", "tomatoes"); T.tVC = W("b08", "vitamin C");
   // b09
   T.tVCd = W("b09", "Vitamin C dissolves"); T.tWater = W("b09", "water"); T.tLower = W("b09", "cooking can lower");
-  T.dive2 = S("b09") - .05;
+  T.dive2 = S("b09") + .15;
   // b10 trio
   T.tMicro = W("b10", "Microwaving"); T.tSteam = W("b10", "steaming"); T.tPan = W("b10", "not just the pan");
   // b11 raw/cooked

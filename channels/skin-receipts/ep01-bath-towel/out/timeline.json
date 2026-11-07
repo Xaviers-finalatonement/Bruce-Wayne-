@@ -1,0 +1,630 @@
+{
+ "duration": 69.888,
+ "fps": 30,
+ "speed": 0.95,
+ "gap": 0.45,
+ "sample_rate": 24000,
+ "beats": [
+  {
+   "id": "b01",
+   "start": 0.2,
+   "end": 2.253,
+   "next": 2.703,
+   "sents": [
+    {
+     "s": 0.2,
+     "e": 2.253,
+     "c0": 0,
+     "c1": 36
+    }
+   ],
+   "captions": [
+    {
+     "text": "Your towel grows a film of bacteria.",
+     "start": 0.2,
+     "key": 4,
+     "end": 2.253
+    }
+   ],
+   "vo": "Your towel grows a film of bacteria.",
+   "screen": [
+    "Your towel grows a film?"
+   ]
+  },
+  {
+   "id": "b02",
+   "start": 2.703,
+   "end": 7.297,
+   "next": 7.747,
+   "sents": [
+    {
+     "s": 2.703,
+     "e": 5.852,
+     "c0": 0,
+     "c1": 48
+    },
+    {
+     "s": 5.992,
+     "e": 7.297,
+     "c0": 49,
+     "c1": 73
+    }
+   ],
+   "captions": [
+    {
+     "text": "The claim: use disposable",
+     "start": 2.703,
+     "key": 3,
+     "end": 4.409
+    },
+    {
+     "text": "towels for ideal skin.",
+     "start": 4.409,
+     "key": 0,
+     "end": 5.992
+    },
+    {
+     "text": "Let's check the receipt.",
+     "start": 5.992,
+     "key": 3,
+     "end": 7.297
+    }
+   ],
+   "vo": "The claim: use disposable towels for ideal skin. Let's check the receipt.",
+   "screen": [
+    "CLAIM: disposable towels for ideal skin"
+   ]
+  },
+  {
+   "id": "b03",
+   "start": 7.747,
+   "end": 13.954,
+   "next": 14.404,
+   "sents": [
+    {
+     "s": 7.747,
+     "e": 8.504,
+     "c0": 0,
+     "c1": 9
+    },
+    {
+     "s": 8.644,
+     "e": 10.107,
+     "c0": 10,
+     "c1": 37
+    },
+    {
+     "s": 10.347,
+     "e": 13.955,
+     "c0": 38,
+     "c1": 96
+    }
+   ],
+   "captions": [
+    {
+     "text": "Line one.",
+     "start": 7.747,
+     "key": 0,
+     "end": 8.644
+    },
+    {
+     "text": "Does that film really form?",
+     "start": 8.644,
+     "key": 3,
+     "end": 10.347
+    },
+    {
+     "text": "One study gave new cotton",
+     "start": 10.347,
+     "key": 4,
+     "end": 11.964
+    },
+    {
+     "text": "towels to twenty-six households.",
+     "start": 11.964,
+     "key": 2,
+     "end": 13.954
+    }
+   ],
+   "vo": "Line one. Does that film really form? One study gave new cotton towels to twenty-six households.",
+   "screen": [
+    "LINE 1 · does the film form?",
+    "26 households"
+   ]
+  },
+  {
+   "id": "b04",
+   "start": 14.404,
+   "end": 18.654,
+   "next": 19.104,
+   "sents": [
+    {
+     "s": 14.404,
+     "e": 16.301,
+     "c0": 0,
+     "c1": 30
+    },
+    {
+     "s": 16.441,
+     "e": 18.653,
+     "c0": 31,
+     "c1": 72
+    }
+   ],
+   "captions": [
+    {
+     "text": "Six months of normal home use.",
+     "start": 14.404,
+     "key": 1,
+     "end": 16.441
+    },
+    {
+     "text": "Every two months, they tested the towels.",
+     "start": 16.441,
+     "key": 2,
+     "end": 18.654
+    }
+   ],
+   "vo": "Six months of normal home use. Every two months, they tested the towels.",
+   "screen": [
+    "6 months",
+    "tested every 2 months"
+   ]
+  },
+  {
+   "id": "b05",
+   "start": 19.104,
+   "end": 23.738,
+   "next": 24.188,
+   "sents": [
+    {
+     "s": 19.104,
+     "e": 21.545,
+     "c0": 0,
+     "c1": 49
+    },
+    {
+     "s": 21.685,
+     "e": 23.739,
+     "c0": 50,
+     "c1": 78
+    }
+   ],
+   "captions": [
+    {
+     "text": "By month two, the towels smelled and looked dull.",
+     "start": 19.104,
+     "key": 5,
+     "end": 21.685
+    },
+    {
+     "text": "Under a microscope: biofilm.",
+     "start": 21.685,
+     "key": 3,
+     "end": 23.738
+    }
+   ],
+   "vo": "By month two, the towels smelled and looked dull. Under a microscope: biofilm.",
+   "screen": [
+    "month 2: odour + dullness",
+    "biofilm seen"
+   ]
+  },
+  {
+   "id": "b06",
+   "start": 24.188,
+   "end": 28.451,
+   "next": 28.901,
+   "sents": [
+    {
+     "s": 24.188,
+     "e": 26.994,
+     "c0": 0,
+     "c1": 47
+    },
+    {
+     "s": 27.134,
+     "e": 28.451,
+     "c0": 48,
+     "c1": 71
+    }
+   ],
+   "captions": [
+    {
+     "text": "Live bacteria counts were",
+     "start": 24.188,
+     "key": 1,
+     "end": 25.74
+    },
+    {
+     "text": "highest at month six.",
+     "start": 25.74,
+     "key": 0,
+     "end": 27.134
+    },
+    {
+     "text": "The film kept building.",
+     "start": 27.134,
+     "key": 3,
+     "end": 28.451
+    }
+   ],
+   "vo": "Live bacteria counts were highest at month six. The film kept building.",
+   "screen": [
+    "live bacteria: highest at month 6"
+   ]
+  },
+  {
+   "id": "b07",
+   "start": 28.901,
+   "end": 30.064,
+   "next": 30.514,
+   "sents": [
+    {
+     "s": 28.901,
+     "e": 30.063,
+     "c0": 0,
+     "c1": 19
+    }
+   ],
+   "captions": [
+    {
+     "text": "That line holds up.",
+     "start": 28.901,
+     "key": 2,
+     "end": 30.064
+    }
+   ],
+   "vo": "That line holds up.",
+   "screen": [
+    "HOLDS UP"
+   ]
+  },
+  {
+   "id": "b08",
+   "start": 30.514,
+   "end": 36.028,
+   "next": 36.478,
+   "sents": [
+    {
+     "s": 30.514,
+     "e": 31.274,
+     "c0": 0,
+     "c1": 9
+    },
+    {
+     "s": 31.414,
+     "e": 32.936,
+     "c0": 10,
+     "c1": 41
+    },
+    {
+     "s": 33.176,
+     "e": 34.121,
+     "c0": 42,
+     "c1": 53
+    },
+    {
+     "s": 34.261,
+     "e": 36.029,
+     "c0": 54,
+     "c1": 87
+    }
+   ],
+   "captions": [
+    {
+     "text": "Line two.",
+     "start": 30.514,
+     "key": 0,
+     "end": 31.414
+    },
+    {
+     "text": "Is it your own skin's bacteria?",
+     "start": 31.414,
+     "key": 5,
+     "end": 33.176
+    },
+    {
+     "text": "Mostly not.",
+     "start": 33.176,
+     "key": 0,
+     "end": 34.261
+    },
+    {
+     "text": "Staph was well under one percent.",
+     "start": 34.261,
+     "key": 0,
+     "end": 36.028
+    }
+   ],
+   "vo": "Line two. Is it your own skin's bacteria? Mostly not. Staph was well under one percent.",
+   "screen": [
+    "LINE 2 · from your skin?",
+    "Staph: under 1%"
+   ]
+  },
+  {
+   "id": "b09",
+   "start": 36.478,
+   "end": 40.555,
+   "next": 41.005,
+   "sents": [
+    {
+     "s": 36.478,
+     "e": 40.554,
+     "c0": 0,
+     "c1": 69
+    }
+   ],
+   "captions": [
+    {
+     "text": "The authors think bacteria that suit",
+     "start": 36.478,
+     "key": 3,
+     "end": 38.664
+    },
+    {
+     "text": "towel fibres move in and settle.",
+     "start": 38.664,
+     "key": 5,
+     "end": 40.555
+    }
+   ],
+   "vo": "The authors think bacteria that suit towel fibres move in and settle.",
+   "screen": [
+    "towel-loving bacteria?"
+   ]
+  },
+  {
+   "id": "b10",
+   "start": 41.005,
+   "end": 46.959,
+   "next": 47.409,
+   "sents": [
+    {
+     "s": 41.005,
+     "e": 41.816,
+     "c0": 0,
+     "c1": 11
+    },
+    {
+     "s": 41.956,
+     "e": 43.419,
+     "c0": 12,
+     "c1": 41
+    },
+    {
+     "s": 43.659,
+     "e": 46.959,
+     "c0": 42,
+     "c1": 103
+    }
+   ],
+   "captions": [
+    {
+     "text": "Line three.",
+     "start": 41.005,
+     "key": 1,
+     "end": 41.956
+    },
+    {
+     "text": "Does the film hurt your skin?",
+     "start": 41.956,
+     "key": 5,
+     "end": 43.659
+    },
+    {
+     "text": "The study never looked at",
+     "start": 43.659,
+     "key": 3,
+     "end": 45.066
+    },
+    {
+     "text": "anyone's skin health or infections.",
+     "start": 45.066,
+     "key": 1,
+     "end": 46.959
+    }
+   ],
+   "vo": "Line three. Does the film hurt your skin? The study never looked at anyone's skin health or infections.",
+   "screen": [
+    "LINE 3 · harm to skin?",
+    "not measured"
+   ]
+  },
+  {
+   "id": "b11",
+   "start": 47.409,
+   "end": 50.915,
+   "next": 51.365,
+   "sents": [
+    {
+     "s": 47.409,
+     "e": 48.886,
+     "c0": 0,
+     "c1": 22
+    },
+    {
+     "s": 49.126,
+     "e": 50.916,
+     "c0": 23,
+     "c1": 59
+    }
+   ],
+   "captions": [
+    {
+     "text": "And disposable towels?",
+     "start": 47.409,
+     "key": 1,
+     "end": 49.126
+    },
+    {
+     "text": "This study didn't test those either.",
+     "start": 49.126,
+     "key": 2,
+     "end": 50.915
+    }
+   ],
+   "vo": "And disposable towels? This study didn't test those either.",
+   "screen": [
+    "disposable: not tested here"
+   ]
+  },
+  {
+   "id": "b12",
+   "start": 51.365,
+   "end": 56.451,
+   "next": 56.901,
+   "sents": [
+    {
+     "s": 51.365,
+     "e": 54.397,
+     "c0": 0,
+     "c1": 47
+    },
+    {
+     "s": 54.537,
+     "e": 56.45,
+     "c0": 48,
+     "c1": 87
+    }
+   ],
+   "captions": [
+    {
+     "text": "What dermatologists do say: never share towels.",
+     "start": 51.365,
+     "key": 5,
+     "end": 54.537
+    },
+    {
+     "text": "And pat your skin dry with a clean one.",
+     "start": 54.537,
+     "key": 7,
+     "end": 56.451
+    }
+   ],
+   "vo": "What dermatologists do say: never share towels. And pat your skin dry with a clean one.",
+   "screen": [
+    "never share towels",
+    "pat dry · clean towel"
+   ]
+  },
+  {
+   "id": "b13",
+   "start": 56.901,
+   "end": 58.524,
+   "next": 59.774,
+   "sents": [
+    {
+     "s": 56.901,
+     "e": 58.524,
+     "c0": 0,
+     "c1": 23
+    }
+   ],
+   "captions": [
+    {
+     "text": "Receipt total: unknown.",
+     "start": 56.901,
+     "key": 2,
+     "end": 58.524
+    }
+   ],
+   "vo": "Receipt total: unknown.",
+   "screen": [
+    "RECEIPT TOTAL",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "id": "b14",
+   "start": 59.774,
+   "end": 65.685,
+   "next": 66.135,
+   "sents": [
+    {
+     "s": 59.774,
+     "e": 60.865,
+     "c0": 0,
+     "c1": 17
+    },
+    {
+     "s": 61.005,
+     "e": 62.044,
+     "c0": 18,
+     "c1": 36
+    },
+    {
+     "s": 62.284,
+     "e": 63.1,
+     "c0": 37,
+     "c1": 46
+    },
+    {
+     "s": 63.24,
+     "e": 65.685,
+     "c0": 47,
+     "c1": 88
+    }
+   ],
+   "captions": [
+    {
+     "text": "The film is real.",
+     "start": 59.774,
+     "key": 1,
+     "end": 61.005
+    },
+    {
+     "text": "Harm to your skin?",
+     "start": 61.005,
+     "key": 0,
+     "end": 62.284
+    },
+    {
+     "text": "Unproven.",
+     "start": 62.284,
+     "key": 0,
+     "end": 63.24
+    },
+    {
+     "text": "Dermatologists say clean, and not shared.",
+     "start": 63.24,
+     "key": 0,
+     "end": 65.685
+    }
+   ],
+   "vo": "The film is real. Harm to your skin? Unproven. Dermatologists say clean, and not shared.",
+   "screen": [
+    "film: real",
+    "harm to skin: unproven",
+    "clean · not shared"
+   ]
+  },
+  {
+   "id": "b15",
+   "start": 66.135,
+   "end": 68.088,
+   "next": 69.888,
+   "sents": [
+    {
+     "s": 66.135,
+     "e": 68.088,
+     "c0": 0,
+     "c1": 36
+    }
+   ],
+   "captions": [
+    {
+     "text": "A dermatologist can check your skin.",
+     "start": 66.135,
+     "key": 1,
+     "end": 68.088
+    }
+   ],
+   "vo": "A dermatologist can check your skin.",
+   "screen": [
+    "Education, not medical advice."
+   ]
+  }
+ ]
+}
