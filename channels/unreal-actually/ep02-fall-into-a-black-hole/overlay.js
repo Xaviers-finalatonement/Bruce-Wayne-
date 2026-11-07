@@ -95,15 +95,15 @@ export function createOverlay(T, TH, cv) {
     // b08: 12.8 s holds (no fake fast countdown); then it settles into a corner timer that runs in real time through the stretch
     if (t >= S("b08") && t < S("b11")) { const sl = slam(t, T.tSlam8, .16), v = Math.max(0, 12.8 - Math.max(0, t - T.tT0)), mv = smooth((t - T.tT0) / .5), out = 1 - smooth((t - S("b11") + .3) / .3);
       if (sl) { ctx.save(); ctx.globalAlpha = out;
-        if (mv < 1) { const g = ctx.createRadialGradient(SX, 700, 20, SX, 700, 440); g.addColorStop(0, col(ABY, .7 * (1 - mv))); g.addColorStop(1, col(ABY, 0)); ctx.fillStyle = g; ctx.fillRect(0, 300, 1080, 800); }
-        const cx = lerp(SX, 215, eio(mv)), cy = lerp(700, 300, eio(mv)), k = lerp(1, .27, eio(mv)), zoom = 1 + .06 * smooth((t - T.tSlam8) / 2) * (1 - mv);
+        if (mv < 1) { const g = ctx.createRadialGradient(SX, 470, 20, SX, 470, 440); g.addColorStop(0, col(ABY, .7 * (1 - mv))); g.addColorStop(1, col(ABY, 0)); ctx.fillStyle = g; ctx.fillRect(0, 100, 1080, 800); }
+        const cx = lerp(SX, 235, eio(mv)), cy = lerp(470, 300, eio(mv)), k = lerp(1, .4, eio(mv)), zoom = 1 + .06 * smooth((t - T.tSlam8) / 2) * (1 - mv);
         ctx.save(); ctx.translate(cx, cy); ctx.scale(sl.sc * k * zoom, sl.sc * k * zoom); ctx.translate(-cx, -cy);
-        const sz = 360; ctx.save(); ctx.font = `400 ${sz}px ${ANTON}`; ctx.letterSpacing = "4px"; const wn = ctx.measureText("12.8").width; ctx.restore();
+        const sz = 330; ctx.save(); ctx.font = `400 ${sz}px ${ANTON}`; ctx.letterSpacing = "4px"; const wn = ctx.measureText("12.8").width; ctx.restore();
         const s = v.toFixed(1); ctx.save(); ctx.globalAlpha = sl.a; ctx.font = `400 ${sz}px ${ANTON}`; ctx.letterSpacing = "4px"; ctx.fillStyle = HOT; ctx.shadowColor = HOT; ctx.shadowBlur = 40; ctx.textAlign = "left";
         const pitch = ctx.measureText("0").width, adv = [...s].map(ch => /[0-9]/.test(ch) ? pitch : ctx.measureText(ch).width), w = adv.reduce((p, q) => p + q, 0); let x = cx - (w + 150) / 2; [...s].forEach((ch, i) => { ctx.fillText(ch, x, cy + 130); x += adv[i]; });
         ctx.font = `400 140px ${ANTON}`; ctx.fillStyle = HAZE; ctx.shadowBlur = 0; ctx.fillText("s", x + 10, cy + 130); ctx.restore(); ctx.restore();
-        if (mv < 1) lab("(NASA simulation)", SX, 880, (1 - mv) * smooth((t - T.tSlam8 - .3) / .3), { color: TXT, ls: 3 });
-        else lab("NASA simulation", 215, 372, out, { size: 40, ls: 2, color: TXT });
+        if (mv < 1) lab("(NASA simulation)", SX, 640, (1 - mv) * smooth((t - T.tSlam8 - .3) / .3), { color: TXT, ls: 3 });
+        else lab("NASA simulation", 235, 385, out, { size: 40, ls: 2, color: TXT });
         ctx.restore(); } }
     if (t >= S("b10") && t < S("b11")) { const sl = slam(t, T.tSpag, .16), out = 1 - smooth((t - E("b10") + .15) / .25);
       if (sl) { const age = t - T.tSpag, st = 1 + 1.0 * smooth(age / 1.5), sz = fitSize("SPAGHETTIFICATION", 830, 150);

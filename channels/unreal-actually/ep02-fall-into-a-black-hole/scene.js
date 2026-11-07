@@ -31,7 +31,7 @@ const BHs = createBlackHoles(scene), bh1 = BHs.make(-10), bh2 = BHs.make(-9), fa
 // ---- lights: orange key from the disk side, violet fill, a whisper of front light so the white suit reads ----
 const keyL = new THREE.DirectionalLight(0xff8a2a, 4), fillL = new THREE.DirectionalLight(0xa98bff, 1), frontL = new THREE.DirectionalLight(0xfff0e8, .2);
 const clockL = new THREE.PointLight(0xffd9b0, 0, 0, 2); scene.add(clockL);
-const wrist = { visible: false };
+
 scene.add(keyL, fillL, frontL, new THREE.HemisphereLight(0x2a2250, 0x05040a, .12));
 const rig = (k, f, fr, kp = [6, 2.5, -4], fp = [-6, 1, -3]) => { keyL.intensity = k; fillL.intensity = f; frontL.intensity = fr; keyL.position.set(...kp); fillL.position.set(...fp); frontL.position.set(1, 2, 8); };
 
@@ -76,7 +76,7 @@ function drawClock(sec) {
 const ckFace = new THREE.Mesh(new THREE.CircleGeometry(CKR, 64), new THREE.MeshBasicMaterial({ map: ckTex })), clock = new THREE.Group(); clock.add(ckFace);
 const bez = new THREE.Mesh(new THREE.TorusGeometry(CKR * 1.04, CKR * .1, 20, 72), new THREE.MeshStandardMaterial({ color: 0x8d8aa6, metalness: 1, roughness: .28, envMap, envMapIntensity: 1.6 })); bez.position.z = .01; clock.add(bez);
 const bezAc = new THREE.Mesh(new THREE.TorusGeometry(CKR * .97, CKR * .012, 8, 72), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xFF8A2A).multiplyScalar(2.5) })); bezAc.position.z = .02; clock.add(bezAc);
-clock.scale.setScalar(.21); clock.traverse(o => { if (o.material) { o.material.transparent = true; o.renderOrder = 2; } });
+clock.scale.setScalar(.8); scene.add(clock); clock.traverse(o => { if (o.material) { o.material.transparent = true; o.renderOrder = 2; } });
 // ---- helpers ----
 const EASE = eio, ez = (t, t0, t1, a, b, f = eio) => lerp(a, b, f((t - t0) / (t1 - t0)));
 const hotC = [1.0, .62, .25], whiteC = [1, .9, .75], uvC = [.66, .55, 1];
@@ -148,15 +148,16 @@ function shotWarp(t, A) { // b04: stars warp into arcs and double images, slow l
     for (let i = 0; i < N; i++) { const k = i / (N - 1), sm = (1 - smooth((t - (T.tPic + 1.2)) / 1.0)), ang = ang0 - k * 0.55 * sm, rad = Rsh * (1.28 + .0 * k), q = 1 - k;
       place(i, { x: cx + Math.cos(ang) * rad, y: cy - Math.sin(ang) * rad * .8 - 30, h: 230, ry: .4, rz: -.2 + (ang - ang0) * 1.2, red: .25 + .6 * k, alpha: a * (i === 0 ? 1 : .5 * q), pose: { reach: .6, flail: .15, phase: 1 } }); } }
 }
-function shotClock(t, A) { // b05: over the shoulder, a steady wrist clock in the foreground
+function shotClock(t, A) { // b05: over the shoulder; a chunky wrist clock faces the camera and ticks steadily
   const lt = t - S("b05"), u = EASE(lt / (E("b05") - S("b05")));
   bhSet(bh1, { cx: lerp(800, 780, u), cy: lerp(520, 510, u), p: lerp(20, 24, u), stars: 1, th: 1.49, roll: -.2, seed: 5 });
   rig(7.5, 1.1, .35, [8, 2.5, -3.5], [-7, 1.5, 3]);
-  const a = astro[7].userData; place(7, { x: lerp(380, 360, u), y: 1590, h: lerp(1560, 1620, u), ry: 2.35, rz: .03, dark: .2, pose: { reach: .55 } });
-  a.armL.el.rotation.x = -1.25; a.armL.sh.rotation.x = -1.1; a.armL.sh.rotation.z = .55;
-  if (!a.armL.el.userData.ck) { a.armL.el.add(clock); a.armL.el.userData.ck = 1; clock.position.set(-.052, -.12, .0); clock.rotation.set(0, -Math.PI / 2, 0); }
-  clock.visible = true; drawClock(lt + 5); hold[7].updateMatrixWorld(true);
+  const a = astro[7].userData; place(7, { x: lerp(330, 315, u), y: 1250, h: lerp(900, 940, u), ry: 2.3, rz: .03, dark: .45, pose: { reach: .55 } });
+  a.armL.el.rotation.x = -1.35; a.armL.sh.rotation.x = -1.0; a.armL.sh.rotation.z = .5; hold[7].updateMatrixWorld(true);
+  const wp = new THREE.Vector3(0, -.15, 0); a.armL.el.localToWorld(wp); clock.position.set(wp.x + .08, wp.y + .1, wp.z + .5); clock.rotation.set(0, 0, 0); clock.scale.setScalar(.8);
+  clock.visible = true; drawClock(lt + 5);
 }
+
 function shotGiant(t, A) { // b06: pull back; the astronaut shrinks to a speck against the huge disc
   const lt = t - S("b06"), d = E("b06") - S("b06"), u = EASE(clamp(lt / (d - .3))), p = lerp(54, 15.5, u), cx = 540, cy = lerp(780, 770, u), Rsh = p * 5.196;
   bhSet(bh1, { cx, cy, p, stars: 1, th: 1.49, roll: -.12, seed: 3 });
@@ -167,9 +168,9 @@ function shotGiant(t, A) { // b06: pull back; the astronaut shrinks to a speck a
 function insideShot(t, A) { // inside the horizon: the whole outside universe crushed into a shrinking window of light behind you, space flowing inward
   const lt = t - T.tCross, d = E("b08") - T.tCross, u = smooth(lt / d);
   const heat = 1 + 1.6 * pulseK(t, T.tCross, 3) + .9 * pulseK(t, T.tCross + 2.0, 4) + .9 * pulseK(t, T.tCross + 4.0, 4) + .9 * pulseK(t, T.tSlam8, 4);
-  insideSet({ cx: 540, cy: 790, R: lerp(430, 150, u) - 12 * pulseK(t, T.tCross + 2.0, 5) - 12 * pulseK(t, T.tCross + 4.0, 5), rip: lerp(.7, 1.1, u), speed: -3.4, heat });
+  insideSet({ cx: 540, cy: 930, R: lerp(400, 140, u) - 12 * pulseK(t, T.tCross + 2.0, 5) - 12 * pulseK(t, T.tCross + 4.0, 5), rip: lerp(.7, 1.1, u), speed: -3.4, heat });
   rig(8, 1.6, 0, [0, 1.5, -8], [-6, 1, -4]);
-  place(0, { x: 540, y: lerp(850, 880, u), h: lerp(300, 230, u), ry: .25 * Math.sin(lt * .9), rz: .35 * Math.sin(lt * .7), rx: .2 * Math.sin(lt * .6 + 1), pose: { reach: .5 + .25 * Math.sin(lt * 1.6), flail: .45, phase: lt * 3 } });
+  place(0, { x: 540, y: lerp(960, 990, u), h: lerp(300, 230, u), ry: .25 * Math.sin(lt * .9), rz: .35 * Math.sin(lt * .7), rx: .2 * Math.sin(lt * .6 + 1), pose: { reach: .5 + .25 * Math.sin(lt * 1.6), flail: .45, phase: lt * 3 } });
 }
 function shotCross(t, A) { // b07: dive over the edge, then the sky shrinks to a window behind you
   const T0 = S("b07");
@@ -182,10 +183,10 @@ function shotCross(t, A) { // b07: dive over the edge, then the sky shrinks to a
 }
 function shotCount(t, A) { insideShot(t, A); }
 function shotNoodle(t, A) { // b09 + b10: side view, the nearer end is pulled harder, the silhouette stretches toward the hole
-  const lt = t - S("b09"), cx = lerp(1030, 990, EASE(lt / 6)), cy = 790 + 230 * smooth((t - S("b10") + .1) / 1.3), p = lerp(43, 47, EASE(lt / 6));
+  const lt = t - S("b09"), cx = lerp(1030, 990, EASE(lt / 6)), cy = 880 + 170 * smooth((t - S("b10") + .1) / 1.3), p = lerp(43, 47, EASE(lt / 6));
   bhSet(bh1, { cx, cy, p, stars: .9, th: 1.49, roll: -.04, disc: .85, seed: 4 });
   const K = ez(t, S("b09") + .15, T.tNoodle + 1.6, 0, 1.7, eio) + (t > S("b10") ? ez(t, S("b10"), E("b10"), 0, .7, eio) : 0);
-  const h = 300, ax = lerp(310, 290, EASE(lt / 6)), ay = cy;
+  const h = 340, ax = lerp(330, 310, EASE(lt / 6)), ay = cy;
   rig(5.5, 1.5, .25, [5, 3, -3], [-5, 1, 1]); place(0, { x: ax, y: ay, h, rz: Math.PI / 2 - .02, ry: .55, rx: .1, K, dark: .35, alpha: 1 - smooth((t - E("b10") + .5) / .5) * .8, pose: { reach: 0, flail: .12 * (1 - smooth(K / 2)), phase: lt * 2 } });
 }
 function shotSplit(t, A) { // b11: giant (calm) vs small (tears early)
@@ -255,7 +256,7 @@ function stage(t, A) {
 window.__seek = function (t) {
   const A = {};
   if (COVER) { // cover: black hole, tiny astronaut at the glowing edge, headline
-    tNow = 3.1; [bh1, bh2, fall, inside, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); ptsBegin();
+    tNow = 3.1; clock.visible = false; [bh1, bh2, fall, inside, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); ptsBegin();
     bhSet(bh1, { cx: 540, cy: 1390, p: 46, stars: 1.1, th: 1.49, roll: -.12, time: 3.1, ring: 1.2 });
     rig(5.5, 1.3, .4); place(0, { x: 470, y: 1090, h: 210, ry: -.6, rz: -.7, red: .15, pose: { reach: .88 } });
     ptsEnd(); bloom.strength = .5; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;

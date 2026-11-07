@@ -173,19 +173,19 @@ void main(){
   vec2 q = fr - uCenter; float r = length(q); vec3 col = vec3(0.);
   // spacetime flowing inward: faint concentric swells that contract toward the centre
   float k = r/960.; float ph = k*38. + uTime*uRipSpeed; float rip = pow(.5+.5*sin(ph + 2.*sin(k*9.)), 5.);
-  col += vec3(.20,.10,.55) * rip * uRip * smoothstep(.0,.25,k) * exp(-k*1.6);
-  col += vec3(.45,.17,.05) * pow(.5+.5*sin(ph*.5 + 1.7), 9.) * uRip * .35 * exp(-k*2.4);
+  col += vec3(.20,.10,.55) * rip * uRip * .22 * smoothstep(.0,.25,k) * exp(-k*1.9);
+  col += vec3(.45,.17,.05) * pow(.5+.5*sin(ph*.5 + 1.7), 9.) * uRip * .08 * exp(-k*2.4);
   if(uR > 1.){
     float u = r/uR;
     if(u < 1.){ // the outside universe, crushed into a shrinking window: fisheye sky, strongly lensed edge
       float ang = atan(q.y, q.x); float th = u*u*2.6 + .1; // sky angle grows quickly towards the rim
       vec3 d = vec3(sin(th)*cos(ang), sin(th)*sin(ang), cos(th));
-      vec3 s = sky(d*(1.+uSeed*.1)); s += vec3(.9,.45,.18) * pow(max(sin(ang*2.+uTime*.7+u*5.),0.),6.) * pow(u,2.5) * 1.8 * uHeat; // glimpse of the disc on the rim
-      col += s * (.5 + 1.8*u*u) + vec3(.55,.25,.9) * pow(u,6.) * .45;
+      vec3 s = sky(d*(1.+uSeed*.1)); s += vec3(.9,.45,.18) * pow(max(sin(ang*2.+uTime*.7+u*5.),0.),6.) * pow(u,2.5) * .7 * uHeat; // glimpse of the disc on the rim
+      col += s * (.25 + .9*u*u) + vec3(.55,.25,.9) * pow(u,6.) * .12;
     }
-    float rim = exp(-pow((r-uR)/(uR*.018+1.2), 2.)) * 2.4 * uHeat;
-    col += vec3(1.,.62,.28) * rim + vec3(.5,.3,1.) * exp(-pow((r-uR)/(uR*.07+2.), 2.)) * .35;
-    col += vec3(.9,.4,.12) * exp(-max(r-uR,0.)/(uR*.35+8.)) * .18 * step(uR, r);
+    float rim = exp(-pow((r-uR)/(uR*.018+1.2), 2.)) * 1.0 * uHeat;
+    col += vec3(1.,.62,.28) * rim + vec3(.5,.3,1.) * exp(-pow((r-uR)/(uR*.07+2.), 2.)) * .2;
+    col += vec3(.9,.4,.12) * exp(-max(r-uR,0.)/(uR*.35+8.)) * .08 * step(uR, r);
   }
   gl_FragColor = vec4(col*uOpacity, 1.);
 }`;

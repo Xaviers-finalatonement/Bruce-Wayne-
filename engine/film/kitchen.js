@@ -106,7 +106,7 @@ export function makePan(R = 1.6, H = .44) { // cast-iron skillet, handle toward 
   const g = new THREE.LatheGeometry(pts, 72);
   const tex = (() => { const c = document.createElement("canvas"); c.width = c.height = 256; const x = c.getContext("2d"); x.fillStyle = "#808080"; x.fillRect(0, 0, 256, 256); const im = x.getImageData(0, 0, 256, 256);
     for (let i = 0; i < 256 * 256; i++) { const v = 128 + (hash(i * .37) - .5) * 70 + (hash(i * 1.7 + 4) - .5) * 40; im.data[i * 4] = im.data[i * 4 + 1] = im.data[i * 4 + 2] = v; } x.putImageData(im, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(6, 3); return t; })();
-  const mat = new THREE.MeshStandardMaterial({ color: "#2A2724", metalness: .85, roughness: .5, roughnessMap: tex, bumpMap: tex, bumpScale: .4 });
+  const mat = new THREE.MeshStandardMaterial({ color: "#24211F", metalness: .7, roughness: .62, roughnessMap: tex, bumpMap: tex, bumpScale: .4 });
   const body = new THREE.Mesh(g, mat); body.castShadow = body.receiveShadow = true;
   const hg = roundBox(.34, .13, 1.55, .05); xf(hg, [0, H * .72, R + .62], [-.06, 0, 0]);
   const handle = new THREE.Mesh(hg, mat); handle.castShadow = true;
@@ -153,7 +153,7 @@ export function makeEnv(renderer) {
   const pm = new THREE.PMREMGenerator(renderer), s = new THREE.Scene(); s.background = new THREE.Color(0x5a4b3b);
   const panel = (col, k, p, sz) => { const m = new THREE.Mesh(new THREE.BoxGeometry(...sz), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(k) })); m.position.set(...p); s.add(m); };
   panel(0xfff1dc, 16, [-9, 6, 1], [1, 9, 8]);   // big window camera-left
-  panel(0xfff4e6, 7, [0, 11, 0], [14, 1, 14]);  // overhead soft box
+  panel(0xfff4e6, 3.2, [0, 11, 0], [14, 1, 14]);  // overhead soft box
   panel(0xffd9b0, 3, [9, 3, -3], [1, 6, 6]);    // warm bounce right
   panel(0xf7e6cb, 2.2, [0, -7, 0], [14, 1, 14]); // counter bounce
   const tx = pm.fromScene(s, .035).texture; pm.dispose(); return tx;
