@@ -1,0 +1,540 @@
+{
+ "duration": 62.06,
+ "fps": 30,
+ "speed": 0.95,
+ "gap": 0.45,
+ "sample_rate": 24000,
+ "beats": [
+  {
+   "id": "b01",
+   "start": 0.2,
+   "end": 2.823,
+   "next": 3.273,
+   "sents": [
+    {
+     "s": 0.2,
+     "e": 1.407,
+     "c0": 0,
+     "c1": 23
+    },
+    {
+     "s": 1.547,
+     "e": 2.823,
+     "c0": 24,
+     "c1": 48
+    }
+   ],
+   "captions": [
+    {
+     "text": "Oil helps your carrots.",
+     "start": 0.2,
+     "key": 3,
+     "end": 1.547
+    },
+    {
+     "text": "Heat costs your peppers.",
+     "start": 1.547,
+     "key": 3,
+     "end": 2.823
+    }
+   ],
+   "vo": "Oil helps your carrots. Heat costs your peppers.",
+   "screen": []
+  },
+  {
+   "id": "b02",
+   "start": 3.273,
+   "end": 6.601,
+   "next": 7.051,
+   "sents": [
+    {
+     "s": 3.273,
+     "e": 3.998,
+     "c0": 0,
+     "c1": 8
+    },
+    {
+     "s": 4.138,
+     "e": 6.601,
+     "c0": 9,
+     "c1": 55
+    }
+   ],
+   "captions": [
+    {
+     "text": "One pan.",
+     "start": 3.273,
+     "key": 1,
+     "end": 4.138
+    },
+    {
+     "text": "Two opposite things",
+     "start": 4.138,
+     "key": 1,
+     "end": 5.209
+    },
+    {
+     "text": "happening to your veggies.",
+     "start": 5.209,
+     "key": 0,
+     "end": 6.601
+    }
+   ],
+   "vo": "One pan. Two opposite things happening to your veggies.",
+   "screen": [
+    "+ oil",
+    "- heat"
+   ]
+  },
+  {
+   "id": "b03",
+   "start": 7.051,
+   "end": 13.409,
+   "next": 13.859,
+   "sents": [
+    {
+     "s": 7.051,
+     "e": 11.251,
+     "c0": 0,
+     "c1": 74
+    },
+    {
+     "s": 11.391,
+     "e": 13.409,
+     "c0": 75,
+     "c1": 111
+    }
+   ],
+   "captions": [
+    {
+     "text": "Bright veggies like carrots are full of",
+     "start": 7.051,
+     "key": 1,
+     "end": 9.321
+    },
+    {
+     "text": "plant pigments called carotenoids.",
+     "start": 9.321,
+     "key": 3,
+     "end": 11.391
+    },
+    {
+     "text": "Your body turns them into vitamin A.",
+     "start": 11.391,
+     "key": 5,
+     "end": 13.409
+    }
+   ],
+   "vo": "Bright veggies like carrots are full of plant pigments called carotenoids. Your body turns them into vitamin A.",
+   "screen": [
+    "carotenoids",
+    "→ vitamin A"
+   ]
+  },
+  {
+   "id": "b04",
+   "start": 13.859,
+   "end": 17.611,
+   "next": 18.061,
+   "sents": [
+    {
+     "s": 13.859,
+     "e": 14.74,
+     "c0": 0,
+     "c1": 17
+    },
+    {
+     "s": 14.88,
+     "e": 17.61,
+     "c0": 18,
+     "c1": 71
+    }
+   ],
+   "captions": [
+    {
+     "text": "Here's the catch.",
+     "start": 13.859,
+     "key": 0,
+     "end": 14.88
+    },
+    {
+     "text": "Those pigments get absorbed",
+     "start": 14.88,
+     "key": 1,
+     "end": 16.322
+    },
+    {
+     "text": "better with a little fat.",
+     "start": 16.322,
+     "key": 0,
+     "end": 17.611
+    }
+   ],
+   "vo": "Here's the catch. Those pigments get absorbed better with a little fat.",
+   "screen": [
+    "better with a little fat"
+   ]
+  },
+  {
+   "id": "b05",
+   "start": 18.061,
+   "end": 21.262,
+   "next": 21.712,
+   "sents": [
+    {
+     "s": 18.061,
+     "e": 19.216,
+     "c0": 0,
+     "c1": 24
+    },
+    {
+     "s": 19.356,
+     "e": 21.263,
+     "c0": 25,
+     "c1": 64
+    }
+   ],
+   "captions": [
+    {
+     "text": "Think of it like a ride.",
+     "start": 18.061,
+     "key": 0,
+     "end": 19.356
+    },
+    {
+     "text": "The pigments travel along with the oil.",
+     "start": 19.356,
+     "key": 1,
+     "end": 21.262
+    }
+   ],
+   "vo": "Think of it like a ride. The pigments travel along with the oil.",
+   "screen": []
+  },
+  {
+   "id": "b06",
+   "start": 21.712,
+   "end": 23.916,
+   "next": 24.366,
+   "sents": [
+    {
+     "s": 21.712,
+     "e": 23.916,
+     "c0": 0,
+     "c1": 41
+    }
+   ],
+   "captions": [
+    {
+     "text": "So a splash of oil isn't just for flavor.",
+     "start": 21.712,
+     "key": 2,
+     "end": 23.916
+    }
+   ],
+   "vo": "So a splash of oil isn't just for flavor.",
+   "screen": []
+  },
+  {
+   "id": "b07",
+   "start": 24.366,
+   "end": 29.604,
+   "next": 30.054,
+   "sents": [
+    {
+     "s": 24.366,
+     "e": 28.443,
+     "c0": 0,
+     "c1": 57
+    },
+    {
+     "s": 28.583,
+     "e": 29.604,
+     "c0": 58,
+     "c1": 76
+    }
+   ],
+   "captions": [
+    {
+     "text": "Same story for vitamins E and K,",
+     "start": 24.366,
+     "key": 3,
+     "end": 26.726
+    },
+    {
+     "text": "in spinach and broccoli.",
+     "start": 26.726,
+     "key": 3,
+     "end": 28.583
+    },
+    {
+     "text": "Fat helps them in.",
+     "start": 28.583,
+     "key": 1,
+     "end": 29.604
+    }
+   ],
+   "vo": "Same story for vitamins E and K, in spinach and broccoli. Fat helps them in.",
+   "screen": [
+    "vitamins A · D · E · K",
+    "absorbed more easily with fat"
+   ]
+  },
+  {
+   "id": "b08",
+   "start": 30.054,
+   "end": 35.008,
+   "next": 35.458,
+   "sents": [
+    {
+     "s": 30.054,
+     "e": 31.096,
+     "c0": 0,
+     "c1": 18
+    },
+    {
+     "s": 31.236,
+     "e": 35.008,
+     "c0": 19,
+     "c1": 76
+    }
+   ],
+   "captions": [
+    {
+     "text": "Now the flip side.",
+     "start": 30.054,
+     "key": 2,
+     "end": 31.236
+    },
+    {
+     "text": "Peppers, broccoli and tomatoes are",
+     "start": 31.236,
+     "key": 1,
+     "end": 33.552
+    },
+    {
+     "text": "packed with vitamin C.",
+     "start": 33.552,
+     "key": 2,
+     "end": 35.008
+    }
+   ],
+   "vo": "Now the flip side. Peppers, broccoli and tomatoes are packed with vitamin C.",
+   "screen": [
+    "vitamin C"
+   ]
+  },
+  {
+   "id": "b09",
+   "start": 35.458,
+   "end": 40.061,
+   "next": 40.511,
+   "sents": [
+    {
+     "s": 35.458,
+     "e": 40.061,
+     "c0": 0,
+     "c1": 69
+    }
+   ],
+   "captions": [
+    {
+     "text": "Vitamin C dissolves in water,",
+     "start": 35.458,
+     "key": 2,
+     "end": 37.459
+    },
+    {
+     "text": "and cooking can lower how much is left.",
+     "start": 37.459,
+     "key": 1,
+     "end": 40.061
+    }
+   ],
+   "vo": "Vitamin C dissolves in water, and cooking can lower how much is left.",
+   "screen": [
+    "water-soluble",
+    "cooking can lower it"
+   ]
+  },
+  {
+   "id": "b10",
+   "start": 40.511,
+   "end": 44.657,
+   "next": 45.107,
+   "sents": [
+    {
+     "s": 40.511,
+     "e": 44.657,
+     "c0": 0,
+     "c1": 68
+    }
+   ],
+   "captions": [
+    {
+     "text": "Microwaving and steaming can lower it too,",
+     "start": 40.511,
+     "key": 0,
+     "end": 43.133
+    },
+    {
+     "text": "so it's not just the pan.",
+     "start": 43.133,
+     "key": 2,
+     "end": 44.657
+    }
+   ],
+   "vo": "Microwaving and steaming can lower it too, so it's not just the pan.",
+   "screen": [
+    "also: microwaving · steaming"
+   ]
+  },
+  {
+   "id": "b11",
+   "start": 45.107,
+   "end": 48.44,
+   "next": 48.89,
+   "sents": [
+    {
+     "s": 45.107,
+     "e": 48.44,
+     "c0": 0,
+     "c1": 53
+    }
+   ],
+   "captions": [
+    {
+     "text": "That's why raw fruit and veg",
+     "start": 45.107,
+     "key": 0,
+     "end": 46.931
+    },
+    {
+     "text": "top the vitamin C lists.",
+     "start": 46.931,
+     "key": 2,
+     "end": 48.44
+    }
+   ],
+   "vo": "That's why raw fruit and veg top the vitamin C lists.",
+   "screen": [
+    "raw = best sources"
+   ]
+  },
+  {
+   "id": "b12",
+   "start": 48.89,
+   "end": 51.608,
+   "next": 52.058,
+   "sents": [
+    {
+     "s": 48.89,
+     "e": 50.678,
+     "c0": 0,
+     "c1": 30
+    },
+    {
+     "s": 50.818,
+     "e": 51.608,
+     "c0": 31,
+     "c1": 44
+    }
+   ],
+   "captions": [
+    {
+     "text": "So sautéing isn't good or bad.",
+     "start": 48.89,
+     "key": 1,
+     "end": 50.818
+    },
+    {
+     "text": "It's a trade.",
+     "start": 50.818,
+     "key": 2,
+     "end": 51.608
+    }
+   ],
+   "vo": "So sautéing isn't good or bad. It's a trade.",
+   "screen": [
+    "a trade"
+   ]
+  },
+  {
+   "id": "b13",
+   "start": 52.058,
+   "end": 55.077,
+   "next": 56.327,
+   "sents": [
+    {
+     "s": 52.058,
+     "e": 53.316,
+     "c0": 0,
+     "c1": 23
+    },
+    {
+     "s": 53.456,
+     "e": 55.077,
+     "c0": 24,
+     "c1": 57
+    }
+   ],
+   "captions": [
+    {
+     "text": "This isn't a diet rule.",
+     "start": 52.058,
+     "key": 1,
+     "end": 53.456
+    },
+    {
+     "text": "It's just what your pan is doing.",
+     "start": 53.456,
+     "key": 6,
+     "end": 55.077
+    }
+   ],
+   "vo": "This isn't a diet rule. It's just what your pan is doing.",
+   "screen": [
+    "education, not a diet rule"
+   ]
+  },
+  {
+   "id": "b14",
+   "start": 56.327,
+   "end": 60.26,
+   "next": 62.06,
+   "sents": [
+    {
+     "s": 56.327,
+     "e": 58.464,
+     "c0": 0,
+     "c1": 37
+    },
+    {
+     "s": 58.604,
+     "e": 60.261,
+     "c0": 38,
+     "c1": 70
+    }
+   ],
+   "captions": [
+    {
+     "text": "The Pan Theory: carrots like company.",
+     "start": 56.327,
+     "key": 3,
+     "end": 58.604
+    },
+    {
+     "text": "Tonight, give them a little oil.",
+     "start": 58.604,
+     "key": 0,
+     "end": 60.26
+    }
+   ],
+   "vo": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+   "screen": [
+    "The Pan Theory:",
+    "carrots + a little oil"
+   ]
+  }
+ ]
+}
