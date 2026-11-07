@@ -16,7 +16,7 @@ const T = makeTiming(tl), { S, E, END, W, DUR } = T;
 const ov = createOverlay(T, TH, document.getElementById("fx")); ov.initCaps(tl);
 
 const { renderer, scene, camera, composer, bokeh, bloom, filmPass } = createPost({ canvas: document.getElementById("gl"), theme: TH });
-renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1.38;
 scene.background = new THREE.Color(C.countertop);
 scene.environment = K.makeEnv(renderer); scene.environmentIntensity = .3;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -40,10 +40,10 @@ const quad = (tex, color, add, op = 1) => new THREE.Mesh(new THREE.PlaneGeometry
 const X_BOARD = 7, X_TRIO = 24, X_CMP = 40, X_BAL = 56;
 const GK = new THREE.Group(); scene.add(GK);
 const counter = K.makeCounter(260); counter.position.set(30, 0, 0); GK.add(counter);
-const pan = K.makePan(); GK.add(pan); pan.userData.mat.envMapIntensity = .55;
+const pan = K.makePan(); GK.add(pan); pan.userData.mat.envMapIntensity = .55; pan.rotation.y = .9;
 const cast = o => { o.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return o; };
 // materials
-const coinMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: .78, metalness: 0, clearcoat: 0, clearcoatRoughness: .3 });
+const coinMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .78, metalness: 0 });
 const coinMatRaw = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .72, metalness: 0 });
 const stripMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: .42, metalness: 0, clearcoat: .0, clearcoatRoughness: .3 });
 const stripMatRaw = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .4, metalness: 0 });
@@ -60,13 +60,13 @@ const panStrips = [[.38, -.02, .5], [-.5, .28, -.4], [.12, .78, 1.2], [-.2, -.62
 const pileC = new THREE.Group(), pileP = new THREE.Group(); GK.add(pileC, pileP);
 for (let i = 0; i < 24; i++) { const a = hash(i * 2.3) * 6.28, r = Math.sqrt(hash(i * 1.7)) * .62; mesh(coinGeos[i % 4], coinMatRaw, pileC, Math.cos(a) * r, .075 + .2 * (1 - r / .62) * hash(i * 9) + (i % 3) * .02, Math.sin(a) * r, (hash(i * 4) - .5) * .7, hash(i) * 6.28, (hash(i * 6) - .5) * .7); }
 for (let i = 0; i < 9; i++) mesh(stripGeos[i % 4], stripMatRaw, pileP, (hash(i * 2) - .5) * .8, .13 + .075 * (i % 3), (hash(i * 3) - .5) * .8, 0, hash(i * 5) * 6.28, 0);
-pileC.position.set(-2.05, 0, .75); pileP.position.set(2.05, 0, .75);
+pileC.position.set(-2.05, 0, .1); pileP.position.set(2.05, 0, .1);
 // spinach + broccoli (drop into the pan during b07)
 const dropIns = [];
 [[-.55, -.35, .3], [.3, .15, 2.2], [-.1, .7, 4.0], [.55, -.6, 5.2], [-.8, .1, 1.0]].forEach((p, i) => { const o = mesh(leafGeos[i % 3], leafMat, GK, p[0], FL + .15 + i * .015, p[1], 0, p[2], 0); o.userData = { rest: o.position.clone(), t0: T.tSpin - .1 + i * .22, ry: p[2] }; o.visible = false; dropIns.push(o); });
 [[.3, -.1, 0.5], [-.45, .72, 3.2], [.75, .55, 5.0]].forEach((p, i) => { const o = mesh(florGeos[i], florMat, GK, p[0], FL + .01, p[1], .15, p[2], .1, 1); o.userData = { rest: o.position.clone(), t0: T.tSpin + .3 + i * .28, ry: p[2] }; o.visible = false; dropIns.push(o); });
 // oil: glossy dome puddle + a ribbon that slides in
-const oilMat = new THREE.MeshPhysicalMaterial({ color: "#EDB63A", roughness: .05, metalness: 0, transparent: true, opacity: .62, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 2.4, ior: 1.47 });
+const oilMat = new THREE.MeshPhysicalMaterial({ color: "#D9981C", roughness: .04, metalness: 0, transparent: true, opacity: .34, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 1.3, ior: 1.47 });
 const oilGeo = (() => { const g = new THREE.SphereGeometry(1, 56, 14, 0, PI * 2, 0, PI / 2); K.mapVerts(g, (x, y, z) => { const r = Math.hypot(x, z), an = Math.atan2(z, x), w = 1 + .1 * K.vn(Math.cos(an) * 1.4, Math.sin(an) * 1.4, 4.1); return [x * w, y * .06 * (1 + .6 * K.vn(x * 2, 3.3, z * 2)) , z * w]; }); g.computeVertexNormals(); return g; })();
 const oil = new THREE.Mesh(oilGeo, oilMat); oil.position.set(-.05, FL + .004, .02); oil.receiveShadow = true; GK.add(oil);
 const ribbonCurve = new THREE.CatmullRomCurve3([V(-1.72, .52, -1.2), V(-1.25, .36, -.85), V(-.8, .16, -.35), V(-.35, .125, .05), V(.0, .115, .02)]);
@@ -76,6 +76,7 @@ const ribbonCount = ribbon.geometry.index.count;
 const Gfx = new THREE.Group(); GK.add(Gfx); noDepth.push(Gfx);
 const steam = []; for (let i = 0; i < 34; i++) { const q = quad(puffTex, "#FFF8EC", false, 0); q.rotation.x = -PI / 2; Gfx.add(q); steam.push(q); }
 const heatQ = []; for (let i = 0; i < 7; i++) { const q = quad(softTex, "#C4381E", true, 0); q.rotation.x = -PI / 2; Gfx.add(q); heatQ.push(q); }
+const gleams = [[-.62, -.5, .9, .22, .6], [-.9, .05, .5, .14, 1.2], [.7, .62, .45, .12, -.5]].map(g => { const q = quad(softTex, "#FFF1CC", true, 0); q.rotation.x = -PI / 2; q.rotation.z = g[4]; q.scale.set(g[2], g[3], 1); q.position.set(g[0], .17, g[1]); Gfx.add(q); return q; });
 const glowRight = quad(softTex, "#E0451F", true, 0); glowRight.rotation.x = -PI / 2; glowRight.scale.set(3.4, 3.4, 1); glowRight.position.set(.9, .5, 0); Gfx.add(glowRight);
 // board with raw peppers, broccoli, tomato halves
 const board = new THREE.Group(); board.position.set(X_BOARD, 0, 0); GK.add(board);
@@ -85,7 +86,7 @@ const boardStrips = [[-1.0, -.55, .15], [-.6, -.62, .05], [-.2, -.55, -.1], [-.8
 [[1.0, -.45, 1.0], [1.35, .4, 2.6]].forEach((p, i) => mesh(florGeos[i], florMat, board, p[0], .22, p[1], .15, p[2], .1, 1.0));
 // tiles (vitamins)
 const tiles = {}; const mkT = (k, l, bg, fg, s, par, x, y, z) => { const g = K.makeTile(l, bg, fg, s); g.position.set(x, y, z); g.visible = false; (par || GK).add(g); tiles[k] = g; return g; };
-const vitX = [-1.2, -.4, .4, 1.2]; ["A", "D", "E", "K"].forEach((l, i) => mkT("v" + l, l, C.butter, C.cast, .68, GK, vitX[i], .15, 2.2));
+const vitX = [-1.45, -.65, .15, .95]; ["A", "D", "E", "K"].forEach((l, i) => mkT("v" + l, l, C.butter, C.cast, .68, GK, vitX[i], .15, 2.2));
 const tileC = mkT("c", "C", C.herb, C.countertop, .95, GK, X_BOARD + .1, 1.5, -.1);
 // trio: microwave plate, steamer, pan
 const trio = new THREE.Group(); trio.position.set(X_TRIO, 0, 0); GK.add(trio);
@@ -107,7 +108,7 @@ const cmp = new THREE.Group(); cmp.position.set(X_CMP, 0, 0); GK.add(cmp);
 const rawPepperMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .32, metalness: 0 }), cookedPepperMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: .36, metalness: 0, clearcoat: .6, clearcoatRoughness: .25 });
 const pepRaw = mesh(K.makePepper(1, false), rawPepperMat, cmp, -1.55, .62, -2.1, 0, .3, 0, 1.15), pepCooked = mesh(K.makePepper(2, true), cookedPepperMat, cmp, 1.55, .5, -2.1, 0, -.4, 0, 1.15);
 const cmpTiles = { raw: [], cooked: [] };
-{ const place = (arr, cx, n, ghosts) => { for (let i = 0; i < n; i++) { const t = K.makeTile("C", C.herb, C.countertop, .66); t.position.set(cx + (i % 2 ? .4 : -.4), .15, .55 + Math.floor(i / 2) * .86); t.rotation.y = (hash(cx + i) - .5) * .25; cmp.add(t); cast(t); arr.push(t); if (ghosts && i >= 2) { t.userData.body.material.transparent = true; t.userData.ghost = true; } } };
+{ const place = (arr, cx, n, ghosts) => { for (let i = 0; i < n; i++) { const t = K.makeTile("C", C.herb, C.countertop, .66); t.position.set(cx + (i % 2 ? .4 : -.4), .15, .3 + Math.floor(i / 2) * .8); t.rotation.y = (hash(cx + i) - .5) * .25; cmp.add(t); cast(t); arr.push(t); if (ghosts && i >= 2) { t.userData.body.material.transparent = true; t.userData.ghost = true; } } };
   place(cmpTiles.raw, -1.55, 6, false); place(cmpTiles.cooked, 1.55, 6, true); }
 // balance
 const bal = new THREE.Group(); bal.position.set(X_BAL, 0, 0); GK.add(bal);
@@ -130,20 +131,20 @@ const beam = new THREE.Group(); beam.position.set(0, 1.25, 0); bal.add(beam);
 
 // ============================================================ MOLECULE WORLDS ============================================================
 const MY = { m1: -200, m2: -300, m3: -400 };
-const gM1 = new THREE.Group(), gM2 = new THREE.Group(), gM3 = new THREE.Group(); [gM1, gM2, gM3].forEach(g => scene.add(g)); gM1.position.y = MY.m1; gM2.position.y = MY.m2; gM3.position.y = MY.m3;
+const gM1 = new THREE.Group(), gM2 = new THREE.Group(), gM3 = new THREE.Group(); [gM1, gM2, gM3].forEach(g => scene.add(g)); gM2.position.y = MY.m2;
 const Gm = new THREE.Group(); scene.add(Gm); noDepth.push(Gm); // blobs/glows for molecule worlds (world space)
 function cellsTex(c0, c1, line, seed) { const S_ = 1024, c = document.createElement("canvas"); c.width = c.height = S_; const x = c.getContext("2d");
   const g = x.createRadialGradient(512, 460, 40, 512, 512, 760); g.addColorStop(0, c1); g.addColorStop(1, c0); x.fillStyle = g; x.fillRect(0, 0, S_, S_);
   x.strokeStyle = line; x.lineWidth = 9; for (let i = 0; i < 46; i++) { const px = hash(i + seed) * S_, py = hash(i * 3 + seed) * S_, r = 70 + hash(i * 7 + seed) * 130; x.globalAlpha = .12 + .22 * hash(i * 5); x.beginPath(); for (let k = 0; k < 7; k++) { const a = k / 7 * 6.283 + hash(i + k) * .4, rr = r * (.85 + .3 * hash(i * 11 + k)); const qx = px + Math.cos(a) * rr, qy = py + Math.sin(a) * rr; k ? x.lineTo(qx, qy) : x.moveTo(qx, qy); } x.closePath(); x.stroke(); }
   x.globalAlpha = 1; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
 const bgPlane = (g, tex, w, h, z, y = 0) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: true })); m.position.set(0, y, z); g.add(m); return m; };
-const blobs = (par, n, col, seed, box, op) => { const r = []; for (let i = 0; i < n; i++) { const q = quad(softTex, col, true, op * (.4 + .6 * hash(i + seed))); const s = 1.6 + hash(i * 3 + seed) * 3.6; q.scale.set(s, s, 1); q.position.set(par.position.x + (hash(i * 5 + seed) - .5) * box[0], par.position.y + (hash(i * 7 + seed) - .5) * box[1], -2 - hash(i * 9 + seed) * 8); q.userData.b = q.position.clone(); Gm.add(q); r.push(q); } return r; };
+const blobs = (par, n, col, seed, box, op, y0 = 0) => { const r = []; for (let i = 0; i < n; i++) { const q = quad(softTex, col, true, op * (.4 + .6 * hash(i + seed))); const s = 1.6 + hash(i * 3 + seed) * 3.6; q.scale.set(s, s, 1); q.position.set((hash(i * 5 + seed) - .5) * box[0], y0 + (hash(i * 7 + seed) - .5) * box[1], -2 - hash(i * 9 + seed) * 8); q.userData.b = q.position.clone(); Gm.add(q); r.push(q); } return r; };
 // ---- M1: carotenoid pigments in carrot flesh ----
-bgPlane(gM1, cellsTex("#8E3408", "#F08A24", "#FFC27A", 3), 60, 60, -16);
+bgPlane(gM1, cellsTex("#5E2004", "#C25A12", "#F0A050", 3), 60, 60, -16, MY.m1);
 const capGeo = new THREE.CapsuleGeometry(.07, .3, 4, 10);
-const NP1 = 230, pig1 = new THREE.InstancedMesh(capGeo, new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#D2540A", emissiveIntensity: .9, roughness: .35 }), NP1); pig1.frustumCulled = false; gM1.add(pig1);
-const pigCols = ["#FF8A1F", "#FFB347", "#F3C54B", "#F26A1B"].map(c => new THREE.Color(c)); for (let i = 0; i < NP1; i++) pig1.setColorAt(i, pigCols[i % 4]);
-const blobs1 = blobs(gM1, 16, "#FFB259", 11, [10, 16], .22);
+const NP1 = 230, pig1 = new THREE.InstancedMesh(capGeo, new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#E8700F", emissiveIntensity: 1.3, roughness: .35 }), NP1); pig1.frustumCulled = false; gM1.add(pig1);
+const pigCols = ["#FFA02A", "#FFC45A", "#FFD56E", "#FF8A1F"].map(c => new THREE.Color(c)); for (let i = 0; i < NP1; i++) pig1.setColorAt(i, pigCols[i % 4]);
+const blobs1 = blobs(gM1, 16, "#FFB259", 11, [10, 16], .22, MY.m1);
 const tileA = K.makeTile("A", C.butter, C.cast, 1.7); tileA.rotation.x = PI / 2; gM1.add(tileA); tileA.visible = false;
 // ---- M2: oil droplets carrying pigments along a cell wall (top: no fat, bottom: with fat) ----
 bgPlane(gM2, cellsTex("#5A2412", "#B8582A", "#F0A06A", 8), 70, 50, -14);
@@ -154,17 +155,17 @@ function makeWall(par, y) { const NC = 28, g = new THREE.SphereGeometry(.52, 26,
 const dropMat = new THREE.MeshPhysicalMaterial({ color: "#F3C54B", roughness: .04, metalness: 0, transparent: true, opacity: .5, clearcoat: 1, envMapIntensity: 3, ior: 1.46 });
 const pigMat2 = new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#D2540A", emissiveIntensity: 1.0, roughness: .35 });
 function makePanel(par, y, withOil, n) { const o = { y, withOil, pig: [], drops: [], wall: makeWall(par, y) };
-  const NP = withOil ? n * 3 : 9; for (let i = 0; i < NP; i++) { const m = new THREE.Mesh(capGeo, pigMat2.clone()); m.material.color.copy(pigCols[i % 4]); par.add(m); o.pig.push(m); }
-  if (withOil) for (let j = 0; j < n; j++) { const d = new THREE.Mesh(new THREE.SphereGeometry(.5, 36, 24), dropMat); par.add(d); o.drops.push(d); }
+  const NP = withOil ? n * 3 : 12; for (let i = 0; i < NP; i++) { const m = new THREE.Mesh(capGeo, pigMat2.clone()); m.material.color.copy(pigCols[i % 4]); par.add(m); o.pig.push(m); }
+  if (withOil) for (let j = 0; j < n; j++) { const d = new THREE.Mesh(new THREE.SphereGeometry(.72, 36, 24), dropMat); par.add(d); o.drops.push(d); }
   o.glow = []; for (let j = 0; j < 5; j++) { const q = quad(softTex, "#FF8A1F", true, 0); q.scale.set(1.6, 1.0, 1); Gm.add(q); o.glow.push(q); }
   return o; }
 const panTop = makePanel(gM2, 3.3, false, 0), panBot = makePanel(gM2, -1.6, true, 5), panFol = makePanel(gM2, -7.5, true, 6);
 // ---- M3: vitamin C in watery pepper cells ----
-const bgM3 = bgPlane(gM3, cellsTex("#5C1409", "#C23A24", "#FF9A7A", 21), 60, 60, -16);
+const bgM3 = bgPlane(gM3, cellsTex("#5C1409", "#C23A24", "#FF9A7A", 21), 60, 60, -16, MY.m3);
 const NC3 = 96, c3 = new THREE.InstancedMesh(new THREE.SphereGeometry(.15, 18, 14), new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#3E8F36", emissiveIntensity: .9, roughness: .3 }), NC3); c3.frustumCulled = false; gM3.add(c3);
 for (let i = 0; i < NC3; i++) c3.setColorAt(i, new THREE.Color(["#6FBF5A", "#8FD36B", "#4FA24A"][i % 3]));
 const bubbles = []; for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(.25 + hash(i) * .5, 24, 16), new THREE.MeshPhysicalMaterial({ color: "#F7F1E6", roughness: .05, transparent: true, opacity: .16, clearcoat: 1, envMapIntensity: 2.2 })); m.userData = { p: V((hash(i * 3) - .5) * 8, (hash(i * 5) - .5) * 14, -3 + hash(i * 7) * 7), s: hash(i * 11) }; gM3.add(m); bubbles.push(m); }
-const blobs3 = blobs(gM3, 14, "#FF7A55", 31, [10, 16], .18);
+const blobs3 = blobs(gM3, 14, "#FF7A55", 31, [10, 16], .18, MY.m3);
 const tileC3 = K.makeTile("C", C.herb, C.countertop, 1.5); tileC3.rotation.x = PI / 2; gM3.add(tileC3);
 const mshim = []; for (let i = 0; i < 8; i++) { const q = quad(puffTex, "#FF5A2A", true, 0); q.scale.set(4, 6, 1); Gm.add(q); mshim.push(q); }
 
@@ -208,12 +209,13 @@ function animKitchen(t, A) {
   // tiles A D E K land beside the pan
   ["A", "D", "E", "K"].forEach((l, i) => { const g = tiles["v" + l], t0 = T.tVit + .2 + i * .24, u = (t - t0) / .5; g.visible = t >= t0 && t < S("b08") + 1.2; const e = u < 0 ? 0 : eob(clamp(u)); g.position.y = .15 + 3.4 * (1 - e) + (u > 1 ? 0 : 0); g.rotation.y = (1 - e) * 1.3; g.userData.glow(.38 * smooth(clamp((t - t0 - .45) / .4)) * (.75 + .25 * Math.sin(t * 5 + i))); });
   // C tile pops above the board
-  { const t0 = T.tVC - .05, u = (t - t0) / .55; tileC.visible = t >= t0 && t < T.diveFrom2 + 1.2; const e = u < 0 ? 0 : eob(clamp(u)); tileC.scale.setScalar(.95 * Math.max(.001, e)); tileC.position.set(X_BOARD + .15, .95 + .25 * Math.sin(t * 2.2) * smooth(u) + .6 * e, -.2); tileC.rotation.y = .3 * Math.sin(t * 1.5); tileC.rotation.x = -.2 * (1 - e); }
+  { const t0 = T.tVC - .05, u = (t - t0) / .55; tileC.visible = t >= t0 && t < T.diveFrom2 + 1.2; const e = u < 0 ? 0 : eob(clamp(u)); tileC.scale.setScalar(1.25 * Math.max(.001, e)); tileC.position.set(X_BOARD + .15, .95 + .25 * Math.sin(t * 2.2) * smooth(u) + .6 * e, -.2); tileC.rotation.y = .3 * Math.sin(t * 1.5); tileC.rotation.x = -.2 * (1 - e); }
   // steam
   const sk = clamp((t - T.tOil - 1.6) / 2.5) * (t > S("b13") - .1 ? 1.35 : 1) * (.7 + .3 * smooth(cu * 3));
   steam.forEach((q, i) => { const per = 3.8 + hash(i) * 2, ph = (t / per + hash(i * 3)) % 1, bx = (hash(i * 5) - .5) * 2.3, bz = (hash(i * 7) - .5) * 2.0;
     const h = .35 + ph * 3.6; q.position.set(bx + Math.sin(t * .6 + i) * .3 * ph + ph * .4, h, bz - ph * .35 + Math.cos(t * .5 + i * 2) * .25 * ph); const s = .7 + ph * 1.9 * (.7 + hash(i * 9)); q.scale.set(s, s, 1); q.rotation.z = i + t * .1 * (i % 2 ? 1 : -1);
-    q.material.opacity = .26 * sk * Math.sin(PI * ph) ** 1.2 * (.6 + .4 * hash(i * 13)); q.visible = q.material.opacity > .004; });
+    q.material.opacity = .06 * sk * Math.sin(PI * ph) ** 1.2 * (.6 + .4 * hash(i * 13)); q.visible = q.material.opacity > .004; });
+  gleams.forEach((q, i) => { q.material.opacity = .55 * oilU * (.8 + .2 * Math.sin(t * 1.3 + i * 2)); q.visible = oilU > .02 && pan.visible; });
   // heat shimmer on the right half (b02)
   const hk = smooth(clamp((t - T.tHeat + .3) / .8)) * (1 - smooth(clamp((t - E("b02") - .4) / .8))), hk2 = hk;
   glowRight.material.opacity = .34 * hk2 * (.85 + .15 * Math.sin(t * 6)); glowRight.visible = hk2 > .01;
@@ -229,25 +231,25 @@ function animM1(t, A) {
   const lt = t - T.dive1, u = smooth(lt / (S("b04") - T.dive1)); const cz = lerp(13, 9.5, u);
   setCam([Math.sin(lt * .25) * .4, MY.m1 + Math.cos(lt * .2) * .3, cz], [0, MY.m1 - .2, 0], 35, [0, MY.m1, 0], .0042);
   mLight.position.set(2, MY.m1 + 3, cz - 2); mLight.intensity = 60; mLight.color.set(0xffb06a);
-  const tp = V(0, MY.m1 - 1.2, 4.2), arrive = T.tBody + .55; // the A tile
+  const tp = V(0, MY.m1 + .45, 4.2), arrive = T.tBody + .55; // the A tile
   for (let i = 0; i < NP1; i++) { const bx = (hash(i * 3) - .5) * 9, by = (hash(i * 5) - .5) * 17, bz = -7 + hash(i * 7) * 13, ph = hash(i * 11) * 6.28, sp = .25 + .4 * hash(i * 13);
     let x = bx + Math.sin(t * sp + ph) * .6, y = MY.m1 + by + Math.cos(t * sp * .8 + ph) * .7 + Math.sin(t * .3 + i) * .2, z = bz + Math.sin(t * sp * .6 + ph * 2) * .5, s = (.7 + .7 * hash(i * 17)) * smooth(clamp((lt - .05 - hash(i) * .5) / .5));
     if (i % 5 === 0 && t > arrive) { const k = eio(clamp((t - arrive - hash(i * 19) * 1.0) / 1.4)); x = lerp(x, tp.x + (hash(i) - .5) * .4, k); y = lerp(y, tp.y, k); z = lerp(z, tp.z, k); s *= 1 - smooth(clamp((k - .8) / .2)); }
     Eu.set(ph + t * .3 * sp, t * .4 * sp + i, ph * 2); Q.setFromEuler(Eu); M.compose(V(x, y, z), Q, V(s, s, s)); pig1.setMatrixAt(i, M); }
   pig1.instanceMatrix.needsUpdate = true;
-  const ta = smooth(clamp((t - T.tBody - .1) / .5)); tileA.visible = ta > .001; tileA.scale.setScalar(1.7 * Math.max(.001, eob(clamp((t - T.tBody - .05) / .55)))); tileA.position.set(0, MY.m1 - 1.2, 4.2 + .1 * Math.sin(t * 2)); tileA.userData.glow(.4 + .25 * Math.sin(t * 4));
+  const ta = smooth(clamp((t - T.tBody - .1) / .5)); tileA.visible = ta > .001; tileA.scale.setScalar(.85 * Math.max(.001, eob(clamp((t - T.tBody - .05) / .55)))); tileA.position.set(0, MY.m1 + .45, 4.2 + .1 * Math.sin(t * 2)); tileA.userData.glow(.4 + .25 * Math.sin(t * 4));
   blobs1.forEach((q, i) => { q.position.x = q.userData.b.x + Math.sin(t * .2 + i) * .6; q.position.y = q.userData.b.y + Math.cos(t * .15 + i) * .5; q.visible = true; });
   A.proj = projector(); A.tileA = A.proj(0, MY.m1 - 1.2, 4.2);
 }
 function animPanel(o, t, speedScale, camx, mode) { // drives one wall panel
   const y = o.y, top = y + .45, P = 4.6;
   if (!o.withOil) { o.pig.forEach((m, i) => { const per = 5.6 + hash(i) * 1.6, u = ((t + hash(i * 3) * per) / per) % 1, x = -5.4 + 10.8 * u, wob = Math.abs(Math.sin(u * 9 + i)), yy = top + .32 + 1.7 * (1 - Math.min(1, u * 1.4)) * (.5 + hash(i * 5)) * (1 - .0) ; const nearWall = u > .35 && u < .75 ? .1 + .5 * wob : yy - top;
-      m.position.set(x, top + .28 + Math.max(.0, u < .35 ? (yy - top - .28) * (1 - u / .35) : nearWall - .28) + .12 * Math.sin(t * 2 + i), -.2 + hash(i * 7) * 1.2); m.rotation.set(t * .6 + i, t * .4, i + u * 5); m.scale.setScalar(.85 + .3 * hash(i * 9)); m.visible = true; }); return; }
+      m.position.set(x, top + .28 + Math.max(.0, u < .35 ? (yy - top - .28) * (1 - u / .35) : nearWall - .28) + .12 * Math.sin(t * 2 + i), -.2 + hash(i * 7) * 1.2); m.rotation.set(t * .6 + i, t * .4, i + u * 5); m.scale.setScalar(1.5 + .5 * hash(i * 9)); m.visible = true; }); return; }
   o.drops.forEach((d, j) => { const u = ((t + j * (P / o.drops.length) + .7 * hash(j)) / P) % 1, xd = [-2.9, -1.2, .4, 2.0, 3.5, 4.6][j % 6]; let x, yy, sc = 1, sink = 0;
-    if (mode === "follow") { x = -3 + (j * 3.2) + t * 1.5; x = ((x + 14) % 28) - 14; yy = top + .95 + .25 * Math.sin(t * 1.6 + j * 2); } else {
-      if (u < .55) { const k = eio(u / .55); x = lerp(-5.2, xd, k); yy = top + 1.0 + .25 * Math.sin(u * 8 + j) + (1 - k) * .3; sc = smooth(u / .08); } else if (u < .75) { const k = smooth((u - .55) / .2); x = xd; yy = lerp(top + 1.0, top + .42, k); sc = 1 + .06 * Math.sin(k * 3); } else if (u < .93) { const k = smooth((u - .75) / .18); x = xd; yy = top + .42 - k * .3; sc = 1 - k; sink = k; } else { x = xd; yy = top; sc = 0; sink = 1; } }
+    if (mode === "follow") { x = -3 + (j * 2.7) + t * 1.5; x = ((x + 14) % 28) - 14; yy = top + .95 + .25 * Math.sin(t * 1.6 + j * 2); } else {
+      if (u < .55) { const k = eio(u / .55); x = lerp(-5.2, xd, k); yy = top + 1.0 + .25 * Math.sin(u * 8 + j) + (1 - k) * .3; sc = smooth(u / .08); } else if (u < .75) { const k = smooth((u - .55) / .2); x = xd; yy = lerp(top + 1.2, top + .6, k); sc = 1 + .06 * Math.sin(k * 3); } else if (u < .93) { const k = smooth((u - .75) / .18); x = xd; yy = top + .6 - k * .4; sc = 1 - k; sink = k; } else { x = xd; yy = top; sc = 0; sink = 1; } }
     d.position.set(x, yy, 0); const sq = u > .6 && u < .75 && mode !== "follow" ? 1 - .22 * Math.sin(smooth((u - .6) / .15) * PI) : 1; d.scale.set(sc * (2 - sq) * 1.0, sc * sq, sc); d.visible = sc > .01;
-    for (let k = 0; k < 3; k++) { const m = o.pig[j * 3 + k], a = k / 3 * 6.283 + t * 1.2 + j; const pr = .17, px = x + Math.cos(a) * pr, py = yy + Math.sin(a * 1.3) * pr * .8 - sink * .55, ps = (1 - .9 * sink) * Math.max(.01, sc) * .85; m.position.set(px, py, Math.sin(a) * pr * .6); m.rotation.set(a, t, k); m.scale.setScalar(ps); m.visible = ps > .02; }
+    for (let k = 0; k < 3; k++) { const m = o.pig[j * 3 + k], a = k / 3 * 6.283 + t * 1.2 + j; const pr = .26, px = x + Math.cos(a) * pr, py = yy + Math.sin(a * 1.3) * pr * .8 - sink * .55, ps = (1 - .9 * sink) * Math.max(.01, sc) * 1.25; m.position.set(px, py, Math.sin(a) * pr * .6); m.rotation.set(a, t, k); m.scale.setScalar(ps); m.visible = ps > .02; }
     if (mode !== "follow") { const g = o.glow[j % 5], gk = u > .72 && u < .95 ? Math.sin(((u - .72) / .23) * PI) : 0; g.position.set(x, top + .15, .6); g.material.opacity = .55 * gk; g.visible = gk > .01; } else o.glow.forEach(g => (g.visible = false)); });
 }
 function animM2(t, A, follow) {
@@ -274,7 +276,7 @@ function animM3(t, A) {
     Eu.set(ph, t * .3, 0); Q.setFromEuler(Eu); M.compose(V(x, y, z), Q, V(s, s, s)); c3.setMatrixAt(i, M); }
   c3.instanceMatrix.needsUpdate = true;
   bubbles.forEach((b, i) => { const p = b.userData.p; b.position.set(p.x + Math.sin(t * .3 + i) * .5, MY.m3 + p.y + Math.cos(t * .25 + i * 2) * .6 + heat * 1.5 * b.userData.s, p.z); });
-  const hs = tileC3.userData; tileC3.position.set(-1.2 + Math.sin(t * .5) * .2, MY.m3 + 1.0 + Math.cos(t * .6) * .15, 5.2); tileC3.scale.setScalar(1.5 * Math.max(.001, eob(clamp((lt - .3) / .6)))); hs.dimTo(.55 * heat); hs.glow(.25 * (1 - heat));
+  const hs = tileC3.userData; tileC3.position.set(-.1 + Math.sin(t * .5) * .2, MY.m3 + .8 + Math.cos(t * .6) * .15, 5.2); tileC3.scale.setScalar(1.5 * Math.max(.001, eob(clamp((lt - .3) / .6)))); hs.dimTo(.55 * heat); hs.glow(.25 * (1 - heat));
   blobs3.forEach((q, i) => { q.position.x = q.userData.b.x + Math.sin(t * .2 + i) * .6; q.position.y = q.userData.b.y + Math.cos(t * .15 + i) * .5; q.material.color.set(heat > .3 ? "#FF6A3A" : "#FF8A6A"); });
   mshim.forEach((q, i) => { const ph = (t * .35 + hash(i * 3)) % 1; q.position.set(-4 + hash(i) * 8, MY.m3 - 6 + ph * 12, 1 + hash(i * 5) * 3); q.material.opacity = .22 * heat * Math.sin(PI * ph); });
   A.proj = projector(); A.heat = heat; A.tileC = A.proj(tileC3.position.x, tileC3.position.y, 5.2);
@@ -323,8 +325,8 @@ window.__seek = function (t) {
   if (COVER) { // cover: overhead pan with carrots + oil gleam
     const tt = T.tOil + 6; show("K"); trio.visible = bal.visible = cmp.visible = false; board.visible = false; tileC.visible = false; pileC.visible = pileP.visible = false;
     animKitchen(tt, A); Object.values(tiles).forEach(g => (g.visible = false));
-    key.position.set(-4.5, 10.5, 4); key.target.position.set(0, 0, 1.6); key.target.updateMatrixWorld();
-    setCam([0, 9.4, 1.6], [0, 0, 1.6], 40, [0, .12, 1.6], .0085, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
+    key.position.set(-4.5, 10.5, 4); key.target.position.set(0, 0, -.75); key.target.updateMatrixWorld();
+    setCam([0, 9.4, -.75], [0, 0, -.75], 40, [0, .12, -.75], .0085, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
   }
   stage(t, A);
   filmPass.uniforms.time.value = (t * 30 | 0) * .017;

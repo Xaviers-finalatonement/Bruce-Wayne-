@@ -42,7 +42,7 @@ export function createOverlay(T, TH, cv) {
       for (let k = 0; k <= 14; k++) { const yy = y0 - k * 14, xx = bx + Math.sin(k * .7 + t * 4 + i) * (10 + k * 1.6); k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); }
     ctx.restore();
   }
-  function arrowDown(x, y0, y1, a) { ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = C.cast; ctx.fillStyle = C.cast; ctx.lineWidth = 12; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1 - 14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 26, y1 - 32); ctx.lineTo(x, y1 + 4); ctx.lineTo(x + 26, y1 - 32); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  function arrowDown(x, y0, y1, a) { return; ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = C.cast; ctx.fillStyle = C.cast; ctx.lineWidth = 12; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1 - 14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 26, y1 - 32); ctx.lineTo(x, y1 + 4); ctx.lineTo(x + 26, y1 - 32); ctx.closePath(); ctx.fill(); ctx.restore(); }
 
   // ---- per-beat labels ----
   function labels(t, A) {
@@ -99,10 +99,10 @@ export function createOverlay(T, TH, cv) {
   function drawCover() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
     const lines = [["WHAT SAUTÉING", CAST], ["DOES TO YOUR", CAST], ["VEGGIES", CAST]], size = Math.min(112, ...lines.map(l => 880 * 100 / mw(l[0], 100)));
-    lines.forEach((l, i) => text(l[0], CX, 330 + i * size * 1.05, { size, color: l[1], ls: -1 }));
-    sticker([["it’s a ", CAST], ["TRADE", TOM]], CX, 330 + 3 * size * 1.05 + 40, { size: 78, fill: rgba(BUT, 1), padX: 44, rot: -.03 });
-    sticker([["PAN THEORY", CT]], 258, 215, { size: 36, fill: rgba(CAST, 1), padX: 30 });
-    ctx.save(); ctx.fillStyle = C.tomato; ctx.beginPath(); ctx.arc(133, 215, 11, 0, 6.3); ctx.fill(); ctx.restore();
+    lines.forEach((l, i) => text(l[0], CX, 375 + i * size * 1.05, { size, color: l[1], ls: -1 }));
+    sticker([["it’s a ", CAST], ["TRADE", TOM]], CX, 375 + 3 * size * 1.05 + 20, { size: 78, fill: rgba(BUT, 1), padX: 44, rot: -.03 });
+    sticker([["PAN THEORY", CT]], 258, 190, { size: 36, fill: rgba(CAST, 1), padX: 30 });
+    ctx.save(); ctx.fillStyle = C.tomato; ctx.beginPath(); ctx.arc(133, 190, 11, 0, 6.3); ctx.fill(); ctx.restore();
   }
   return { draw, drawCover, captions, initCaps };
 }
