@@ -25,11 +25,11 @@ export function createOverlay(T, TH, cv) {
   }
 
   // ------------------------------------------------------------ receipt layout
-  const PX = 28, PW = 392, ROWH = 42, CLIPB = 1236, VIS = 1150, FS = 31;
+  const PX = 54, PW = 376, ROWH = 42, CLIPB = 1236, VIS = 1150, FS = 30;
   const wrap = (s, n) => { const out = []; let c = ""; for (const w of s.split(" ")) { if (c && (c + " " + w).length > n) { out.push(c); c = w; } else c = c ? c + " " + w : w; } if (c) out.push(c); return out; };
   const items = []; { let y = 86;
     T.items.forEach((it, i) => {
-      const st = it[3], rows = st === "hdr" ? it[2] : [].concat(...it[2].map(r => wrap(r, 18)));
+      const st = it[3], rows = st === "hdr" ? it[2] : [].concat(...it[2].map(r => wrap(r, 17)));
       if (st === "head" || st === "total") y += 20;
       const o = { i, beat: it[0], t: it[1], rows, st, y0: y }; y += st === "hdr" ? 90 : rows.length * ROWH + 12; if (st === "head" || st === "total") y -= 0;
       o.y1 = y; if (st === "total") y += 150; o.yEnd = y; items.push(o);
@@ -105,8 +105,8 @@ export function createOverlay(T, TH, cv) {
     });
     ctx.restore();
     // paper fades out toward the caption band
-    const fg = ctx.createLinearGradient(0, CLIPB - 90, 0, CLIPB + 4); fg.addColorStop(0, "rgba(255,255,255,0)"); fg.addColorStop(1, "rgba(251,250,246,1)");
-    ctx.fillStyle = fg; ctx.fillRect(PX - 30, CLIPB - 90, PW + 60, 100);
+    if (full) { const fg = ctx.createLinearGradient(0, CLIPB - 90, 0, CLIPB + 4); fg.addColorStop(0, "rgba(255,255,255,0)"); fg.addColorStop(1, "rgba(251,250,246,1)");
+    ctx.fillStyle = fg; ctx.fillRect(PX - 30, CLIPB - 90, PW + 60, 100); }
     ctx.restore();
   }
 
@@ -125,8 +125,8 @@ export function createOverlay(T, TH, cv) {
   const LX = 700; // centre of the free area right of the receipt
   function labels(t, A) {
     const inB = (id, a = 0, b = 0) => t >= S(id) + a && t < END(id) + .3 + b;
-    if (inB("b03", .9) ) { // household counter
-      const a = smooth((t - S("b03") - .9) / .3) * (1 - smooth((t - END("b03") - .1) / .3)); const n = A.houses | 0;
+    if (A.h0 != null && t >= A.h0 - .05 && t < END("b03") + .4) { // household counter
+      const a = smooth((t - A.h0 + .05) / .2) * (1 - smooth((t - END("b03") - .1) / .3)); const n = A.houses | 0;
       ctx.save(); ctx.globalAlpha = a; plate(470, 190, 460, 250, 1); ctx.globalAlpha = a;
       txt(String(n), LX, 335, { size: 170, color: TEAL, w: 700, ls: -4 }); txt("households", LX, 400, { size: 46, color: SLATE, w: 700 }); ctx.restore();
     }
@@ -184,7 +184,7 @@ export function createOverlay(T, TH, cv) {
     if (t < .05) return; ctx.save(); ctx.fillStyle = "rgba(251,250,246,.80)"; const w = mw("Education, not medical advice.", 30, 400) + 36; rrect(SX - w / 2, 1470, w, 46, 23); ctx.fill(); ctx.restore();
     txt("Education, not medical advice.", SX, 1503, { size: 30, w: 400, color: SLATE });
   }
-  function draw(t, A) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); labels(t, A || {}); receipt(t); hook(t); endCard(t); edu(t); }
+  function draw(t, A) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); labels(t, A || {}); ctx.save(); ctx.globalAlpha = 1 - smooth((t - (T.tEnd - .1)) / .35); receipt(t); ctx.restore(); hook(t); endCard(t); edu(t); }
 
   function drawCover() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
