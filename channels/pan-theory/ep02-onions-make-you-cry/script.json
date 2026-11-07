@@ -1,0 +1,185 @@
+{
+  "channel": "pan-theory",
+  "episode": 2,
+  "slug": "ep02-onions-make-you-cry",
+  "title": "Why onions make you cry",
+  "voice": {
+    "engine": "kokoro",
+    "voice": "af_bella",
+    "speed": 1.0
+  },
+  "beats": [
+    {
+      "id": "b01",
+      "vo": "Your onion shoots tiny droplets when you cut it.",
+      "claims": [
+        "C1"
+      ],
+      "screen": [],
+      "visual": "Overhead on a warm countertop: a matte, chunky yellow onion half under a steel blade edge. The blade drops and a fan of bright droplets sprays up in slow motion, backlit by window light. Reads in under 2 s."
+    },
+    {
+      "id": "b02",
+      "vo": "One lab caught it on cameras far faster than your eyes can see.",
+      "claims": [
+        "C2"
+      ],
+      "screen": [
+        "5,000 – 20,000 frames per second"
+      ],
+      "visual": "Cut to a side-on macro of the blade meeting the onion skin, shown in ultra slow motion with a tiny frame counter ticking at the edge. Overhead lens lowers to counter level (motivated: to see the splash)."
+    },
+    {
+      "id": "b03",
+      "vo": "Droplets burst out at up to about ninety miles an hour.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [
+        "up to 40 m/s",
+        "≈ 90 mph"
+      ],
+      "visual": "Follow a single droplet from the cut as it streaks up and away across the frame; a small speed number counts up beside it. Camera tracks the drop (follow)."
+    },
+    {
+      "id": "b04",
+      "vo": "That was a lab rig that drops a blade onto half an onion, not a chef.",
+      "claims": [
+        "C4"
+      ],
+      "screen": [
+        "lab rig · not a chef"
+      ],
+      "visual": "Pull back to reveal a clean steel guillotine rig with a vertical slider holding the blade over a half onion on the countertop. Slow overhead pull-back."
+    },
+    {
+      "id": "b05",
+      "vo": "Within a fiftieth of a second, they split into hundreds, even thousands, of smaller drops.",
+      "claims": [
+        "C5"
+      ],
+      "screen": [
+        "< 0.02 s",
+        "hundreds → thousands"
+      ],
+      "visual": "Macro of one big droplet bursting into a fine mist of smaller ones in slow motion, each catching a speck of light. Static macro, no shake."
+    },
+    {
+      "id": "b06",
+      "vo": "Why cry? Cutting breaks open the cells. A reaction turns the onion's sulfur compounds into an eye irritant.",
+      "claims": [
+        "C6"
+      ],
+      "screen": [
+        "sulfur compounds",
+        "→ propanethial S-oxide"
+      ],
+      "visual": "Camera drops straight down into the cut surface to cell scale: cells split, chunky yellow sulfur molecules react and form a small Tomato-red irritant shape. Motivated drop on the break."
+    },
+    {
+      "id": "b07",
+      "vo": "It switches on nerves in your cornea, the clear front of your eye. Tears.",
+      "claims": [
+        "C7",
+        "C8"
+      ],
+      "screen": [
+        "cornea",
+        "→ tears"
+      ],
+      "visual": "Overhead cutaway to a stylised eye: the irritant shape touches the clear dome and a nerve lights; a tear bead forms and rolls. Slow push-in on the cornea."
+    },
+    {
+      "id": "b08",
+      "vo": "One chemist suggested the droplets carry that irritant to your eyes.",
+      "claims": [
+        "C9"
+      ],
+      "screen": [
+        "suggested, not shown here"
+      ],
+      "visual": "Back above the counter: the droplet fan rises toward a stylised eye line at frame edge; a dotted arrow links them, drawn dashed to read as a theory. Slow overhead tilt-free hold."
+    },
+    {
+      "id": "b09",
+      "vo": "The tough outer skin lets the flesh under it get squeezed first. Then it bursts.",
+      "claims": [
+        "C10"
+      ],
+      "screen": [
+        "skin holds · flesh squeezed · bursts"
+      ],
+      "visual": "Cross-section of an onion layer: tough skin as a firm Cast-Iron-dark band, the soft flesh below visibly compressing, then rupturing in a spray. Side-on macro, steady."
+    },
+    {
+      "id": "b10",
+      "vo": "A blunter knife makes it worse. So do faster cuts.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "blunt",
+        "fast",
+        "more droplets"
+      ],
+      "visual": "Split frame: left a rounded blunt blade, right a razor edge, both hitting onion halves at once; the blunt side throws a wider spray. Locked-off split."
+    },
+    {
+      "id": "b11",
+      "vo": "A sharper blade gave fewer, slower droplets.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "sharp = fewer, slower"
+      ],
+      "visual": "The sharp side of the split holds alone, its thin spray settling. Slow push-in on the clean cut."
+    },
+    {
+      "id": "b12",
+      "vo": "But the team tracked droplets, not tears.",
+      "claims": [
+        "C12"
+      ],
+      "screen": [
+        "droplets ✓",
+        "tears ?"
+      ],
+      "visual": "Overhead on the counter: a small card slides in with 'droplets ✓' and 'tears ?' in Cast Iron on Butter. Static overhead."
+    },
+    {
+      "id": "b13",
+      "vo": "And it's one study, still a preprint.",
+      "claims": [
+        "C13"
+      ],
+      "screen": [
+        "one study · preprint"
+      ],
+      "visual": "Same card; a second line stamps in beneath it. Hold still, no move."
+    },
+    {
+      "id": "b14",
+      "vo": "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears.",
+      "claims": [
+        "C11",
+        "C12"
+      ],
+      "screen": [
+        "The Pan Theory:",
+        "sharp knife → fewer droplets"
+      ],
+      "visual": "Signature card on Countertop beige: 'The Pan Theory:' in Rubik, key word 'sharpen' in Tomato red on a Butter highlight. Overhead onion and a clean-cut half behind; hold 1 s."
+    }
+  ],
+  "end_card": {
+    "text": "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears.",
+    "channel": "Pan Theory"
+  },
+  "cover": {
+    "headline": "Why onions make you cry",
+    "key_word": "droplets"
+  },
+  "end_hold": 1.8,
+  "sound": "pan-theory"
+}
