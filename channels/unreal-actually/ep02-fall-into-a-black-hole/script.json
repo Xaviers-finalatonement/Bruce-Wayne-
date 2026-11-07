@@ -1,0 +1,185 @@
+{
+  "channel": "unreal-actually",
+  "episode": 2,
+  "slug": "ep02-fall-into-a-black-hole",
+  "title": "What happens if you fall into a black hole",
+  "voice": {
+    "engine": "kokoro",
+    "voice": "am_michael",
+    "speed": 1.0
+  },
+  "beats": [
+    {
+      "id": "b01",
+      "vo": "To everyone watching, you'd freeze at the edge.",
+      "claims": [
+        "C1"
+      ],
+      "screen": [],
+      "visual": "Near-black. A lone astronaut in a white suit hangs in front of a glowing orange ring of light, rim-lit by hard Horizon-orange. Hard push-in toward the figure; the figure's motion visibly stalls mid-reach. Reads in under 2 s."
+    },
+    {
+      "id": "b02",
+      "vo": "Friends far away would watch you slow down. Then stop, just short of the edge.",
+      "claims": [
+        "C1"
+      ],
+      "screen": [
+        "slows",
+        "stops"
+      ],
+      "visual": "Cut to a distant, tiny observer on a dark ledge, watching through a lens flare. Locked-off long lens; the astronaut's motion in the far frame decelerates like a film frame-rate dropping to a hold."
+    },
+    {
+      "id": "b03",
+      "vo": "That edge is the event horizon. Point of no return. Not even light escapes.",
+      "claims": [
+        "C2"
+      ],
+      "screen": [
+        "EVENT HORIZON",
+        "point of no return"
+      ],
+      "visual": "Camera follows a streak of light curving into the black disc and vanishing at a razor-thin edge. Hard orange rim light on the edge; a thin Anton label fades in. Camera tracks the light (follow)."
+    },
+    {
+      "id": "b04",
+      "vo": "Why? Gravity bends space and time so hard, your picture slows to a stop.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [],
+      "visual": "Starfield behind the disc warps into arcs and double images. Slow lateral slide so the stars stretch past the lens, then the astronaut's image smears and holds."
+    },
+    {
+      "id": "b05",
+      "vo": "On your own clock, NASA's simulation has the fall take about three hours.",
+      "claims": [
+        "C4"
+      ],
+      "screen": [
+        "≈ 3 hours (NASA simulation)"
+      ],
+      "visual": "Over-the-shoulder behind the astronaut, accretion disc glowing to the side, a wrist clock in sharp foreground focus ticking steadily. Slow push toward the horizon; hold steady so the clock reads as normal."
+    },
+    {
+      "id": "b06",
+      "vo": "A giant black hole, about four million Suns. Like the one in our galaxy's center.",
+      "claims": [
+        "C5"
+      ],
+      "screen": [
+        "≈ 4.3 million Suns"
+      ],
+      "visual": "Reveal pull-back: the astronaut shrinks to a speck against the huge disc, a tiny Sun-yellow dot for scale in the corner. Pull-back reveals the scale."
+    },
+    {
+      "id": "b07",
+      "vo": "Cross the edge, and space itself rushes inward at light speed.",
+      "claims": [
+        "C6"
+      ],
+      "screen": [
+        "space flows inward at light speed"
+      ],
+      "visual": "Camera tracks with the astronaut across the edge; streaks of starlight all rush inward toward one point. Light falls, camera leads the way in."
+    },
+    {
+      "id": "b08",
+      "vo": "Then the simulation gives you twelve point eight seconds.",
+      "claims": [
+        "C7"
+      ],
+      "screen": [
+        "12.8 s"
+      ],
+      "visual": "Anton countdown 12.8 slams in, Horizon orange, over the dark inner view; the numerals tick down on the beat. Push-in on the number."
+    },
+    {
+      "id": "b09",
+      "vo": "The closer end of you gets pulled harder. You stretch like a noodle.",
+      "claims": [
+        "C8"
+      ],
+      "screen": [],
+      "visual": "Side view: the astronaut silhouette, rim lit, is pulled lengthwise toward a point, thin and long. Slow lateral dolly beside the stretching figure."
+    },
+    {
+      "id": "b10",
+      "vo": "Scientists really call it spaghettification.",
+      "claims": [
+        "C9"
+      ],
+      "screen": [
+        "SPAGHETTIFICATION"
+      ],
+      "visual": "Condensed word SPAGHETTIFICATION slams in with a sub hit; letters stretch vertically. Hold 1 s."
+    },
+    {
+      "id": "b11",
+      "vo": "A small black hole is worse. It can tear you apart before the edge.",
+      "claims": [
+        "C10"
+      ],
+      "screen": [
+        "small black hole",
+        "tears you apart early"
+      ],
+      "visual": "Split frame: left a giant black hole with a calm approach, right a small tight black hole where the figure breaks apart well before the edge. Impact shake allowed on the tear."
+    },
+    {
+      "id": "b12",
+      "vo": "At the center, math says a point of endless crush. Nobody knows if it's real.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "singularity = ?"
+      ],
+      "visual": "Dark centre; a single pinprick of violet light. Slow push-in to the pin; a question mark resolves in Ultraviolet."
+    },
+    {
+      "id": "b13",
+      "vo": "The verdict? Unproven.",
+      "claims": [
+        "C12"
+      ],
+      "screen": [
+        "CASE FILE 002",
+        "UNPROVEN"
+      ],
+      "visual": "Signature stamp: CASE FILE 002 header, a big Anton UNPROVEN stamp slams down in Ultraviolet on Abyss. Deep hit. Hold 1 s still."
+    },
+    {
+      "id": "b14",
+      "vo": "Nothing from inside can reach us. This is math, not a memory.",
+      "claims": [
+        "C13"
+      ],
+      "screen": [
+        "math, not a memory"
+      ],
+      "visual": "Slow pull-back from the stamp to the empty dark ring with a single faint photon ring. Calm, no shake."
+    },
+    {
+      "id": "b15",
+      "vo": "To the world, you'd freeze at the edge. To you, you'd fall right through.",
+      "claims": [
+        "C1",
+        "C4"
+      ],
+      "screen": [],
+      "visual": "Split frame holds: left the frozen astronaut at the rim, right the same astronaut sliding through, both rim-lit orange. Slow push-in on the join, end on the rule card for about 1 s."
+    }
+  ],
+  "end_card": {
+    "text": "Case file 002 · UNPROVEN · Nobody has fallen in. This is math, not a memory.",
+    "channel": "Unreal, Actually"
+  },
+  "cover": {
+    "headline": "Fall into a black hole",
+    "key_word": "freeze"
+  },
+  "end_hold": 1.8,
+  "sound": "unreal-actually"
+}
