@@ -32,9 +32,9 @@ export function createOverlay(T, TH, cv) {
   const coverLines = () => {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
     let y = 270; const one = s => { const sz = fitSize(s, 860, 150); const b = y + capR * sz; y = b + 30; return [sz, b]; };
-    let [sz, b] = one("FALL INTO"); txt("FALL INTO", 505, b, { size: sz, color: TXT, ls: 4 });
-    [sz, b] = one("A BLACK HOLE"); txt("A BLACK HOLE", 505, b, { size: sz, color: TXT, ls: 4 });
-    const s2 = fitSize("AND FREEZE", 860, 190); b = y + capR * s2; mixLine([["AND ", TXT, 0], ["FREEZE", HOT, 1]], 505, b, s2, 3, { sc: 1, a: 1 }, 0);
+    let [sz, b] = one("TO EVERYONE"); txt("TO EVERYONE", 505, b, { size: sz, color: TXT, ls: 4 });
+    [sz, b] = one("WATCHING,"); txt("WATCHING,", 505, b, { size: sz, color: TXT, ls: 4 });
+    const s2 = fitSize("YOU'D FREEZE", 860, 190); b = y + capR * s2; mixLine([["YOU'D ", TXT, 0], ["FREEZE", HOT, 1]], 505, b, s2, 3, { sc: 1, a: 1 }, 0);
     ctx.save(); rrect(90, 170, 420, 62, 31); ctx.fillStyle = col(ABY, .85); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 3; ctx.stroke(); ctx.restore();
     txt("UNREAL, ACTUALLY", 305, 214, { f: BARL, w: 800, size: 30, ls: 5 }); ctx.fillStyle = HOT; ctx.beginPath(); ctx.arc(120, 201, 6, 0, 6.3); ctx.fill();
   };
