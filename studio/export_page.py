@@ -77,7 +77,7 @@ for e in cat["episodes"]:
     if tt and not is_todo(tt):
         text += '<section class="plat"><h4>TikTok</h4>' + copy_block("Title", tt.get("title"), f"{eid}-tt-t") + copy_block("Hashtags", " ".join(tt.get("hashtags", [])), f"{eid}-tt-h") + "</section>"
     link = ""
-    if state == "video" and e.get("video"):
+    if state == "video" and e.get("video") and os.path.exists(os.path.join(ROOT, e["video"])):
         link = f'<a class="ext" href="{REPO_URL}{esc(e["video"])}" target="_blank" rel="noopener">Full-quality file on GitHub</a>'
     words = sum(len(b["vo"].split()) for b in script.get("beats", []))
     cards.setdefault(ch, []).append(
