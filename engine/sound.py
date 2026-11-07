@@ -138,8 +138,102 @@ def ua_bed(sfx, dur):
     sfx += (pad * 0.5 + beat * 0.5) * fade * db(-30)
 
 
+# ---- palette "pan-theory": warm kitchen foley (sizzle, chop, pour) over a light plucked-string bed ----
+def pt_env(n, a, r): t = np.arange(n) / SR; return np.minimum(1, t / max(a, 1e-4)) * np.minimum(1, np.maximum(0, (n / SR - t)) / max(r, 1e-4))
+
+
+def pt_hit(gain=1.0):  # knife on board: dry wooden transient + short body
+    n = int(0.18 * SR); t = np.arange(n) / SR
+    tr = bandnoise(n, 1200, 6500) * env_exp(n, 0.006); body = np.sin(2 * np.pi * (170 - 60 * t / 0.05 * (t < 0.05)) * t) * env_exp(n, 0.035)
+    return (0.8 * tr + 0.6 * body) * db(-19) * gain
+
+
+def pt_swell(dur):  # soft steam breath
+    n = int(dur * SR); x = lowpass(bandnoise(n, 300, 4500), 2600)
+    return x * pt_env(n, dur * 0.55, dur * 0.45) * db(-30)
+
+
+def pt_riser(dur): return pt_swell(dur)
+
+
+def pt_sweep(dur):  # cloth / soft whoosh
+    n = int(dur * SR); x = lowpass(bandnoise(n, 500, 3500), 2200)
+    return x * pt_env(n, dur * 0.4, dur * 0.6) * db(-31)
+
+
+def pt_tick(tock=False):  # wooden spoon tap
+    n = int(0.05 * SR); t = np.arange(n) / SR
+    return (bandnoise(n, 1500, 5000) * env_exp(n, 0.004) * 0.6 + np.sin(2 * np.pi * (620 if tock else 800) * t) * env_exp(n, 0.012) * 0.5) * db(-29)
+
+
+def pt_pop():  # oil bubble pop
+    n = int(0.08 * SR); t = np.arange(n) / SR
+    return (np.sin(2 * np.pi * (900 - 6000 * t) * t) * env_exp(n, 0.012) + 0.3 * bandnoise(n, 2000, 8000) * env_exp(n, 0.004)) * db(-27)
+
+
+def pt_sizzle(c):  # filtered noise bed with crackle; k = intensity
+    dur = max(0.3, c.get("dur", 1.0)); k = c.get("k", 1.0); n = int(dur * SR); t = np.arange(n) / SR
+    hiss = bandnoise(n, 3500, 11000) * (0.7 + 0.3 * lowpass(rng.standard_normal(n), 25) / 0.05 * 0.05 + 0.0)
+    hiss = hiss * (0.8 + 0.2 * np.sin(2 * np.pi * 7 * t + 1.3))
+    body = lowpass(bandnoise(n, 400, 2500), 1800) * 0.35
+    cr = np.zeros(n)
+    for _ in range(int(dur * 26 * k)):
+        i = int(rng.uniform(0, n - 400)); m = 300
+        cr[i:i + m] += rng.uniform(0.3, 1.0) * rng.standard_normal(m) * env_exp(m, rng.uniform(0.0008, 0.003))
+    x = (0.5 * hiss + body) * db(-34 + 3 * k) + cr * db(-26)
+    return x * pt_env(n, min(0.5, dur * 0.3), min(0.7, dur * 0.4))
+
+
+def pt_pour(c):  # liquid stream: modulated mid noise
+    dur = c.get("dur", 1.5); n = int(dur * SR); t = np.arange(n) / SR
+    x = bandnoise(n, 500, 3200) * (0.6 + 0.4 * np.sin(2 * np.pi * 23 * t + 3 * np.sin(2 * np.pi * 3 * t)) ** 2)
+    return lowpass(x, 3000) * pt_env(n, 0.15, 0.5) * db(-28)
+
+
+def pt_plop(c):  # veg hitting the pan
+    n = int(0.25 * SR); t = np.arange(n) / SR; g = c.get("gain", 1.0)
+    return (np.sin(2 * np.pi * (260 - 380 * t) * t) * env_exp(n, 0.04) + 0.5 * bandnoise(n, 800, 6000) * env_exp(n, 0.02)) * db(-23) * g
+
+
+def pt_hiss(c):
+    dur = c.get("dur", 1.5); n = int(dur * SR)
+    return bandnoise(n, 4000, 12000) * pt_env(n, dur * 0.3, dur * 0.7) * db(-33)
+
+
+def pt_clink(c):  # glass / metal ping
+    n = int(0.6 * SR); t = np.arange(n) / SR; g = c.get("gain", 1.0)
+    return sum(np.sin(2 * np.pi * f * t) * a for f, a in [(1760, 1), (2637, .5), (3951, .25)]) * env_exp(n, 0.12) * db(-33) * g
+
+
+def pt_whoosh(c): return pt_sweep(c.get("dur", 0.8))
+
+
+def pt_pluck(f, dur=0.9):  # Karplus-Strong string
+    n = int(dur * SR); L = int(SR / f); buf = rng.uniform(-1, 1, L); out = np.zeros(n)
+    for i in range(n):
+        out[i] = buf[i % L]; buf[i % L] = 0.4975 * (buf[i % L] + buf[(i + 1) % L])
+    return out * np.minimum(1, np.arange(n) / (0.002 * SR)) * np.minimum(1, (n - np.arange(n)) / (0.1 * SR))
+
+
+def pt_bed(sfx, dur):  # light acoustic feel: 92 bpm plucked pattern in G major pentatonic + soft sub
+    n = len(sfx); beat = 60 / 92.0
+    notes = {"G3": 196.0, "B3": 246.9, "D4": 293.7, "E4": 329.6, "G4": 392.0, "A3": 220.0}
+    pat = ["G3", "D4", "B3", "D4", "E4", "D4", "B3", "A3", "G3", "D4", "G4", "D4", "E4", "B3", "A3", "D4"]
+    cache = {k: pt_pluck(v) for k, v in notes.items()}
+    fade = np.minimum(1, np.arange(n) / SR / 1.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - np.arange(n) / SR)) / 1.2)
+    bed = np.zeros(n); i = 0; t = 0.3
+    while t < dur:
+        x = cache[pat[i % len(pat)]] * (1.0 if i % 4 == 0 else 0.6)
+        j = int(t * SR); m = min(n - j, len(x))
+        if m > 0: bed[j:j + m] += x[:m]
+        t += beat / 2; i += 1
+    sfx += bed * fade * db(-27)
+
+
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
+    "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
+                       custom=dict(sizzle=pt_sizzle, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
 }
 
 
@@ -174,6 +268,7 @@ def main(ep):
                 step = 1.0 / c.get("rate", 1.0); i = 0; t = c["t"]
                 while t < c["t1"]:
                     put(sfx, pal["tick"](i % 2 == 1), t); t += step; i += 1
+            elif k in pal.get("custom", {}): put(sfx, pal["custom"][k](c), c["t"])
         cues = []
     else:
         p = pulse()  # sparse steady pulse (one low thump every 1.6 s)
