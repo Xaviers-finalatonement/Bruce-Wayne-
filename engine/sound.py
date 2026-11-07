@@ -190,7 +190,7 @@ def main(ep):
     af = (f"loudnorm={tgt}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
           f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,alimiter=limit=0.84:level=disabled")
     subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", wav, "-af", af, "-ar", "48000",
-                    "-c:a", "aac", "-b:a", "192k", os.path.join(out, "audio.m4a")], check=True)
+                    "-c:a", "aac", "-b:a", "320k", os.path.join(out, "audio.m4a")], check=True)
     print("audio.m4a written; pre-master I=%s TP=%s" % (m["input_i"], m["input_tp"]))
 
 

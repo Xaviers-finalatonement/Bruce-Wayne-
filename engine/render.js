@@ -32,7 +32,7 @@ function serve() {
   const page = await ctx.newPage();
   page.on("pageerror", e => console.error("PAGE ERROR", e.message));
   page.on("console", m => { if (m.type() === "error") console.error("console:", m.text()); });
-  const url = `http://127.0.0.1:${port}/${rel}/index.html` + (flag("cover") ? "?cover=1" : "");
+  const url = `http://127.0.0.1:${port}/${rel}/index.html` + (flag("cover") ? "?cover=1" : (val("q") ? "?" + val("q") : ""));
   await page.goto(url);
   await page.waitForFunction("window.__ready === true", null, { timeout: 60000 });
   const dur = await page.evaluate(() => window.__duration || 0);
@@ -60,13 +60,14 @@ function serve() {
     const n = Math.round(tl.duration * FPS);
     const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
       ...(fs.existsSync(audio) ? ["-i", audio] : []),
-      "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-r", String(FPS), "-movflags", "+faststart",
+      "-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "16", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
+      "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart",
       ...(fs.existsSync(audio) ? ["-c:a", "copy", "-t", String(n / FPS)] : []), outFile], { stdio: ["pipe", "inherit", "inherit"] });
     const done = new Promise(r => ff.on("close", r));
     const t0 = Date.now();
     for (let i = 0; i < n; i++) {
       await page.evaluate(t => window.__seek(t), i / FPS);
-      const buf = await page.screenshot({ type: "jpeg", quality: 95 });
+      const buf = await page.screenshot({ type: "jpeg", quality: 98 });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
       if (i % 150 === 0) console.log(`frame ${i}/${n}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     }

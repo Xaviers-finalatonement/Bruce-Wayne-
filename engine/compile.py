@@ -27,9 +27,14 @@ except ImportError:  # fall back to the studio venv, if it has Pillow
     sys.exit("Pillow is missing. Run: python3 -m venv ~/.cache/studio/venv && ~/.cache/studio/venv/bin/pip install pillow")
 
 ROOT = Path(__file__).resolve().parent.parent
-W, H, FPS = 1920, 1080, 30
-SHORT_W = 608                      # 9:16 at 1080 high (607.5 rounded up to an even number)
-SLOT_X = (W - SHORT_W) // 2        # 656
+W, H, FPS = 2560, 1440, 30        # 1440p, 16:9
+K = H / 1080                       # panel layout is designed at 1080p and drawn natively at 1440p
+SHORT_W = 810                      # 9:16 at 1440 high
+SLOT_X = (W - SHORT_W) // 2        # 875
+
+
+def u(n):
+    return round(n * K)
 XF = 0.3                           # crossfade at every join, seconds
 T_INTRO, T_CHAPTER, T_OUTRO = 3.5, 1.8, 3.5
 TARGET_LUFS, TARGET_TP = -14.0, -1.5
@@ -189,70 +194,67 @@ def base_canvas(st, size=(W, H)):
 def side_chrome(im, st, comp):
     """Right-hand channel mark, shared by every 16:9 panel."""
     d = ImageDraw.Draw(im)
-    f = F(st["display"], 40)
-    right = W - 72
-    d.text((right - d.textlength(st["name"], font=f), 76), st["name"], font=f, fill=st["ink"])
-    d.rectangle((right - 44, 134, right, 140), fill=st["accent"])
-    fb = F(st["body"], 28)
-    ln = wrap(d, f"Compilation {comp['number']:02d}", fb, 500) + wrap(d, comp["title"], fb, 500)[:3]
-    y = H - 72 - int(sum(sum(fb.getmetrics()) * 1.25 for _ in ln))
+    f = F(st["display"], u(40))
+    right = W - u(72)
+    d.text((right - d.textlength(st["name"], font=f), u(76)), st["name"], font=f, fill=st["ink"])
+    d.rectangle((right - u(44), u(134), right, u(140)), fill=st["accent"])
+    fb = F(st["body"], u(28))
+    ln = wrap(d, f"Compilation {comp['number']:02d}", fb, u(500)) + wrap(d, comp["title"], fb, u(500))[:3]
+    y = H - u(72) - int(sum(sum(fb.getmetrics()) * 1.25 for _ in ln))
     draw_lines(d, right, y, ln, fb, st["muted"], 1.25, True)
 
 
 def chapter_panel(st, comp, idx, total, title):
-    """Full 1920x1080 background for chapter `idx` (1-based): number + title on the left."""
+    """Full-frame background for chapter `idx` (1-based): number + title on the left."""
     im = base_canvas(st)
     d = ImageDraw.Draw(im)
-    x0, maxw = 72, SLOT_X - 72 - 56
-    fl = F(st["body"], 30)
-    d.text((x0, 84), f"CHAPTER {idx:02d} / {total:02d}", font=fl, fill=st["muted"])
-    fn = F(st["display"], 300)
-    d.text((x0 - 6, 96), f"{idx:02d}", font=fn, fill=st["accent"])
+    x0, maxw = u(72), SLOT_X - u(72) - u(56)
+    d.text((x0, u(84)), f"CHAPTER {idx:02d} / {total:02d}", font=F(st["body"], u(30)), fill=st["muted"])
+    fn = F(st["display"], u(300))
+    d.text((x0 - u(6), u(96)), f"{idx:02d}", font=fn, fill=st["accent"])
     asc, desc = fn.getmetrics()
-    ry = 96 + int((asc + desc) * 0.98) + 14
-    d.rectangle((x0, ry, x0 + 120, ry + 6), fill=st["ink"])
-    ft, lines = fit(d, title, st["display"], maxw, 5, 78, 44)
-    draw_lines(d, x0, ry + 34, lines, ft, st["ink"])
-    bw, gap = 56, 16
+    ry = u(96) + int((asc + desc) * 0.98) + u(14)
+    d.rectangle((x0, ry, x0 + u(120), ry + u(6)), fill=st["ink"])
+    ft, lines = fit(d, title, st["display"], maxw, 5, u(78), u(44))
+    draw_lines(d, x0, ry + u(34), lines, ft, st["ink"], 0.95)
+    bw, gap = u(56), u(16)
     for i in range(total):
         col = st["accent"] if i + 1 == idx else (st["ink"] if i + 1 < idx else mix(st["ink"], st["bg"], 0.78))
-        d.rectangle((x0 + i * (bw + gap), H - 84, x0 + i * (bw + gap) + bw, H - 76), fill=col)
+        d.rectangle((x0 + i * (bw + gap), H - u(84), x0 + i * (bw + gap) + bw, H - u(76)), fill=col)
     side_chrome(im, st, comp)
     edge = mix(st["ink"], st["bg"], 0.82)
     d = ImageDraw.Draw(im)
-    d.rectangle((SLOT_X - 3, 0, SLOT_X - 1, H), fill=edge)
-    d.rectangle((SLOT_X + SHORT_W, 0, SLOT_X + SHORT_W + 2, H), fill=edge)
+    d.rectangle((SLOT_X - 4, 0, SLOT_X - 1, H), fill=edge)
+    d.rectangle((SLOT_X + SHORT_W, 0, SLOT_X + SHORT_W + 3, H), fill=edge)
     return im
 
 
 def tiles_row(im, st, srcs, x, y, tw, th, gap, numbered=True):
     d = ImageDraw.Draw(im)
-    fb = F(st["body"], 26)
+    fb = F(st["body"], u(26))
     for i, s in enumerate(srcs):
-        t = tile(s, tw, th, st)
+        t = tile(s, tw, th, st, u(10))
         im.paste(t, (x + i * (tw + gap), y), t)
         if numbered:
-            d.text((x + i * (tw + gap), y + th + 14), f"{i + 1:02d}", font=fb, fill=st["accent"])
+            d.text((x + i * (tw + gap), y + th + u(14)), f"{i + 1:02d}", font=fb, fill=st["accent"])
 
 
 def card_panel(st, comp, srcs, kind):
     im = base_canvas(st)
     d = ImageDraw.Draw(im)
-    x0 = 96
-    d.text((x0, 84), st["name"].upper(), font=F(st["body"], 34), fill=st["accent"])
+    x0 = u(96)
+    d.text((x0, u(84)), st["name"].upper(), font=F(st["body"], u(34)), fill=st["accent"])
     if kind == "intro":
         big, sub = comp["title"], f"Compilation {comp['number']:02d}  ·  {len(srcs)} shorts in one watch"
     else:
         big, sub = "Thanks for watching", f"New shorts every week on {st['name']}."
-    f, lines = fit(d, big, st["display"], 1500, 2, 150, 70)
-    y = draw_lines(d, x0, 150, lines, f, st["ink"], 1.0)
-    d.rectangle((x0, y + 18, x0 + 160, y + 26), fill=st["accent"])
-    d.text((x0, y + 52), sub, font=F(st["body"], 42), fill=st["muted"])
-    n = len(srcs)
-    tw = 190
-    gap = 30
+    f, lines = fit(d, big, st["display"], u(1500), 2, u(120), u(60))
+    y = draw_lines(d, x0, u(140), lines, f, st["ink"], 0.92)
+    d.rectangle((x0, y + u(18), x0 + u(160), y + u(26)), fill=st["accent"])
+    d.text((x0, y + u(52)), sub, font=F(st["body"], u(42)), fill=st["muted"])
+    tw = u(150)
     th = round(tw * 16 / 9)
-    tiles_row(im, st, srcs, x0, H - th - 130, tw, th, gap)
+    tiles_row(im, st, srcs, x0, H - th - u(100), tw, th, u(26))
     return im
 
 
@@ -262,14 +264,14 @@ def thumbnail(st, comp, srcs, path, minutes):
     d = ImageDraw.Draw(im)
     x0 = 56
     d.text((x0, 52), st["name"].upper(), font=F(st["body"], 30), fill=st["accent"])
-    f, lines = fit(d, comp["title"], st["display"], 500, 6, 92, 44)
-    y = draw_lines(d, x0, 104, lines, f, st["ink"], 1.0)
+    f, lines = fit(d, comp["title"], st["display"], 500, 5, 76, 36)
+    y = draw_lines(d, x0, 104, lines, f, st["ink"], 0.95)
     d.rectangle((x0, y + 14, x0 + 110, y + 20), fill=st["accent"])
     pill = f"{len(srcs)} SHORTS  ·  {minutes} MIN"
     fp = F(st["body"], 30)
     d.text((x0, th_ - 82), pill, font=fp, fill=st["muted"])
     n = len(srcs)
-    tw, step = 236, 134
+    tw, step = 200, 110
     th = round(tw * 16 / 9)
     x = tw_ - 40 - ((n - 1) * step + tw)
     for i, s in enumerate(srcs):
@@ -332,7 +334,7 @@ def short_segment(panel, mp4, out):
     d = duration(mp4)
     frames = math.ceil(d * FPS)
     secs = frames / FPS + XF                      # freeze the last frame for the crossfade
-    fc = (f"[0:v]{BG_FX}[b];[1:v]scale={SHORT_W}:{H}:flags=lanczos,fps={FPS},tpad=stop_mode=clone:stop_duration={XF},format=yuv420p[s];"
+    fc = (f"[0:v]{BG_FX}[b];[1:v]scale={SHORT_W}:{H}:flags=lanczos+accurate_rnd+full_chroma_int,fps={FPS},tpad=stop_mode=clone:stop_duration={XF},format=yuv420p[s];"
           f"[b][s]overlay={SLOT_X}:0:eof_action=pass,format=yuv420p[v];[1:a]{AUDIO_FMT},apad=whole_dur={secs:.3f}[a]")
     ffmpeg("-loop", "1", "-framerate", str(FPS), "-t", f"{secs:.3f}", "-i", panel, "-i", mp4, "-filter_complex", fc,
            "-map", "[v]", "-map", "[a]", "-t", f"{secs:.3f}", *X264, "-c:a", "aac", "-b:a", "256k", out)
@@ -400,8 +402,8 @@ def build(spec_path, out_dir, keep):
         parts.append(f"[{last}]fade=t=in:st=0:d=0.3,fade=t=out:st={total - 0.6:.3f}:d=0.6,format=yuv420p[v]")
         print(f"[compile] encoding video ({total:.1f} s) ...")
         vid = work / "video.mp4"
-        ffmpeg(*inputs, "-filter_complex", ";".join(parts), "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-               "-pix_fmt", "yuv420p", "-r", str(FPS), "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-t", f"{total:.3f}", vid)
+        ffmpeg(*inputs, "-filter_complex", ";".join(parts), "-map", "[v]", "-an", "-c:v", "libx264", "-profile:v", "high", "-preset", "slow",
+               "-tune", "film", "-crf", "16", "-g", "60", "-pix_fmt", "yuv420p", "-r", str(FPS), "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-t", f"{total:.3f}", vid)
 
         # audio: place every segment at its offset with linear fades at the joins, then two-pass loudnorm
         ap = []
@@ -415,13 +417,13 @@ def build(spec_path, out_dir, keep):
         final = loudnorm(mixwav, work, TARGET_TP)
 
         mp4 = out_dir / f"c{number:02d}.mp4"
-        ffmpeg("-i", vid, "-i", final, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+        ffmpeg("-i", vid, "-i", final, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-ar", "48000",
                "-movflags", "+faststart", "-shortest", mp4)
         lufs, tp = measure(mp4)
         if tp > -1.0:  # AAC overshoot: pull the true-peak target down once and redo
             print(f"[compile] true peak {tp:.2f} dBTP is over -1, renormalising lower")
             final = loudnorm(mixwav, work, TARGET_TP - (tp + 1.0) - 0.5)
-            ffmpeg("-i", vid, "-i", final, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+            ffmpeg("-i", vid, "-i", final, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-ar", "48000",
                    "-movflags", "+faststart", "-shortest", mp4)
             lufs, tp = measure(mp4)
 

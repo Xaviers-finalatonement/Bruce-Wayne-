@@ -25,12 +25,12 @@ const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // ---------------- renderer + post ----------------
 const glc = document.getElementById("gl");
-const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: false, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, preserveDrawingBuffer: true, powerPreference: "high-performance" });
 renderer.setPixelRatio(1); renderer.setSize(1080, 1920, false); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.NoToneMapping; // ACES is applied by the OutputPass
 const scene = new THREE.Scene(); scene.background = ABY.clone();
 const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, .05, 300);
-const rt = new THREE.WebGLRenderTarget(1080, 1920, { type: THREE.HalfFloatType, samples: 4 });
+const rt = new THREE.WebGLRenderTarget(1080, 1920, { type: THREE.HalfFloatType, samples: 2 });
 const composer = new EffectComposer(renderer, rt); composer.setSize(1080, 1920);
 composer.addPass(new RenderPass(scene, camera));
 const bokeh = new BokehPass(scene, camera, { focus: 8, aperture: .0004, maxblur: .012 }); composer.addPass(bokeh);
@@ -56,6 +56,7 @@ const filmPass = new ShaderPass({
     }` });
 composer.addPass(filmPass);
 bloom.threshold = .85;
+const QP = new URLSearchParams(location.search); if (QP.has("nobokeh")) bokeh.enabled = false; if (QP.has("nobloom")) bloom.enabled = false; if (QP.has("nofilm")) filmPass.enabled = false;
 
 // ---------------- procedural textures ----------------
 function canvasTex(w, h, fn, srgb = true) { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); fn(x, w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t; }
@@ -154,7 +155,7 @@ float hs(vec3 p){ p=fract(p*.3183099+.1); p*=17.; return fract(p.x*p.y*p.z*(p.x+
 float vn(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.-2.*f);
   return mix(mix(mix(hs(i),hs(i+vec3(1,0,0)),f.x),mix(hs(i+vec3(0,1,0)),hs(i+vec3(1,1,0)),f.x),f.y),
              mix(mix(hs(i+vec3(0,0,1)),hs(i+vec3(1,0,1)),f.x),mix(hs(i+vec3(0,1,1)),hs(i+vec3(1,1,1)),f.x),f.y),f.z); }
-float fbm(vec3 p){ float a=.5, s=0.; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+7.1; a*=.5; } return s; }`;
+float fbm(vec3 p){ float a=.5, s=0.; for(int i=0;i<4;i++){ s+=a*vn(p); p=p*2.03+7.1; a*=.5; } return s; }`;
 function makeEarth(R, sun) {
   const g = new THREE.Group();
   const m = new THREE.ShaderMaterial({ uniforms: { sun: { value: sun.clone().normalize() }, t: { value: 0 } },
@@ -215,8 +216,8 @@ const pathA = [
   { t: 0, p: [.3, 1.05, 12.6], l: [.55, 1.0, 0], f: 60, fp: [.5, 1.2, 0], ap: .00025 },
   { t: T.hookEnd, p: [.5, 1.05, 11.4], l: [.6, 1.0, 0], f: 60, fp: [.5, 1.2, 0], ap: .00025 },
   { t: S("b02"), p: [.5, 1.1, 11.2], l: [.6, 1.1, 0], f: 60, fp: [.5, 1.2, 0], ap: .0003 },
-  { t: S("b02") + .9, p: [.75, 1.3, 9.4], l: [.85, 1.25, 0], f: 70, fp: [1.1, 1.46, 0], ap: .0006 },
-  { t: END("b02"), p: [.95, 1.3, 7.4], l: [1.0, 1.22, 0], f: 70, fp: [1.1, 1.46, 0], ap: .0009 },
+  { t: S("b02") + .9, p: [.75, .95, 10.2], l: [.85, 1.0, 0], f: 70, fp: [1.1, 1.46, 0], ap: .0006 },
+  { t: END("b02"), p: [.95, .8, 9.0], l: [1.0, .84, 0], f: 70, fp: [1.1, 1.46, 0], ap: .0009 },
 ];
 const pathA2 = [
   { t: S("b05"), p: [1.0, .3, 7.4], l: [1.1, .22, 0], f: 70, fp: [1.1, .38, 0], ap: .0009 },
@@ -330,32 +331,32 @@ D.update = t => {
   dm.rotation.z = 0; dm.scale.setScalar(0); dm.updateMatrix(); for (; n < sprayN * 2; n++) spray.setMatrixAt(n, dm.matrix); spray.instanceMatrix.needsUpdate = true;
   const dp = new THREE.Vector3(.55, 1.4, .4); D.A = { dim: { x: proj(dp)[0] - 210, y: proj(dp)[1] } };
 };
-const pathD = [{ t: S("b06"), p: [-.2, 1.2, 7.8], l: [-.1, 1.0, 0], f: 40, fp: [-1, .6, 0], ap: .0007 }, { t: END("b06"), p: [.2, 1.1, 7.0], l: [.3, 1.0, 0], f: 40, fp: [-1, .6, 0], ap: .0007 },
-  { t: S("b07"), p: [.6, 1.2, 7.6], l: [.8, 1.0, 0], f: 36, fp: [.6, .7, 0], ap: .0006 }, { t: S("b08"), p: [1.4, 1.3, 6.8], l: [1.2, 1.1, 0], f: 40, fp: [2.4, 1.0, 0], ap: .0008 }, { t: S("b09") - .1, p: [1.6, 1.3, 6.2], l: [1.4, 1.2, 0], f: 40, fp: [2.65, 1.1, 0], ap: .001 }];
+const pathD = [{ t: S("b06"), p: [.3, 1.2, 10], l: [.4, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 }, { t: END("b06"), p: [.5, 1.2, 9.4], l: [.6, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 },
+  { t: S("b07"), p: [.7, 1.2, 9.8], l: [.8, .9, 0], f: 34, fp: [.6, .7, 0], ap: .0006 }, { t: S("b08"), p: [1.0, 1.2, 9.4], l: [1.0, .95, 0], f: 36, fp: [2.4, 1.0, 0], ap: .0008 }, { t: S("b09") - .1, p: [1.1, 1.2, 9.0], l: [1.1, 1.0, 0], f: 36, fp: [2.65, 1.1, 0], ap: .001 }];
 
 // ===== E: 79 years as a light trail; the gap (b09, b10) =====
 const Es = shot("E", [0x08070d, .03]);
 const LEN = 7;
-const barE = new THREE.Mesh(new THREE.BoxGeometry(1, .06, .06), new THREE.ShaderMaterial({ uniforms: { len: { value: LEN } }, vertexShader: "varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: "varying vec2 vUv; void main(){ gl_FragColor=vec4(mix(vec3(.55,.45,1.),vec3(1.,.5,.12),vUv.x)*2.2,1.); }" })); barE.geometry.translate(.5, 0, 0); Es.g.add(barE);
+const barE = new THREE.Mesh(new THREE.BoxGeometry(1, .03, .03), new THREE.ShaderMaterial({ uniforms: { len: { value: LEN } }, vertexShader: "varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: "varying vec2 vUv; void main(){ gl_FragColor=vec4(mix(vec3(.55,.45,1.),vec3(.8,.4,.9),vUv.x)*1.1,1.); }" })); barE.geometry.translate(.5, 0, 0); Es.g.add(barE);
 const barGlow = new THREE.Mesh(new THREE.BoxGeometry(1, .2, .2), addMat(UV, { opacity: .12 })); barGlow.geometry.translate(.5, 0, 0); Es.g.add(barGlow);
-const tickE = new THREE.InstancedMesh(new THREE.BoxGeometry(.014, 1, .014), emis(TXT, 1.8), 80); Es.g.add(tickE);
-const gapMesh = new THREE.Mesh(new THREE.BoxGeometry(1, .075, .075), emis(HOT, 4)); gapMesh.geometry.translate(.5, 0, 0); Es.g.add(gapMesh);
-const gapGlow = glowSprite(HOT, .6, .8); Es.g.add(gapGlow);
+const tickE = new THREE.InstancedMesh(new THREE.BoxGeometry(.014, 1, .014), emis(TXT, .9), 80); Es.g.add(tickE);
+const gapMesh = new THREE.Mesh(new THREE.BoxGeometry(1, .1, .06), emis(HOT, 1.7)); gapMesh.geometry.translate(.5, 0, 0); Es.g.add(gapMesh);
+const gapGlow = glowSprite(HOT, .6, .35); Es.g.add(gapGlow);
 const bornM = new THREE.Mesh(new THREE.BoxGeometry(.03, .7, .03), emis(UV, 3)); Es.g.add(bornM);
 Es.g.add(dustField(260, [12, 4, 6], 0xc9b8ff, .03, 41), new THREE.HemisphereLight(0x3a2a70, 0x05040a, .5));
 const floorE = floorMesh(40, -.5, .25); Es.g.add(floorE);
 Es.update = t => {
   const drawn = eo3((t - T.tl0) / (T.tl1 - T.tl0)), xe = LEN * drawn;
-  barE.scale.x = Math.max(.001, xe); barGlow.scale.x = Math.max(.001, xe);
-  for (let y = 0; y < 80; y++) { const x = lerp(0, LEN - .05, y / 79), big = y % 10 === 0; dm.position.set(x, 0, 0); dm.scale.set(1, x > xe ? 0 : (big ? .42 : .17), 1); dm.rotation.z = 0; dm.updateMatrix(); tickE.setMatrixAt(y, dm.matrix); } dm.scale.set(1, 1, 1); tickE.instanceMatrix.needsUpdate = true;
+  barE.scale.x = Math.max(.001, xe); barGlow.visible = false;
+  for (let y = 0; y < 80; y++) { const x = lerp(0, LEN - .05, y / 79), big = y % 10 === 0; dm.position.set(x, 0, 0); dm.scale.set(1, x > xe ? 0 : (big ? .16 : .07), 1); dm.rotation.z = 0; dm.updateMatrix(); tickE.setMatrixAt(y, dm.matrix); } dm.scale.set(1, 1, 1); tickE.instanceMatrix.needsUpdate = true;
   const tGap = W("b09", "about ninety") - .6, sh0 = S("b10") + .15, sh1 = S("b10") + 1.4, k = smooth((t - sh0) / (sh1 - sh0)), L = .012 * (1 - k) + .0006;
-  gapMesh.position.set(LEN, 0, 0); gapMesh.scale.set(t >= tGap ? L : .0001, 1, 1); gapGlow.position.set(LEN + L / 2, 0, .02); gapGlow.scale.setScalar(.1 + .5 * (1 - k * .7) * (t >= tGap ? 1 : 0)); bornM.position.set(0, 0, 0);
+  gapMesh.position.set(LEN, 0, 0); gapMesh.scale.set(t >= tGap ? L : .0001, 1, 1); gapGlow.position.set(LEN + L / 2, 0, .02); gapGlow.scale.setScalar(.04 + .12 * (1 - k * .7) * (t >= tGap ? 1 : 0)); bornM.position.set(0, 0, 0);
   const gp = V3(LEN, 0, 0); const p = proj(gp); Es.A = { gap: { x: p[0], y: p[1], s: 1 } };
 };
 const pathE = [{ t: S("b09"), p: [3.6, .5, 10.5], l: [3.5, 0, 0], f: 35, fp: [3.5, 0, 0], ap: .0004 }, { t: T.tl1, p: [4.5, .5, 9.5], l: [4.2, 0, 0], f: 35, fp: [4.2, 0, 0], ap: .0004 },
   { t: T.tl1 + .15, p: [4.5, .5, 9.5], l: [4.2, 0, 0], f: 35, fp: [4.2, 0, 0], ap: .0004 },
-  { t: W("b09", "ninety") + .4, p: [LEN - .18, .015, .48], l: [LEN - .02, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
-  { t: W("b10", "But real"), p: [LEN - .18, .015, .48], l: [LEN - .02, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
+  { t: W("b09", "ninety") + .4, p: [LEN - .3, .02, .95], l: [LEN - .03, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
+  { t: W("b10", "But real"), p: [LEN - .3, .02, .95], l: [LEN - .03, 0, 0], f: 85, fp: [LEN, 0, 0], ap: .0030 },
   { t: W("b10", "But real") + 1.1, p: [LEN - 1, .3, 6.5], l: [LEN - 1.4, 0, 0], f: 50, fp: [LEN, 0, 0], ap: .0006 }];
 
 // ===== F: GPS satellite above Earth (b11) =====
@@ -386,7 +387,7 @@ F.update = t => {
   F.A = {};
 };
 const pathF = [{ t: S("b11"), p: [.35, -1.35, -2.4], l: [0, -1.75, -8], f: 50, fp: [0, -1.9, -8], ap: .0014 }, { t: S("b11") + .5, p: [.35, -1.3, -2.2], l: [0, -1.7, -8], f: 50, fp: [0, -1.9, -8], ap: .0014 },
-  { t: W("b11", "GPS satellites"), p: [0, 1.0, 8.2], l: [0, .9, -6], f: 32, fp: [0, 3.8, -6], ap: .0006 }, { t: W("b11", "clocks run"), p: [0, 2.6, 5.6], l: [0, 3.4, -6], f: 40, fp: [0, 3.9, -6], ap: .0007 }, { t: END("b11") + .2, p: [.2, 3.3, 3.2], l: [0, 3.8, -6], f: 50, fp: [0, 3.9, -6], ap: .0008 }];
+  { t: W("b11", "GPS satellites"), p: [0, 1.0, 5.4], l: [0, .9, -6], f: 32, fp: [0, 3.8, -6], ap: .0006 }, { t: W("b11", "clocks run"), p: [0, 2.6, 3.4], l: [0, 3.4, -6], f: 40, fp: [0, 3.9, -6], ap: .0007 }, { t: END("b11") + .2, p: [.2, 3.3, 1.2], l: [0, 3.8, -6], f: 50, fp: [0, 3.9, -6], ap: .0008 }];
 
 // ===== G: set slow before launch (b12, first half) =====
 const G = shot("G", [0x08070d, .04]);
@@ -403,7 +404,7 @@ G.g.add(lightCone(TXT.clone(), 8, .2, 2.4, .08)); G.g.children[G.g.children.leng
 G.g.add(dustField(150, [8, 5, 5], 0xffd9b0, .04, 61));
 const dialS = t => { let a = 0; for (let s = S("b12") + .6; s < t; s += 1 / 30) { const k = smooth((s - T.tSlow0) / (T.tSlow1 - T.tSlow0)); a += lerp(5.2, 1.0, k) / 30; } return a; };
 G.update = t => { const ka = smooth((t - T.tSlow0) / (T.tSlow1 - T.tSlow0)); bigC.userData.set(dialS(t), { hot: 1 + .3 * (1 - ka) }); knob.rotation.z = ka * 2.6; const kp = anchorOf(knob, .4); G.A = { knob: kp }; };
-const pathG = [{ t: S("b12"), p: [.9, .5, 6.4], l: [.9, -.4, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow0, p: [.4, .3, 5.8], l: [.4, -.2, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow1, p: [-.1, .3, 5.4], l: [0, -.1, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }, { t: T.th0, p: [-.1, .3, 5.0], l: [0, -.1, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }];
+const pathG = [{ t: S("b12"), p: [.5, -.4, 10.5], l: [.3, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow0, p: [.3, -.4, 10], l: [.3, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow1, p: [.1, -.4, 9.6], l: [.3, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }, { t: T.th0, p: [.1, -.4, 9.4], l: [.3, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }];
 
 // ===== H: dark 3D city grid, the pin drifts and snaps back (b12 second half) =====
 const Hh = shot("H", [0x08070d, .018]);
@@ -412,7 +413,7 @@ const Hh = shot("H", [0x08070d, .018]);
   city.count = n; city.castShadow = city.receiveShadow = true; Hh.g.add(city);
   const road = new THREE.InstancedMesh(new THREE.BoxGeometry(1, .01, 1), emis(UV, .8), 80); n = 0; for (let i = -9; i <= 9; i++) { ps.set(i * 2.4 + 1.2 - 1.2, .005, 0); sc.set(.035, 1, 46); m4.compose(ps, q, sc); if (n < 80) road.setMatrixAt(n++, m4); ps.set(0, .005, i * 2.4); sc.set(46, 1, .035); m4.compose(ps, q, sc); if (n < 80) road.setMatrixAt(n++, m4); } road.count = n; Hh.g.add(road);
   const grd = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), mat({ color: 0x0a0814, roughness: .5, metalness: .6, envMap, envMapIntensity: .4 })); grd.rotation.x = -Math.PI / 2; grd.receiveShadow = true; Hh.g.add(grd);
-  const route = new THREE.Mesh(new THREE.BoxGeometry(.05, .03, 5), emis(TXT, 1.8)); route.position.set(0, .02, 2.5); Hh.g.add(route); Hh.userData = { route }; }
+  const route = new THREE.Mesh(new THREE.BoxGeometry(.03, .02, 5), emis(TXT, .7)); route.position.set(0, .02, 2.5); Hh.g.add(route); Hh.userData = { route }; }
 const pin = new THREE.Group(); { const pm_ = emis(HOT, 3); const head = new THREE.Mesh(new THREE.SphereGeometry(.26, 32, 24), pm_); head.position.y = .85; const cone = new THREE.Mesh(new THREE.ConeGeometry(.2, .6, 28), pm_); cone.rotation.x = Math.PI; cone.position.y = .38; pin.add(head, cone);
   const hole = new THREE.Mesh(new THREE.SphereGeometry(.09, 16, 12), new THREE.MeshBasicMaterial({ color: 0x08070d })); hole.position.set(0, .85, .22); pin.add(hole); const pl = new THREE.PointLight(0xff8a2a, 18, 6, 2); pl.position.y = .9; pin.add(pl); const gs = glowSprite(HOT, 2.2, .8); gs.position.y = .85; pin.add(gs); }
 Hh.g.add(pin);
@@ -434,8 +435,8 @@ const pathH = [{ t: T.th0, p: [-.8, 6.6, 6.4], l: [.3, 0, .2], f: 40, fp: [0, 0,
 
 // ===== I: verdict void (b13) and end card =====
 const I = shot("I", [0x08070d, .03]);
-{ const ringV = new THREE.Mesh(new THREE.TorusGeometry(3.2, .05, 16, 180), emis(UV, 1.4)); ringV.position.set(0, .2, -6); I.g.add(ringV); I.userData = { ringV };
-  const tk = new THREE.InstancedMesh(new THREE.BoxGeometry(.04, .3, .04), emis(UV, 1.2), 60); const o = new THREE.Object3D(); for (let i = 0; i < 60; i++) { const a = i / 60 * 6.283; o.position.set(Math.sin(a) * 2.9, Math.cos(a) * 2.9 + .2, -6); o.rotation.z = -a; o.scale.setScalar(i % 5 ? .6 : 1.3); o.updateMatrix(); tk.setMatrixAt(i, o.matrix); } I.g.add(tk);
+{ const ringV = new THREE.Mesh(new THREE.TorusGeometry(2.2, .035, 16, 180), emis(UV, .5)); ringV.position.set(0, -1.7, -6); I.g.add(ringV); I.userData = { ringV };
+  const tk = new THREE.InstancedMesh(new THREE.BoxGeometry(.04, .3, .04), emis(UV, .45), 60); const o = new THREE.Object3D(); for (let i = 0; i < 60; i++) { const a = i / 60 * 6.283; o.position.set(Math.sin(a) * 1.98, Math.cos(a) * 1.98 - 1.7, -6); o.rotation.z = -a; o.scale.setScalar(i % 5 ? .6 : 1.3); o.updateMatrix(); tk.setMatrixAt(i, o.matrix); } I.g.add(tk);
   const cone = lightCone(TXT.clone(), 12, .1, 3.0, .16); cone.position.set(.6, 8, -4); cone.rotation.z = .08; I.g.add(cone); I.userData.cone = cone; I.g.add(floorMesh(40, -2.2, .28), dustField(260, [12, 8, 10], 0xffd9b0, .05, 81), new THREE.HemisphereLight(0x3a2a70, 0x05040a, .6), dir(0xff8a2a, 1.4, [3, 3, -3], [0, 0, 0])); }
 I.update = t => { I.userData.ringV.rotation.z = t * .04; I.A = {}; };
 const pathI = [{ t: S("b13"), p: [0, 0, 8.5], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }, { t: T.tTrue, p: [0, 0, 8.5], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }, { t: S("b14"), p: [0, 0, 7.3], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }];
@@ -472,13 +473,15 @@ const SH = [
 ];
 function shakeAt(t) { let x = 0, y = 0; for (const [t0, amp, dur] of T.shakes) { const d = t - t0; if (d < 0 || d > dur) continue; const k = Math.pow(1 - d / dur, 2) * amp, f = Math.floor(d * 60); x += (hash(f * 3 + t0 * 7) - .5) * 2 * k; y += (hash(f * 5 + t0 * 11) - .5) * 2 * k; } return [x, y]; }
 const glitchBuf = document.createElement("canvas");
+const DOF = new Set(["A", "D", "E", "F", "G"]);
 function setShot(sh, path, t, tt) {
+  bokeh.enabled = DOF.has(sh.id) && !QP.has("nobokeh");
   Object.values(shots).forEach(s => (s.g.visible = s === sh));
   scene.fog = new THREE.FogExp2(sh.fog[0], sh.fog[1]);
   const c = evalPath(path, tt == null ? t : tt);
   const dr = [Math.sin(t * .7) * .012, Math.cos(t * .53) * .009]; // natural camera weight
   camera.position.set(c.p[0] + dr[0], c.p[1] + dr[1], c.p[2]); camera.lookAt(c.l[0], c.l[1], c.l[2]);
-  camera.fov = 2 * Math.atan(18 / c.f) * 180 / Math.PI; camera.updateProjectionMatrix();
+  camera.fov = 2 * Math.atan(18 / c.f) * 180 / Math.PI; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
   bokeh.uniforms.focus.value = camera.position.distanceTo(V3(...c.fp)); bokeh.uniforms.aperture.value = c.ap; bokeh.uniforms.maxblur.value = .014;
   sh.update(t);
 }

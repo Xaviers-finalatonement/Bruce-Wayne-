@@ -72,7 +72,7 @@ export function createOverlay(T, TH, cv) {
     if (inA && A.head && t < T.tSign - .35) {
       const a = smooth(t / .4);
       tag("HEAD", A.head.x - A.head.r - 22, A.head.y + 14, { color: HOT, align: "right", a });
-      tag("FEET", A.feet.x - A.feet.r - 22, A.feet.y + 14, { color: UV, align: "right", a });
+      if (A.feet.y < 1230) tag("FEET", A.feet.x - A.feet.r - 22, A.feet.y + 14, { color: UV, align: "right", a });
       if (t < S("b03")) tag("AHEAD", (A.head.x + A.feet.x) / 2 - 20, (A.head.y + A.feet.y) / 2 + 12, { color: HOT, align: "right", a: smooth((t - .5) / .3), size: 34 });
       const g = W("b05", "Your feet"); ring(A.feet.x, A.feet.y, A.feet.r, A.feet.r + 90, (t - g) / .8, UV, 6);
       ring(A.head.x, A.head.y, A.head.r, A.head.r + 90, (t - W("b05", "Your head is")) / .8, HOT, 6); ring(A.head.x, A.head.y, A.head.r, A.head.r + 130, (t - W("b05", "faster")) / .9, HOT, 7);
@@ -113,7 +113,7 @@ export function createOverlay(T, TH, cv) {
     if (t >= S("b11") && t < S("b12")) { const g = W("b11", "GPS"); txt("GPS", 130, 330, { size: 150, color: TXT, glow: 24, gcol: HOT, align: "left", ls: 6, a: smooth((t - g) / .15), sc: 1 + .4 * (1 - eo3((t - g) / .16)) }); }
     if (t >= S("b12") && t < T.th0) { const ta = smooth((t - T.tSlow0 + .2) / .25), sc = 1 + .25 * (1 - eo3((t - T.tSlow0 + .2) / .2));
       txt("SET SLOW", 505, 262, { size: 118, color: HOT, glow: 26, ls: 4, a: ta, sc }); txt("BEFORE LAUNCH", 505, 352, { size: 76, color: TXT, ls: 6, a: ta });
-      if (A.knob) { tag("FAST", A.knob.x - 60, A.knob.y + A.knob.r + 70, { color: UV, size: 28, ls: 4 }); tag("SLOW", A.knob.x + 70, A.knob.y + A.knob.r + 70, { color: HOT, size: 28, ls: 4 }); } }
+      if (A.knob) { tag("FAST", A.knob.x - 60, A.knob.y - A.knob.r - 30, { color: UV, size: 28, ls: 4 }); tag("SLOW", A.knob.x + 70, A.knob.y - A.knob.r - 30, { color: HOT, size: 28, ls: 4 }); } }
     if (t >= T.th0 && t < S("b13")) { const wa = smooth((t - T.tDrift1 + .9) / .2) * (1 - smooth((t - T.tSnap + .1) / .2));
       if (wa > 0) txt("WRONG", 505, 360, { size: 170, color: HOT, glow: 34, a: wa, ls: 6, sc: 1 + .2 * (1 - eo3((t - T.tDrift1 + .9) / .18)) }); }
     if (t >= S("b14") && t < S("b15") && A.plus) for (let i = 1; i < T.NST; i++) { const u = (t - T.arr(i)) / 1.0; if (u < 0 || u > 1) continue;

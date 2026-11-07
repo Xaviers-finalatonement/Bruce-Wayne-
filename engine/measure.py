@@ -28,7 +28,7 @@ def main(ep):
         if b["id"] == "b13" or b is tl["beats"][-1]: holds.append((b["end"] - 0.1, b["next"] + 0.1))
     def intentional(f): return any(f[0] >= h[0] - 1.5 and f[1] <= h[1] + 1.5 for h in holds)
     lines = ["# Render report", "",
-        f"- File: `{os.path.basename(mp4)}` ({size/1e6:.1f} MB)", f"- Duration: {dur:.2f} s (target 70-80 s)",
+        f"- File: `{os.path.basename(mp4)}` ({size/1e6:.1f} MB), overall bitrate {int(pr['format'].get('bit_rate', 0))/1e6:.2f} Mb/s (video {int(v.get('bit_rate', 0))/1e6:.2f} Mb/s)", f"- Duration: {dur:.2f} s (target 70-80 s)",
         f"- Resolution: {v['width']}x{v['height']}  fps: {eval(v['r_frame_rate']):.2f}  codec: {v['codec_name']} {v.get('profile','')} {v['pix_fmt']}",
         f"- Audio: {a['codec_name']} {a['sample_rate']} Hz {a['channels']} ch",
         f"- Loudness: integrated {I} LUFS (target -14), LRA {LRA} LU, true peak {TP} dBTP (limit -1)",
