@@ -1,0 +1,6 @@
+{
+  "name": "studio",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node studio/server.js" }
+}
