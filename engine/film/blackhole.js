@@ -49,14 +49,7 @@ float vn(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.-2.*f);
              mix(mix(h21(i.xy+(i.z+1.)*17.),h21(i.xy+vec2(1,0)+(i.z+1.)*17.),f.x),mix(h21(i.xy+vec2(0,1)+(i.z+1.)*17.),h21(i.xy+vec2(1,1)+(i.z+1.)*17.),f.x),f.y),f.z); }
 float fbm(vec3 p){ float a=.5, s=0.; for(int i=0;i<4;i++){ s+=a*vn(p); p=p*2.03+7.1; a*=.5; } return s; }`;
 
-const BH_FRAG = `precision highp float;
-uniform sampler2D uLUT, uEnd; uniform vec2 uCenter; uniform vec4 uClip;
-uniform float uScale, uTheta, uRoll, uTime, uDisc, uStars, uRing, uSpin, uOpacity, uFlip, uDobs, uStarK, uHeat, uNeb, uSeed;
-const float BC = 5.196152, PI = 3.14159265, PH = ${PH.toFixed(6)}, VMAX = ${VMAX.toFixed(3)};
-${HASH}
-vec2 lut(float b, float phi){ float v = b/(b+8.); float tv = (min(v/VMAX,1.)*${NB - 1}.+.5)/${NB}.; float tu = (clamp(phi,0.,PH)/PH*${NP - 1}.+.5)/${NP}.; return texture2D(uLUT, vec2(tu, tv)).rg; }
-float phiEnd(float b){ float v = min(b/(b+8.)/VMAX,1.)*${NB - 1}.; float i0=floor(v), f=v-i0; float a = texelFetch(uEnd, ivec2(int(i0),0),0).r, c = texelFetch(uEnd, ivec2(int(min(i0+1.,${NB - 1}.)),0),0).r; return mix(a,c,f); }
-vec3 starLayer(vec3 d, float sc, float rad, float dens, float seed){
+const SKYFN = `vec3 starLayer(vec3 d, float sc, float rad, float dens, float seed){
   vec3 p = d*sc, c = floor(p); vec3 h = h33(c + seed); if(h.x > dens) return vec3(0.);
   vec3 q = fract(p) - (.2 + .6*h.yzx); float dd = length(q);
   float br = pow(h.z, 3.) * smoothstep(rad, 0., dd);
@@ -73,6 +66,15 @@ vec3 sky(vec3 d){
   col += (vec3(.30,.20,.55)*.8 + vec3(.5,.18,.04)*.3) * band * .04 * uNeb;
   return col * uStars;
 }
+`;
+const BH_FRAG = `precision highp float;
+uniform sampler2D uLUT, uEnd; uniform vec2 uCenter; uniform vec4 uClip;
+uniform float uScale, uTheta, uRoll, uTime, uDisc, uStars, uRing, uSpin, uOpacity, uFlip, uDobs, uStarK, uHeat, uNeb, uSeed;
+const float BC = 5.196152, PI = 3.14159265, PH = ${PH.toFixed(6)}, VMAX = ${VMAX.toFixed(3)};
+${HASH}
+vec2 lut(float b, float phi){ float v = b/(b+8.); float tv = (min(v/VMAX,1.)*${NB - 1}.+.5)/${NB}.; float tu = (clamp(phi,0.,PH)/PH*${NP - 1}.+.5)/${NP}.; return texture2D(uLUT, vec2(tu, tv)).rg; }
+float phiEnd(float b){ float v = min(b/(b+8.)/VMAX,1.)*${NB - 1}.; float i0=floor(v), f=v-i0; float a = texelFetch(uEnd, ivec2(int(i0),0),0).r, c = texelFetch(uEnd, ivec2(int(min(i0+1.,${NB - 1}.)),0),0).r; return mix(a,c,f); }
+${SKYFN}
 vec3 ramp(float I, float g, float r){
   vec3 hz = vec3(1.0, .26, .025), cool = vec3(.42, .20, .95);
   vec3 base = mix(hz, cool, smoothstep(9.,26.,r)*.75);
@@ -160,6 +162,34 @@ void main(){
   gl_FragColor = vec4(col*uOpacity, 1.);
 }`;
 
+
+const INSIDE_FRAG = `precision highp float;
+uniform vec2 uCenter; uniform vec4 uClip; uniform float uTime, uR, uOpacity, uRip, uRipSpeed, uStarK, uStars, uNeb, uSeed, uHeat;
+${HASH}
+${SKYFN}
+void main(){
+  vec2 fr = vec2(gl_FragCoord.x, 1920. - gl_FragCoord.y);
+  if(fr.x < uClip.x || fr.x > uClip.z || fr.y < uClip.y || fr.y > uClip.w) discard;
+  vec2 q = fr - uCenter; float r = length(q); vec3 col = vec3(0.);
+  // spacetime flowing inward: faint concentric swells that contract toward the centre
+  float k = r/960.; float ph = k*38. + uTime*uRipSpeed; float rip = pow(.5+.5*sin(ph + 2.*sin(k*9.)), 5.);
+  col += vec3(.20,.10,.55) * rip * uRip * smoothstep(.0,.25,k) * exp(-k*1.6);
+  col += vec3(.45,.17,.05) * pow(.5+.5*sin(ph*.5 + 1.7), 9.) * uRip * .35 * exp(-k*2.4);
+  if(uR > 1.){
+    float u = r/uR;
+    if(u < 1.){ // the outside universe, crushed into a shrinking window: fisheye sky, strongly lensed edge
+      float ang = atan(q.y, q.x); float th = u*u*2.6 + .1; // sky angle grows quickly towards the rim
+      vec3 d = vec3(sin(th)*cos(ang), sin(th)*sin(ang), cos(th));
+      vec3 s = sky(d*(1.+uSeed*.1)); s += vec3(.9,.45,.18) * pow(max(sin(ang*2.+uTime*.7+u*5.),0.),6.) * pow(u,2.5) * 1.8 * uHeat; // glimpse of the disc on the rim
+      col += s * (.5 + 1.8*u*u) + vec3(.55,.25,.9) * pow(u,6.) * .45;
+    }
+    float rim = exp(-pow((r-uR)/(uR*.018+1.2), 2.)) * 2.4 * uHeat;
+    col += vec3(1.,.62,.28) * rim + vec3(.5,.3,1.) * exp(-pow((r-uR)/(uR*.07+2.), 2.)) * .35;
+    col += vec3(.9,.4,.12) * exp(-max(r-uR,0.)/(uR*.35+8.)) * .18 * step(uR, r);
+  }
+  gl_FragColor = vec4(col*uOpacity, 1.);
+}`;
+
 export function createBlackHoles(scene) {
   const { lut, end } = buildLUT();
   const geo = new THREE.PlaneGeometry(2, 2);
@@ -176,5 +206,10 @@ export function createBlackHoles(scene) {
       vertexShader: VERT, fragmentShader: FALL_FRAG, depthTest: false, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending });
     const me = new THREE.Mesh(geo, m); me.frustumCulled = false; me.renderOrder = order; scene.add(me); me.visible = false; return me;
   }
-  return { make, makeFall, lut, layers };
+  function makeInside(order = -9) {
+    const m = new THREE.ShaderMaterial({ uniforms: { uCenter: { value: new THREE.Vector2(540, 900) }, uClip: { value: new THREE.Vector4(0, 0, 1080, 1920) }, uTime: { value: 0 }, uR: { value: 0 }, uOpacity: { value: 1 }, uRip: { value: 1 }, uRipSpeed: { value: -3 },
+      uStarK: { value: 1.3 }, uStars: { value: 1.6 }, uNeb: { value: 1.5 }, uSeed: { value: 1 }, uHeat: { value: 1 } }, vertexShader: VERT, fragmentShader: INSIDE_FRAG, depthTest: false, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending });
+    const me = new THREE.Mesh(geo, m); me.frustumCulled = false; me.renderOrder = order; scene.add(me); me.visible = false; return me;
+  }
+  return { make, makeFall, makeInside, lut, layers };
 }

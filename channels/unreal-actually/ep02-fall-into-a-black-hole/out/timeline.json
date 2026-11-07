@@ -1,55 +1,55 @@
 {
- "duration": 70.615,
+ "duration": 71.76,
  "fps": 30,
- "speed": 0.95,
- "gap": 0.45,
+ "speed": 1.0,
+ "gap": 0.25,
  "sample_rate": 24000,
  "beats": [
   {
    "id": "b01",
    "start": 0.2,
-   "end": 2.951,
-   "next": 3.401,
+   "end": 2.971,
+   "next": 3.321,
    "sents": [
     {
      "s": 0.2,
-     "e": 2.951,
+     "e": 2.971,
      "c0": 0,
-     "c1": 47
+     "c1": 45
     }
    ],
    "captions": [
     {
-     "text": "To everyone watching,",
+     "text": "To anyone far away,",
      "start": 0.2,
      "key": 1,
-     "end": 1.488
+     "end": 1.432
     },
     {
      "text": "you'd freeze at the edge.",
-     "start": 1.488,
+     "start": 1.432,
      "key": 1,
-     "end": 2.951
+     "end": 2.971
     }
    ],
-   "vo": "To everyone watching, you'd freeze at the edge.",
+   "vo": "To anyone far away, you'd freeze at the edge.",
    "screen": []
   },
   {
    "id": "b02",
-   "start": 3.401,
-   "end": 8.025,
-   "next": 8.475,
+   "start": 3.321,
+   "end": 7.838,
+   "next": 8.338,
    "sents": [
     {
-     "s": 3.401,
-     "e": 5.983,
+     "s": 3.321,
+     "e": 5.845,
      "c0": 0,
      "c1": 43
     },
     {
-     "s": 6.123,
-     "e": 8.025,
+     "s": 5.985,
+     "e": 7.837,
      "c0": 44,
      "c1": 78
     }
@@ -57,15 +57,15 @@
    "captions": [
     {
      "text": "Friends far away would watch you slow down.",
-     "start": 3.401,
+     "start": 3.321,
      "key": 6,
-     "end": 6.123
+     "end": 5.985
     },
     {
      "text": "Then stop, just short of the edge.",
-     "start": 6.123,
+     "start": 5.985,
      "key": 1,
-     "end": 8.025
+     "end": 7.838
     }
    ],
    "vo": "Friends far away would watch you slow down. Then stop, just short of the edge.",
@@ -76,25 +76,25 @@
   },
   {
    "id": "b03",
-   "start": 8.475,
-   "end": 13.655,
-   "next": 14.105,
+   "start": 8.338,
+   "end": 13.304,
+   "next": 13.704,
    "sents": [
     {
-     "s": 8.475,
-     "e": 10.442,
+     "s": 8.338,
+     "e": 10.188,
      "c0": 0,
      "c1": 31
     },
     {
-     "s": 10.582,
-     "e": 12.031,
+     "s": 10.328,
+     "e": 11.695,
      "c0": 32,
      "c1": 51
     },
     {
-     "s": 12.171,
-     "e": 13.655,
+     "s": 11.835,
+     "e": 13.305,
      "c0": 52,
      "c1": 75
     }
@@ -102,21 +102,21 @@
    "captions": [
     {
      "text": "That edge is the event horizon.",
-     "start": 8.475,
+     "start": 8.338,
      "key": 5,
-     "end": 10.582
+     "end": 10.328
     },
     {
      "text": "Point of no return.",
-     "start": 10.582,
+     "start": 10.328,
      "key": 3,
-     "end": 12.171
+     "end": 11.835
     },
     {
      "text": "Not even light escapes.",
-     "start": 12.171,
+     "start": 11.835,
      "key": 2,
-     "end": 13.655
+     "end": 13.304
     }
    ],
    "vo": "That edge is the event horizon. Point of no return. Not even light escapes.",
@@ -127,19 +127,19 @@
   },
   {
    "id": "b04",
-   "start": 14.105,
-   "end": 19.686,
-   "next": 20.136,
+   "start": 13.704,
+   "end": 19.095,
+   "next": 19.745,
    "sents": [
     {
-     "s": 14.105,
-     "e": 14.688,
+     "s": 13.704,
+     "e": 14.266,
      "c0": 0,
      "c1": 4
     },
     {
-     "s": 14.928,
-     "e": 19.685,
+     "s": 14.506,
+     "e": 19.095,
      "c0": 5,
      "c1": 72
     }
@@ -147,21 +147,21 @@
    "captions": [
     {
      "text": "Why?",
-     "start": 14.105,
+     "start": 13.704,
      "key": 0,
-     "end": 14.928
+     "end": 14.506
     },
     {
      "text": "Gravity bends space and time so hard,",
-     "start": 14.928,
+     "start": 14.506,
      "key": 1,
-     "end": 17.626
+     "end": 17.109
     },
     {
      "text": "your picture slows to a stop.",
-     "start": 17.626,
+     "start": 17.109,
      "key": 5,
-     "end": 19.686
+     "end": 19.095
     }
    ],
    "vo": "Why? Gravity bends space and time so hard, your picture slows to a stop.",
@@ -169,57 +169,51 @@
   },
   {
    "id": "b05",
-   "start": 20.136,
-   "end": 25.094,
-   "next": 25.544,
+   "start": 19.745,
+   "end": 24.571,
+   "next": 25.021,
    "sents": [
     {
-     "s": 20.136,
-     "e": 25.095,
+     "s": 19.745,
+     "e": 24.571,
      "c0": 0,
-     "c1": 73
+     "c1": 76
     }
    ],
    "captions": [
     {
-     "text": "On your own clock,",
-     "start": 20.136,
+     "text": "On your own clock, NASA's simulation says,",
+     "start": 19.745,
      "key": 3,
-     "end": 21.427
+     "end": 22.476
     },
     {
-     "text": "NASA's simulation has the",
-     "start": 21.427,
-     "key": 1,
-     "end": 23.193
-    },
-    {
-     "text": "fall take about three hours.",
-     "start": 23.193,
-     "key": 3,
-     "end": 25.094
+     "text": "the fall takes about three hours.",
+     "start": 22.476,
+     "key": 4,
+     "end": 24.571
     }
    ],
-   "vo": "On your own clock, NASA's simulation has the fall take about three hours.",
+   "vo": "On your own clock, NASA's simulation says, the fall takes about three hours.",
    "screen": [
     "≈ 3 hours (NASA simulation)"
    ]
   },
   {
    "id": "b06",
-   "start": 25.544,
-   "end": 31.051,
-   "next": 31.501,
+   "start": 25.021,
+   "end": 30.417,
+   "next": 30.917,
    "sents": [
     {
-     "s": 25.544,
-     "e": 28.74,
+     "s": 25.021,
+     "e": 28.149,
      "c0": 0,
      "c1": 44
     },
     {
-     "s": 28.88,
-     "e": 31.051,
+     "s": 28.289,
+     "e": 30.416,
      "c0": 45,
      "c1": 81
     }
@@ -227,15 +221,15 @@
    "captions": [
     {
      "text": "A giant black hole, about four million Suns.",
-     "start": 25.544,
+     "start": 25.021,
      "key": 1,
-     "end": 28.88
+     "end": 28.289
     },
     {
      "text": "Like the one in our galaxy's center.",
-     "start": 28.88,
+     "start": 28.289,
      "key": 5,
-     "end": 31.051
+     "end": 30.417
     }
    ],
    "vo": "A giant black hole, about four million Suns. Like the one in our galaxy's center.",
@@ -245,13 +239,13 @@
   },
   {
    "id": "b07",
-   "start": 31.501,
-   "end": 35.671,
-   "next": 36.121,
+   "start": 30.917,
+   "end": 34.951,
+   "next": 35.251,
    "sents": [
     {
-     "s": 31.501,
-     "e": 35.67,
+     "s": 30.917,
+     "e": 34.952,
      "c0": 0,
      "c1": 62
     }
@@ -259,15 +253,15 @@
    "captions": [
     {
      "text": "Cross the edge,",
-     "start": 31.501,
+     "start": 30.917,
      "key": 2,
-     "end": 32.577
+     "end": 31.958
     },
     {
      "text": "and space itself rushes inward at light speed.",
-     "start": 32.577,
+     "start": 31.958,
      "key": 4,
-     "end": 35.671
+     "end": 34.951
     }
    ],
    "vo": "Cross the edge, and space itself rushes inward at light speed.",
@@ -277,51 +271,57 @@
   },
   {
    "id": "b08",
-   "start": 36.121,
-   "end": 39.396,
-   "next": 39.846,
+   "start": 35.251,
+   "end": 40.255,
+   "next": 40.405,
    "sents": [
     {
-     "s": 36.121,
-     "e": 39.396,
+     "s": 35.251,
+     "e": 40.255,
      "c0": 0,
-     "c1": 57
+     "c1": 83
     }
    ],
    "captions": [
     {
      "text": "Then the simulation gives you",
-     "start": 36.121,
+     "start": 35.251,
      "key": 2,
-     "end": 37.845
+     "end": 37.06
     },
     {
-     "text": "twelve point eight seconds.",
-     "start": 37.845,
+     "text": "twelve point eight seconds,",
+     "start": 37.06,
      "key": 0,
-     "end": 39.396
+     "end": 38.748
+    },
+    {
+     "text": "before you're torn apart.",
+     "start": 38.748,
+     "key": 0,
+     "end": 40.255
     }
    ],
-   "vo": "Then the simulation gives you twelve point eight seconds.",
+   "vo": "Then the simulation gives you twelve point eight seconds, before you're torn apart.",
    "screen": [
     "12.8 s"
    ]
   },
   {
    "id": "b09",
-   "start": 39.846,
-   "end": 43.76,
-   "next": 44.21,
+   "start": 40.405,
+   "end": 44.208,
+   "next": 44.358,
    "sents": [
     {
-     "s": 39.846,
-     "e": 42.174,
+     "s": 40.405,
+     "e": 42.676,
      "c0": 0,
      "c1": 41
     },
     {
-     "s": 42.314,
-     "e": 43.76,
+     "s": 42.816,
+     "e": 44.208,
      "c0": 42,
      "c1": 68
     }
@@ -329,15 +329,15 @@
    "captions": [
     {
      "text": "The closer end of you gets pulled harder.",
-     "start": 39.846,
+     "start": 40.405,
      "key": 1,
-     "end": 42.314
+     "end": 42.816
     },
     {
      "text": "You stretch like a noodle.",
-     "start": 42.314,
+     "start": 42.816,
      "key": 1,
-     "end": 43.76
+     "end": 44.208
     }
    ],
    "vo": "The closer end of you gets pulled harder. You stretch like a noodle.",
@@ -345,13 +345,13 @@
   },
   {
    "id": "b10",
-   "start": 44.21,
-   "end": 46.797,
-   "next": 47.247,
+   "start": 44.358,
+   "end": 46.855,
+   "next": 47.455,
    "sents": [
     {
-     "s": 44.21,
-     "e": 46.798,
+     "s": 44.358,
+     "e": 46.855,
      "c0": 0,
      "c1": 44
     }
@@ -359,9 +359,9 @@
    "captions": [
     {
      "text": "Scientists really call it spaghettification.",
-     "start": 44.21,
+     "start": 44.358,
      "key": 4,
-     "end": 46.797
+     "end": 46.855
     }
    ],
    "vo": "Scientists really call it spaghettification.",
@@ -371,19 +371,19 @@
   },
   {
    "id": "b11",
-   "start": 47.247,
-   "end": 51.362,
-   "next": 51.812,
+   "start": 47.455,
+   "end": 51.484,
+   "next": 51.984,
    "sents": [
     {
-     "s": 47.247,
-     "e": 49.031,
+     "s": 47.455,
+     "e": 49.195,
      "c0": 0,
      "c1": 28
     },
     {
-     "s": 49.17,
-     "e": 51.361,
+     "s": 49.335,
+     "e": 51.484,
      "c0": 29,
      "c1": 67
     }
@@ -391,38 +391,38 @@
    "captions": [
     {
      "text": "A small black hole is worse.",
-     "start": 47.247,
+     "start": 47.455,
      "key": 5,
-     "end": 49.17
+     "end": 49.335
     },
     {
      "text": "It can tear you apart before the edge.",
-     "start": 49.17,
+     "start": 49.335,
      "key": 2,
-     "end": 51.362
+     "end": 51.484
     }
    ],
    "vo": "A small black hole is worse. It can tear you apart before the edge.",
    "screen": [
     "small black hole",
-    "tears you apart early"
+    "can tear you apart early"
    ]
   },
   {
    "id": "b12",
-   "start": 51.812,
-   "end": 56.845,
-   "next": 57.295,
+   "start": 51.984,
+   "end": 56.882,
+   "next": 57.582,
    "sents": [
     {
-     "s": 51.812,
-     "e": 54.954,
+     "s": 51.984,
+     "e": 55.08,
      "c0": 0,
      "c1": 50
     },
     {
-     "s": 55.094,
-     "e": 56.845,
+     "s": 55.22,
+     "e": 56.882,
      "c0": 51,
      "c1": 77
     }
@@ -430,21 +430,21 @@
    "captions": [
     {
      "text": "At the center,",
-     "start": 51.812,
+     "start": 51.984,
      "key": 2,
-     "end": 52.755
+     "end": 52.913
     },
     {
      "text": "math says a point of endless crush.",
-     "start": 52.755,
+     "start": 52.913,
      "key": 5,
-     "end": 55.094
+     "end": 55.22
     },
     {
      "text": "Nobody knows if it's real.",
-     "start": 55.094,
+     "start": 55.22,
      "key": 0,
-     "end": 56.845
+     "end": 56.882
     }
    ],
    "vo": "At the center, math says a point of endless crush. Nobody knows if it's real.",
@@ -453,59 +453,20 @@
    ]
   },
   {
-   "id": "b13",
-   "start": 57.295,
-   "end": 59.261,
-   "next": 60.511,
-   "sents": [
-    {
-     "s": 57.295,
-     "e": 58.135,
-     "c0": 0,
-     "c1": 12
-    },
-    {
-     "s": 58.375,
-     "e": 59.261,
-     "c0": 13,
-     "c1": 22
-    }
-   ],
-   "captions": [
-    {
-     "text": "The verdict?",
-     "start": 57.295,
-     "key": 1,
-     "end": 58.375
-    },
-    {
-     "text": "Unproven.",
-     "start": 58.375,
-     "key": 0,
-     "end": 59.261
-    }
-   ],
-   "vo": "The verdict? Unproven.",
-   "screen": [
-    "CASE FILE 002",
-    "UNPROVEN"
-   ]
-  },
-  {
    "id": "b14",
-   "start": 60.511,
-   "end": 64.476,
-   "next": 64.926,
+   "start": 57.582,
+   "end": 61.371,
+   "next": 62.071,
    "sents": [
     {
-     "s": 60.511,
-     "e": 62.632,
+     "s": 57.582,
+     "e": 59.619,
      "c0": 0,
      "c1": 33
     },
     {
-     "s": 62.772,
-     "e": 64.476,
+     "s": 59.759,
+     "e": 61.371,
      "c0": 34,
      "c1": 61
     }
@@ -513,15 +474,15 @@
    "captions": [
     {
      "text": "Nothing from inside can reach us.",
-     "start": 60.511,
+     "start": 57.582,
      "key": 0,
-     "end": 62.772
+     "end": 59.759
     },
     {
      "text": "This is math, not a memory.",
-     "start": 62.772,
+     "start": 59.759,
      "key": 2,
-     "end": 64.476
+     "end": 61.371
     }
    ],
    "vo": "Nothing from inside can reach us. This is math, not a memory.",
@@ -530,39 +491,85 @@
    ]
   },
   {
-   "id": "b15",
-   "start": 64.926,
-   "end": 68.815,
-   "next": 70.615,
+   "id": "b13",
+   "start": 62.071,
+   "end": 64.008,
+   "next": 65.308,
    "sents": [
     {
-     "s": 64.926,
-     "e": 66.902,
+     "s": 62.071,
+     "e": 62.899,
      "c0": 0,
-     "c1": 39
+     "c1": 12
     },
     {
-     "s": 67.042,
-     "e": 68.814,
-     "c0": 40,
-     "c1": 73
+     "s": 63.139,
+     "e": 64.008,
+     "c0": 13,
+     "c1": 22
     }
    ],
    "captions": [
     {
-     "text": "To the world, you'd freeze at the edge.",
-     "start": 64.926,
-     "key": 4,
-     "end": 67.042
+     "text": "The verdict?",
+     "start": 62.071,
+     "key": 1,
+     "end": 63.139
+    },
+    {
+     "text": "Unproven.",
+     "start": 63.139,
+     "key": 0,
+     "end": 64.008
+    }
+   ],
+   "vo": "The verdict? Unproven.",
+   "screen": [
+    "CASE FILE 002",
+    "CLAIM: you'd freeze at the edge",
+    "UNPROVEN"
+   ]
+  },
+  {
+   "id": "b15",
+   "start": 65.308,
+   "end": 69.96,
+   "next": 71.76,
+   "sents": [
+    {
+     "s": 65.308,
+     "e": 68.079,
+     "c0": 0,
+     "c1": 45
+    },
+    {
+     "s": 68.219,
+     "e": 69.959,
+     "c0": 46,
+     "c1": 79
+    }
+   ],
+   "captions": [
+    {
+     "text": "To anyone far away,",
+     "start": 65.308,
+     "key": 1,
+     "end": 66.54
+    },
+    {
+     "text": "you'd freeze at the edge.",
+     "start": 66.54,
+     "key": 1,
+     "end": 68.219
     },
     {
      "text": "To you, you'd fall right through.",
-     "start": 67.042,
+     "start": 68.219,
      "key": 3,
-     "end": 68.815
+     "end": 69.96
     }
    ],
-   "vo": "To the world, you'd freeze at the edge. To you, you'd fall right through.",
+   "vo": "To anyone far away, you'd freeze at the edge. To you, you'd fall right through.",
    "screen": []
   }
  ]

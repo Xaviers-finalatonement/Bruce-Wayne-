@@ -26,11 +26,12 @@ bokeh.enabled = false; camera.fov = 20; camera.position.set(0, 0, 20); camera.lo
 const PXU = 1920 / (2 * 20 * Math.tan(THREE.MathUtils.degToRad(10))); // px per world unit at z = 0
 const wx = px => (px - 540) / PXU, wy = py => (960 - py) / PXU;
 const { envMap, glowTex, makeClock } = createProps(renderer);
-const BHs = createBlackHoles(scene), bh1 = BHs.make(-10), bh2 = BHs.make(-9), fall = BHs.makeFall(-8);
+const BHs = createBlackHoles(scene), bh1 = BHs.make(-10), bh2 = BHs.make(-9), fall = BHs.makeFall(-8), inside = BHs.makeInside(-8);
 
 // ---- lights: orange key from the disk side, violet fill, a whisper of front light so the white suit reads ----
 const keyL = new THREE.DirectionalLight(0xff8a2a, 4), fillL = new THREE.DirectionalLight(0xa98bff, 1), frontL = new THREE.DirectionalLight(0xfff0e8, .2);
 const clockL = new THREE.PointLight(0xffd9b0, 0, 0, 2); scene.add(clockL);
+const wrist = { visible: false };
 scene.add(keyL, fillL, frontL, new THREE.HemisphereLight(0x2a2250, 0x05040a, .12));
 const rig = (k, f, fr, kp = [6, 2.5, -4], fp = [-6, 1, -3]) => { keyL.intensity = k; fillL.intensity = f; frontL.intensity = fr; keyL.position.set(...kp); fillL.position.set(...fp); frontL.position.set(1, 2, 8); };
 
@@ -75,13 +76,7 @@ function drawClock(sec) {
 const ckFace = new THREE.Mesh(new THREE.CircleGeometry(CKR, 64), new THREE.MeshBasicMaterial({ map: ckTex })), clock = new THREE.Group(); clock.add(ckFace);
 const bez = new THREE.Mesh(new THREE.TorusGeometry(CKR * 1.04, CKR * .1, 20, 72), new THREE.MeshStandardMaterial({ color: 0x8d8aa6, metalness: 1, roughness: .28, envMap, envMapIntensity: 1.6 })); bez.position.z = .01; clock.add(bez);
 const bezAc = new THREE.Mesh(new THREE.TorusGeometry(CKR * .97, CKR * .012, 8, 72), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xFF8A2A).multiplyScalar(2.5) })); bezAc.position.z = .02; clock.add(bezAc);
-clock.position.set(wx(560), wy(1050), 2.75); wrist.add(clock);
-{ const a0 = new THREE.Vector3(wx(-150), wy(1450), 2.5), a1 = new THREE.Vector3(wx(760), wy(815), 2.5), d = a1.clone().sub(a0), len = d.length(), q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
-  const arm = new THREE.Mesh(new THREE.CapsuleGeometry(.25, len - .5, 10, 24), suitM); arm.position.copy(a0.clone().add(a1).multiplyScalar(.5)); arm.quaternion.copy(q); wrist.add(arm);
-  const cp = new THREE.Vector3(wx(560), wy(1050), 2.5), cuff = new THREE.Mesh(new THREE.CylinderGeometry(.285, .285, .2, 32), new THREE.MeshStandardMaterial({ color: 0x5d5a73, metalness: .6, roughness: .35, envMap, envMapIntensity: .8 })); cuff.quaternion.copy(q); cuff.position.copy(a0.clone().add(d.clone().multiplyScalar(.69))); wrist.add(cuff);
-  const glove = new THREE.Mesh(new THREE.SphereGeometry(.31, 24, 18), suitM); glove.position.copy(a1); glove.scale.set(1, 1.2, .9); glove.quaternion.copy(q); wrist.add(glove);
-  clock.position.copy(cuff.position).add(new THREE.Vector3(0, 0, .28)); clock.rotation.z = 0; }
-wrist.traverse(o => { if (o.material) { o.material.transparent = true; o.renderOrder = 2; } });
+clock.scale.setScalar(.21); clock.traverse(o => { if (o.material) { o.material.transparent = true; o.renderOrder = 2; } });
 // ---- helpers ----
 const EASE = eio, ez = (t, t0, t1, a, b, f = eio) => lerp(a, b, f((t - t0) / (t1 - t0)));
 const hotC = [1.0, .62, .25], whiteC = [1, .9, .75], uvC = [.66, .55, 1];
@@ -94,31 +89,31 @@ function bhSet(L, o) {
 }
 const fallSet = (o) => { const u = fall.material.uniforms; fall.visible = true; u.uCenter.value.set(o.cx, o.cy); u.uTime.value = tNow; u.uSpeed.value = o.speed == null ? .5 : o.speed; u.uOpacity.value = o.op == null ? 1 : o.op; u.uDens.value = o.dens == null ? .8 : o.dens; u.uCore.value = o.core == null ? 1 : o.core; u.uClip.value.set(...(o.clip || [0, 0, 1080, 1920])); };
 let tNow = 0;
+const insideSet = o => { const u = inside.material.uniforms; inside.visible = true; u.uCenter.value.set(o.cx, o.cy); u.uR.value = o.R; u.uTime.value = tNow; u.uRip.value = o.rip == null ? 1 : o.rip; u.uRipSpeed.value = o.speed == null ? -3 : o.speed; u.uOpacity.value = o.op == null ? 1 : o.op; u.uHeat.value = o.heat == null ? 1 : o.heat; u.uSeed.value = o.seed || 1; };
+const pulseK = (t, t0, k = 4) => t < t0 ? 0 : Math.exp(-(t - t0) * k);
 // gravitational time dilation for a distant watcher: proper-time rate falls to zero, progress saturates
 const rateF = x => Math.exp(-Math.pow(Math.max(x, 0) / 1.25, 1.6));
 const tauF = x => { let s = 0; const n = 60; for (let i = 0; i < n; i++) s += rateF((i + .5) * x / n) * x / n; return s; };
 const TAUMAX = 1.12;
 
 // ================= the shots =================
-function shotHook(t, A) { // b01 (0 .. S(b02)): hard push-in, the reach stalls
-  const u = EASE(t / S("b02")), p = lerp(30, 40, u), cx = lerp(530, 548, u), cy = lerp(1010, 1000, u);
+function shotHook(t, A) { // b01: hard push-in; the astronaut floats free in front of the disc and its reach stalls
+  const u = EASE(t / S("b02")), p = lerp(30, 40, u), cx = lerp(530, 548, u), cy = lerp(1035, 1025, u);
   bhSet(bh1, { cx, cy, p, stars: 1.1, th: 1.49, roll: -.14 });
-  const rr = t < 1.7 ? 1 - Math.pow(1 - clamp(t / 1.75), 3) : 1, stut = t > 1.1 ? Math.floor(rr * 14) / 14 : rr; // frame-rate drop into a hold
-  const hh = lerp(250, 300, u);
-  rig(7, 1.2, .1); place(0, { x: lerp(585, 570, u), y: lerp(752, 745, u), h: hh, ry: -.5, rz: -.14, red: .25 * smooth((t - 1.5) / 1.5), pose: { reach: .88 * stut, flail: .25 * (1 - stut) * 0, phase: 1 } });
-  A.astro = { x: 585, y: 750 };
+  const rr = t < 1.7 ? 1 - Math.pow(1 - clamp(t / 1.75), 3) : 1, stut = t > 1.1 ? Math.floor(rr * 14) / 14 : rr;
+  rig(7.5, 1.4, .1, [6, 2.5, -3], [-6, 1, -3]);
+  place(0, { x: lerp(430, 420, u) + 14 * (1 - rr), y: lerp(722, 712, u) + 10 * (1 - rr), h: lerp(250, 300, u), ry: -.6, rz: -.7 + .12 * (1 - rr), red: .3 * smooth((t - 1.5) / 1.5), pose: { reach: .88 * stut, flail: .2 * (1 - rr), phase: 1 } });
 }
 function shotFar(t, A) { // b02: far observer on a ledge, long lens, the astronaut slows to a hold
   const lt = t - S("b02"), tau = tauF(lt) / TAUMAX, rate = rateF(lt);
   const cx = 560, cy = 800, p = 23, Rsh = p * 5.196;
   bhSet(bh1, { cx, cy, p, stars: 1.2, th: 1.5, roll: -.07 });
-  const x0 = 90, y0 = 600, xe = cx - Rsh * 1.2, ye = cy - 40, s = tau, px = lerp(x0, xe, s), py = lerp(y0, ye, s) + Math.sin(tau * 9) * 4 * rate;
-  rig(7, 1.4, .25); place(0, { x: px, y: py, h: 190, ry: .4, rz: -.2 + .35 * Math.sin(tau * 5) * rate, red: .88 * (1 - Math.pow(rate, .5)), alpha: .5 + .5 * Math.pow(rate, .4) + 0 * 0, pose: { reach: .5, flail: .9 * rate, phase: tau * 16 } });
-  // the watcher on the ledge, seen from behind
-  rig(5, 1.2, .5); place(1, { x: 190, y: 1565, h: 150, ry: Math.PI + .25, rz: 0, dark: .15, pose: { reach: 0 } });
+  const x0 = 90, y0 = 600, xe = cx - Rsh * 1.2, ye = cy - 40, px = lerp(x0, xe, tau), py = lerp(y0, ye, tau) + Math.sin(tau * 9) * 4 * rate;
+  rig(7, 1.4, .25); place(0, { x: px, y: py, h: 190, ry: .4, rz: -.2 + .35 * Math.sin(tau * 5) * rate, red: .88 * (1 - Math.pow(rate, .5)), alpha: .5 + .5 * Math.pow(rate, .4), pose: { reach: .5, flail: .9 * rate, phase: tau * 16 } });
+  place(1, { x: 150, y: 1135 - 96, h: 190, ry: Math.PI - .6, dark: .25, pose: { reach: 0 } }); // the friend on a ledge, seen from behind
   const fl = .8 + .2 * Math.sin(t * 3.1);
   sprPlace(sprFlare, cx, cy, 1500, 22, .8 * fl); sprPlace(sprFlare2, cx, cy, 900, 12, .45 * fl);
-  A.tau = tau * 1.0; A.rate = rate; A.ledge = true;
+  A.tau = tau; A.rate = rate; A.ledge = 1135;
 }
 function photon(t, t0, t1, th0, dir, turns, A, Rsh, cx, cy, k = 1) {
   if (t < t0 - .05 || t > t1 + .5) return null;
@@ -153,47 +148,45 @@ function shotWarp(t, A) { // b04: stars warp into arcs and double images, slow l
     for (let i = 0; i < N; i++) { const k = i / (N - 1), sm = (1 - smooth((t - (T.tPic + 1.2)) / 1.0)), ang = ang0 - k * 0.55 * sm, rad = Rsh * (1.28 + .0 * k), q = 1 - k;
       place(i, { x: cx + Math.cos(ang) * rad, y: cy - Math.sin(ang) * rad * .8 - 30, h: 230, ry: .4, rz: -.2 + (ang - ang0) * 1.2, red: .25 + .6 * k, alpha: a * (i === 0 ? 1 : .5 * q), pose: { reach: .6, flail: .15, phase: 1 } }); } }
 }
-function shotClock(t, A) { // b05: over the shoulder, a steady wrist clock in sharp foreground
+function shotClock(t, A) { // b05: over the shoulder, a steady wrist clock in the foreground
   const lt = t - S("b05"), u = EASE(lt / (E("b05") - S("b05")));
-  bhSet(bh1, { cx: lerp(790, 770, u), cy: lerp(560, 550, u), p: lerp(20, 24, u), stars: 1, th: 1.49, roll: -.2, seed: 5 });
-  rig(7, 1.1, .3, [8, 2.5, -3.5], [-7, 1.5, 3]); clockL.intensity = 0;
-  place(0, { x: lerp(235, 225, u), y: 1400, h: lerp(1500, 1560, u), ry: 2.6, rz: .04, dark: .3, pose: { reach: 0 } });
-  wrist.visible = true; drawClock(lt + 3 * 3600 * 0 + 5); wrist.position.set(0, lerp(0, .04, u), 0);
-  A.clock = true;
+  bhSet(bh1, { cx: lerp(800, 780, u), cy: lerp(520, 510, u), p: lerp(20, 24, u), stars: 1, th: 1.49, roll: -.2, seed: 5 });
+  rig(7.5, 1.1, .35, [8, 2.5, -3.5], [-7, 1.5, 3]);
+  const a = astro[7].userData; place(7, { x: lerp(380, 360, u), y: 1590, h: lerp(1560, 1620, u), ry: 2.35, rz: .03, dark: .2, pose: { reach: .55 } });
+  a.armL.el.rotation.x = -1.25; a.armL.sh.rotation.x = -1.1; a.armL.sh.rotation.z = .55;
+  if (!a.armL.el.userData.ck) { a.armL.el.add(clock); a.armL.el.userData.ck = 1; clock.position.set(-.052, -.12, .0); clock.rotation.set(0, -Math.PI / 2, 0); }
+  clock.visible = true; drawClock(lt + 5); hold[7].updateMatrixWorld(true);
 }
 function shotGiant(t, A) { // b06: pull back; the astronaut shrinks to a speck against the huge disc
   const lt = t - S("b06"), d = E("b06") - S("b06"), u = EASE(clamp(lt / (d - .3))), p = lerp(54, 15.5, u), cx = 540, cy = lerp(780, 770, u), Rsh = p * 5.196;
   bhSet(bh1, { cx, cy, p, stars: 1, th: 1.49, roll: -.12, seed: 3 });
   const h = lerp(150, 20, Math.pow(u, .62)), ox = lerp(-.95, -1.12, u) * Rsh, oy = lerp(-1.18, -1.28, u) * Rsh;
   rig(4, .8, .25); place(0, { x: cx + ox, y: cy + oy + (-0.5 * h) * 0, h, ry: -.4, rz: -.2, pose: { reach: .7, flail: .0 } });
-  const sr = Math.max(1.6, Rsh * .0211);
-  A.sun = { x: 135, y: 1085, r: sr + 1.1 };
+  A.sun = { x: 135, y: 1085, r: Math.max(.9, Rsh * .0211) };
 }
-function shotCross(t, A) { // b07: dive over the edge, then the whole sky streams inward
+function insideShot(t, A) { // inside the horizon: the whole outside universe crushed into a shrinking window of light behind you, space flowing inward
+  const lt = t - T.tCross, d = E("b08") - T.tCross, u = smooth(lt / d);
+  const heat = 1 + 1.6 * pulseK(t, T.tCross, 3) + .9 * pulseK(t, T.tCross + 2.0, 4) + .9 * pulseK(t, T.tCross + 4.0, 4) + .9 * pulseK(t, T.tSlam8, 4);
+  insideSet({ cx: 540, cy: 790, R: lerp(430, 150, u) - 12 * pulseK(t, T.tCross + 2.0, 5) - 12 * pulseK(t, T.tCross + 4.0, 5), rip: lerp(.7, 1.1, u), speed: -3.4, heat });
+  rig(8, 1.6, 0, [0, 1.5, -8], [-6, 1, -4]);
+  place(0, { x: 540, y: lerp(850, 880, u), h: lerp(300, 230, u), ry: .25 * Math.sin(lt * .9), rz: .35 * Math.sin(lt * .7), rx: .2 * Math.sin(lt * .6 + 1), pose: { reach: .5 + .25 * Math.sin(lt * 1.6), flail: .45, phase: lt * 3 } });
+}
+function shotCross(t, A) { // b07: dive over the edge, then the sky shrinks to a window behind you
   const T0 = S("b07");
   if (t < T.tCross) { const u = EASE((t - T0) / (T.tCross - T0)), p = lerp(24, 62, u * u * .6 + u * .4), Rsh = p * 5.196, dd = lerp(.62, .0, u * u);
-    const ax = 540, ay = 780, cy = ay + 30 + (1 + dd) * Rsh;
+    const ax = 540, ay = 700, cy = ay + 70 + (1 + dd) * Rsh;
     bhSet(bh1, { cx: 540, cy, p, stars: 1, th: 1.49, roll: lerp(-.12, 0, u), seed: 3, ring: 1 + 1.5 * smooth((u - .7) / .3) });
-    rig(5, 1, .3); place(0, { x: ax, y: ay, h: lerp(120, 200, u), ry: -.3, rz: -.1, pose: { reach: .4 + .3 * u, flail: .35, phase: t * 4 } });
+    rig(7.5, 1, .2); place(0, { x: ax, y: ay, h: lerp(130, 220, u), ry: -.3, rz: -.5, pose: { reach: .4 + .3 * u, flail: .35, phase: t * 4 } });
     A.flash = 0; }
-  else { const lt = t - T.tCross, fl = Math.pow(Math.max(0, 1 - lt / .45), 2);
-    fallSet({ cx: 540, cy: 780, speed: lerp(.5, .9, smooth(lt / 2)), op: 1, dens: .85 });
-    rig(2.5, 1.6, .5, [4, 3, -6], [-5, 1, -4]);
-    place(0, { x: 540, y: lerp(860, 900, smooth(lt / 3)), h: lerp(190, 150, smooth(lt / 3)), ry: Math.PI - .2, rz: .1 * Math.sin(lt * 1.5), pose: { reach: .55 + .2 * Math.sin(lt * 2), flail: .5, phase: lt * 3 } });
-    A.flash = fl; }
+  else { insideShot(t, A); A.flash = Math.pow(Math.max(0, 1 - (t - T.tCross) / .45), 2); }
 }
-function shotCount(t, A) { // b08: dark inner view, the countdown slams in
-  const lt = t - S("b08");
-  fallSet({ cx: 540, cy: 760, speed: lerp(.7, 1.3, smooth((t - T.tCount0) / (T.tCountEnd - T.tCount0))), op: .55, dens: .7, core: 1.3 });
-  const gone = smooth((t - S("b08")) / 1.2);
-  rig(2, 1.2, .4, [4, 3, -6], [-5, 1, -4]); place(0, { x: 540, y: 1000, h: 130, ry: Math.PI, rz: .15, alpha: .55 * (1 - gone), pose: { reach: .6, flail: .6, phase: lt * 3 } });
-}
+function shotCount(t, A) { insideShot(t, A); }
 function shotNoodle(t, A) { // b09 + b10: side view, the nearer end is pulled harder, the silhouette stretches toward the hole
   const lt = t - S("b09"), cx = lerp(1030, 990, EASE(lt / 6)), cy = 790 + 230 * smooth((t - S("b10") + .1) / 1.3), p = lerp(43, 47, EASE(lt / 6));
   bhSet(bh1, { cx, cy, p, stars: .9, th: 1.49, roll: -.04, disc: .85, seed: 4 });
-  const K = ez(t, S("b09") + .15, T.tNoodle + 1.6, 0, 2.0, eio) + (t > S("b10") ? ez(t, S("b10"), E("b10"), 0, .9, eio) : 0);
-  const h = 290, ax = lerp(262, 236, EASE(lt / 6)), ay = cy;
-  rig(5.5, 1.5, .25, [5, 3, -3], [-5, 1, 1]); place(0, { x: ax, y: ay, h, rz: Math.PI / 2 - .02, ry: .1, K, dark: .35, alpha: 1 - smooth((t - E("b10") + .5) / .5) * .8, pose: { reach: 0, flail: .12 * (1 - smooth(K / 2)), phase: lt * 2 } });
+  const K = ez(t, S("b09") + .15, T.tNoodle + 1.6, 0, 1.7, eio) + (t > S("b10") ? ez(t, S("b10"), E("b10"), 0, .7, eio) : 0);
+  const h = 300, ax = lerp(310, 290, EASE(lt / 6)), ay = cy;
+  rig(5.5, 1.5, .25, [5, 3, -3], [-5, 1, 1]); place(0, { x: ax, y: ay, h, rz: Math.PI / 2 - .02, ry: .55, rx: .1, K, dark: .35, alpha: 1 - smooth((t - E("b10") + .5) / .5) * .8, pose: { reach: 0, flail: .12 * (1 - smooth(K / 2)), phase: lt * 2 } });
 }
 function shotSplit(t, A) { // b11: giant (calm) vs small (tears early)
   const lt = t - S("b11"), sx = 530; A.sx = sx;
@@ -210,34 +203,36 @@ function shotSplit(t, A) { // b11: giant (calm) vs small (tears early)
   place(1, { x: rx, y: ry, h: 175, rz: lerp(.35, .75, u) - .3, ry: .3, K: Kr, gap, tearY: .52, pose: { reach: .4, flail: .1, phase: lt * 2 }, red: .0 });
   ptsBegin(); if (t > T.tTear && t < T.tTear + 1.2) { const a = t - T.tTear; for (let i = 0; i < 90; i++) { const ang = hash(i) * 6.283, sp = 40 + hash(i * 3) * 330, r0 = sp * (1 - Math.exp(-a * 3.2)) / 3.2 * 1.0; ptAdd(rx + Math.cos(ang) * r0, ry + Math.sin(ang) * r0 * .8 + a * 40, 4 + 10 * hash(i * 5) * (1 - a / 1.2), (1 - a / 1.2) * (.4 + .6 * hash(i * 7)), i % 3 ? hotC.map(v => v * 1.6) : whiteC.map(v => v * 2)); } }
 }
-function shotPin(t, A) { // b12: a single pinprick of violet light; slow push-in
+function shotPin(t, A) { // b12: a single pinprick of violet light at the end of flowing space; slow push-in
   const lt = t - S("b12"), d = E("b12") - S("b12"), u = EASE(lt / d), px = 505, py = 880;
-  fallSet({ cx: px, cy: py, speed: lerp(.08, .45, u * u), op: lerp(.3, .55, u), dens: .55, core: 1.8 });
-  const g = 1 + 1.9 * u; sprPlace(sprPin, px, py, 16 * g, 16 * g, 1); sprPlace(sprPinHalo, px, py, 110 * g, 110 * g, .6); sprPlace(sprPinHalo2, px, py, 420 * g, 420 * g, .12 + .08 * u);
+  insideSet({ cx: px, cy: py, R: 0, rip: lerp(.5, 1.5, u), speed: -lerp(2, 6, u), op: .9 });
+  const pk = Math.exp(-(((lt - .2) % 1.8 + 1.8) % 1.8) * 3), g = (1 + 1.9 * u) * (1 + .3 * pk);
+  sprPlace(sprPin, px, py, 16 * g, 16 * g, 1); sprPlace(sprPinHalo, px, py, 110 * g, 110 * g, .6); sprPlace(sprPinHalo2, px, py, 420 * g, 420 * g, .12 + .08 * u);
   A.pin = { x: px, y: py };
 }
-function shotVerdictBG(t, A) { // b13/b14: the empty dark ring with a single faint photon ring
-  const up = EASE((t - S("b14")) / (E("b14") - S("b14")));
-  const op = t < S("b14") ? .22 : lerp(.22, 1, smooth((t - S("b14")) / 2.0)), p = t < S("b14") ? 52 : lerp(58, 46, up);
-  bhSet(bh1, { cx: 505, cy: 760, p, disc: 0, ring: t < S("b14") ? .6 : lerp(.6, 1.1, smooth((t - S("b14")) / 2)), stars: .5, neb: .7, op, th: 1.49, roll: -.1, seed: 8 });
+function shotVerdictBG(t, A) { // b14 / b13 / end: the empty dark ring with a single faint photon ring; b14 sends pulses that never get out
+  const b14 = t >= S("b14") && t < S("b13"), lt = t - S("b14");
+  const p = b14 ? lerp(60, 50, EASE(lt / (E("b14") - S("b14")))) : 44, op = b14 ? lerp(.3, 1, smooth(lt / 1.6)) : .22;
+  bhSet(bh1, { cx: 505, cy: 800, p, disc: 0, ring: b14 ? lerp(.6, 1.1, smooth(lt / 2)) : .5, stars: .5, neb: .7, op, th: 1.49, roll: -.1, seed: 8 });
+  if (b14) { A.pulses = [T.tNoth, T.tNoth + 1.9].map(t0 => ({ u: (t - t0) / 1.4, cx: 505, cy: 800, R: p * 5.196 })); }
 }
-function shotFinal(t, A) { // b15: the same fall, two ways
+function shotFinal(t, A) { // b15: the same fall, two ways: frozen at the rim vs sliding through
   const lt = t - S("b15"), d = E("b15") - S("b15"), u = EASE(lt / d), sx = 530; A.sx = sx;
-  const Lc = [lerp(262, 300, u), 840], Rc = [lerp(772, 740, u), 840], p = lerp(21, 25, u), Rs = p * 5.196;
+  const Lc = [lerp(262, 290, u), 860], Rc = [lerp(772, 750, u), 860], p = lerp(21, 25, u), Rs = p * 5.196;
   bhSet(bh1, { cx: Lc[0], cy: Lc[1], p, stars: 1, th: 1.49, roll: -.1, clip: [0, 0, sx, 1920], seed: 6 });
   bhSet(bh2, { cx: Rc[0], cy: Rc[1], p, stars: 1, th: 1.49, roll: -.1, clip: [sx, 0, 1080, 1920], seed: 6 });
-  rig(5, 1.2, .3);
-  // left: frozen at the rim, dim and red. right: slides through the edge
+  rig(7.5, 1.3, .2);
   const rl = rateF(lt * 1.4 + 1.2), tauL = tauF(lt * 1.4 + 1.2) / TAUMAX;
-  place(0, { x: Lc[0] + lerp(-.55, -.18, tauL) * Rs, y: Lc[1] - 1.12 * Rs - 20, h: 215, ry: .3, rz: -.2, red: .6 * (1 - Math.pow(rl, .5)), alpha: .8 + .2 * Math.pow(rl, .4), pose: { reach: .6, flail: .2 * rl, phase: tauL * 10 } });
-  const s = EASE(clamp((t - S("b15") - .2) / (d - .4)));
-  place(1, { x: Rc[0] + lerp(-.55, .55, s) * Rs, y: Rc[1] + lerp(-1.12, -.15, s) * Rs - 14 * (1 - s), h: lerp(215, 165, s), ry: .3, rz: lerp(-.2, -.8, s), pose: { reach: .6, flail: .5, phase: lt * 5 }, alpha: 1 });
+  place(0, { x: Lc[0] + lerp(-.65, -.2, tauL) * Rs, y: Lc[1] - 1.3 * Rs, h: 215, ry: .3, rz: -.6, red: .6 * (1 - Math.pow(rl, .5)), alpha: .85 + .15 * Math.pow(rl, .4), pose: { reach: .6, flail: .2 * rl, phase: tauL * 10 } });
+  const f = clamp((t - T.tYou - .2) / 1.9), fe = f * f * (3 - 2 * f), fall1 = lt < 1 ? 0 : fe;
+  place(1, { x: Rc[0] + lerp(-.65, .1, fall1) * Rs + 8 * Math.sin(lt * 1.3), y: Rc[1] + lerp(-1.3, .15, fall1) * Rs, h: lerp(215, 120, fall1), ry: .3, rz: lerp(-.6, -.2, fall1) + .2 * Math.sin(lt * 2), pose: { reach: .6, flail: .55, phase: lt * 5 }, alpha: 1 });
+  A.gL = { x: 150, y: 560, tau: tauL, frozen: rl < .12 }; A.gR = { x: 830, y: 560, tau: lt * .09 + (t - T.tYou) * .0 };
 }
 
 let lastShot = "";
 function stage(t, A) {
-  [bh1, bh2, fall, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); [sprFlare, sprFlare2, sprPin, sprPinHalo, sprPinHalo2].forEach(s => (s.visible = false)); wrist.visible = false; clockL.intensity = 0;
-  ptsBegin(); tNow = t;
+  [bh1, bh2, fall, inside, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); [sprFlare, sprFlare2, sprPin, sprPinHalo, sprPinHalo2].forEach(s => (s.visible = false)); clockL.intensity = 0;
+  ptsBegin(); tNow = t; clock.visible = false;
   const s2 = S("b02");
   if (t >= T.tSign - .35) { shotVerdictBG(S("b13") + 1, A); bh1.material.uniforms.uOpacity.value = .18; bloom.strength = .4; }
   else if (t < s2) shotHook(t, A);
@@ -250,7 +245,7 @@ function stage(t, A) {
   else if (t < S("b09")) shotCount(t, A);
   else if (t < S("b11")) shotNoodle(t, A);
   else if (t < S("b12")) shotSplit(t, A);
-  else if (t < S("b13")) shotPin(t, A);
+  else if (t < S("b14")) shotPin(t, A);
   else if (t < S("b15")) shotVerdictBG(t, A);
   else shotFinal(t, A);
   if (t < T.tSign - .35) bloom.strength = .5 + (t > T.tStamp && t < T.tStamp + .4 ? .0 : 0);
@@ -260,9 +255,9 @@ function stage(t, A) {
 window.__seek = function (t) {
   const A = {};
   if (COVER) { // cover: black hole, tiny astronaut at the glowing edge, headline
-    tNow = 3.1; [bh1, bh2, fall, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); ptsBegin();
-    bhSet(bh1, { cx: 540, cy: 1180, p: 40, stars: 1.1, th: 1.49, roll: -.12, time: 3.1, ring: 1.2 });
-    rig(5.5, 1.3, .4); place(0, { x: 640, y: 895, h: 195, ry: -.5, rz: -.14, red: .15, pose: { reach: .88 } });
+    tNow = 3.1; [bh1, bh2, fall, inside, pts].forEach(o => (o.visible = false)); hold.forEach(h => (h.visible = false)); ptsBegin();
+    bhSet(bh1, { cx: 540, cy: 1390, p: 46, stars: 1.1, th: 1.49, roll: -.12, time: 3.1, ring: 1.2 });
+    rig(5.5, 1.3, .4); place(0, { x: 470, y: 1090, h: 210, ry: -.6, rz: -.7, red: .15, pose: { reach: .88 } });
     ptsEnd(); bloom.strength = .5; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
   }
   const shk = shakeAt(t);

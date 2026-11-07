@@ -11,7 +11,7 @@
   "beats": [
     {
       "id": "b01",
-      "vo": "To everyone watching, you'd freeze at the edge.",
+      "vo": "To anyone far away, you'd freeze at the edge.",
       "claims": [
         "C1"
       ],
@@ -53,14 +53,15 @@
     },
     {
       "id": "b05",
-      "vo": "On your own clock, NASA's simulation has the fall take about three hours.",
+      "vo": "On your own clock, NASA's simulation says, the fall takes about three hours.",
       "claims": [
         "C4"
       ],
       "screen": [
         "≈ 3 hours (NASA simulation)"
       ],
-      "visual": "Over-the-shoulder behind the astronaut, accretion disc glowing to the side, a wrist clock in sharp foreground focus ticking steadily. Slow push toward the horizon; hold steady so the clock reads as normal."
+      "visual": "Over-the-shoulder behind the astronaut, accretion disc glowing to the side, a wrist clock in sharp foreground focus ticking steadily. Slow push toward the horizon; hold steady so the clock reads as normal.",
+      "tts": "On your own clock, NASA's simulation says the fall takes about three hours."
     },
     {
       "id": "b06",
@@ -86,14 +87,15 @@
     },
     {
       "id": "b08",
-      "vo": "Then the simulation gives you twelve point eight seconds.",
+      "vo": "Then the simulation gives you twelve point eight seconds, before you're torn apart.",
       "claims": [
         "C7"
       ],
       "screen": [
         "12.8 s"
       ],
-      "visual": "Anton countdown 12.8 slams in, Horizon orange, over the dark inner view; the numerals tick down on the beat. Push-in on the number."
+      "visual": "Anton countdown 12.8 slams in, Horizon orange, over the dark inner view; the numerals tick down on the beat. Push-in on the number.",
+      "tts": "Then the simulation gives you twelve point eight seconds before you're torn apart."
     },
     {
       "id": "b09",
@@ -123,7 +125,7 @@
       ],
       "screen": [
         "small black hole",
-        "tears you apart early"
+        "can tear you apart early"
       ],
       "visual": "Split frame: left a giant black hole with a calm approach, right a small tight black hole where the figure breaks apart well before the edge. Impact shake allowed on the tear."
     },
@@ -139,18 +141,6 @@
       "visual": "Dark centre; a single pinprick of violet light. Slow push-in to the pin; a question mark resolves in Ultraviolet."
     },
     {
-      "id": "b13",
-      "vo": "The verdict? Unproven.",
-      "claims": [
-        "C12"
-      ],
-      "screen": [
-        "CASE FILE 002",
-        "UNPROVEN"
-      ],
-      "visual": "Signature stamp: CASE FILE 002 header, a big Anton UNPROVEN stamp slams down in Ultraviolet on Abyss. Deep hit. Hold 1 s still."
-    },
-    {
       "id": "b14",
       "vo": "Nothing from inside can reach us. This is math, not a memory.",
       "claims": [
@@ -162,8 +152,21 @@
       "visual": "Slow pull-back from the stamp to the empty dark ring with a single faint photon ring. Calm, no shake."
     },
     {
+      "id": "b13",
+      "vo": "The verdict? Unproven.",
+      "claims": [
+        "C12"
+      ],
+      "screen": [
+        "CASE FILE 002",
+        "CLAIM: you'd freeze at the edge",
+        "UNPROVEN"
+      ],
+      "visual": "Signature stamp: CASE FILE 002 header, a big Anton UNPROVEN stamp slams down in Ultraviolet on Abyss. Deep hit. Hold 1 s still."
+    },
+    {
       "id": "b15",
-      "vo": "To the world, you'd freeze at the edge. To you, you'd fall right through.",
+      "vo": "To anyone far away, you'd freeze at the edge. To you, you'd fall right through.",
       "claims": [
         "C1",
         "C4"
@@ -173,13 +176,29 @@
     }
   ],
   "end_card": {
-    "text": "Case file 002 · UNPROVEN · Nobody has fallen in. This is math, not a memory.",
+    "text": "Case file 002 · UNPROVEN · Nothing from inside can reach us. This is math, not a memory.",
     "channel": "Unreal, Actually"
   },
   "cover": {
-    "headline": "Fall into a black hole",
+    "headline": "To anyone far away, you'd freeze at the edge",
     "key_word": "freeze"
   },
   "end_hold": 1.8,
-  "sound": "unreal-actually"
+  "sound": "unreal-actually",
+  "gaps": {
+    "b01": 0.35,
+    "b02": 0.5,
+    "b03": 0.4,
+    "b04": 0.65,
+    "b05": 0.45,
+    "b06": 0.5,
+    "b07": 0.3,
+    "b08": 0.15,
+    "b09": 0.15,
+    "b10": 0.6,
+    "b11": 0.5,
+    "b12": 0.7,
+    "b14": 0.7,
+    "b13": 0.5
+  }
 }
