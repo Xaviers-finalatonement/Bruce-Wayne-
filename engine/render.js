@@ -27,7 +27,7 @@ function serve() {
   fs.mkdirSync(outDir, { recursive: true });
   const srv = await serve(), port = srv.address().port;
   const rel = path.relative(root, epDir).split(path.sep).join("/");
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: ["--use-angle=swiftshader", "--use-gl=angle", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"] });
   const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
   page.on("pageerror", e => console.error("PAGE ERROR", e.message));

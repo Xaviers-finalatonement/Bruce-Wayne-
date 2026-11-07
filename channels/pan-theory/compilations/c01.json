@@ -1,0 +1,19 @@
+{
+  "channel": "pan-theory",
+  "number": 1,
+  "title": "5 Kitchen Science Facts That Change How You Cook",
+  "episodes": [
+    "channels/pan-theory/ep01-sauteing-veggies",
+    "channels/pan-theory/ep02-onions-make-you-cry",
+    "channels/pan-theory/ep03-searing-juices",
+    "channels/pan-theory/ep04-bread-goes-stale",
+    "channels/pan-theory/ep05-why-popcorn-pops"
+  ],
+  "titles": [
+    "What sautéing does to your veggies",
+    "Why onions make you cry",
+    "Searing doesn't seal in juices",
+    "Why bread goes stale",
+    "Why popcorn pops"
+  ]
+}

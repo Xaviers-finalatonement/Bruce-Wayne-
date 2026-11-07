@@ -1,0 +1,20 @@
+{
+  "channel": "skin-receipts",
+  "number": 1,
+  "title": "5 Skin-Care Habits, Checked Against the Evidence",
+  "episodes": [
+    "channels/skin-receipts/ep01-bath-towel",
+    "channels/skin-receipts/ep02-drinking-water-skin",
+    "channels/skin-receipts/ep03-sunscreen-cloudy-days",
+    "channels/skin-receipts/ep04-hot-showers",
+    "channels/skin-receipts/ep05-open-pores"
+  ],
+  "titles": [
+    "What's living on your bath towel",
+    "Does drinking water hydrate your skin?",
+    "Sunscreen on cloudy days",
+    "What hot showers do to your skin",
+    "Can you open your pores?"
+  ],
+  "footer": "Education, not medical advice."
+}

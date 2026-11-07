@@ -50,20 +50,45 @@ const appr = (ep, p) => (state.approvals[ep] && state.approvals[ep][p]) || {};
 const isReady = (ep, p) => !!(appr(ep, p).video && appr(ep, p).text);
 const postedOn = (ep, p) => (state.posted[ep] || {})[p] || null;
 
+/* ---------- units: shorts (episodes) and long videos (compilations) ---------- */
+const COMPS = {};
+catalog.channels.forEach((c) => (c.compilations || []).forEach((k) => { COMPS[k.id] = Object.assign({}, k, { channel: c.id, isComp: true }); }));
+const UNIT = Object.assign({}, EP, COMPS);
+const compsOf = (ch) => Object.values(COMPS).filter((k) => k.channel === ch);
+const platformsOf = (u) => (u.isComp ? ['youtube'] : PKEYS);
+const unitName = (u) => `${CH[u.channel].name} · ${u.isComp ? 'Long video' : 'Ep'} ${u.number}`;
+const unitHref = (u) => (u.isComp ? '/compilation/' : '/episode/') + u.id;
+const compMeta = (k) => {
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, path.dirname(k.video), 'compilation.json'), 'utf8')); } catch { return null; }
+};
+const compRendered = (k) => k.episodes.filter((id) => EP[id] && fileExists(EP[id].video)).length;
+
 function statusOf(e) {
-  if (PKEYS.every((p) => postedOn(e.id, p))) return 'posted';
-  if (PKEYS.every((p) => isReady(e.id, p))) return 'approved';
+  if (e.isComp) {
+    if (postedOn(e.id, 'youtube')) return 'posted';
+    if (isReady(e.id, 'youtube')) return 'approved';
+    if (fileExists(e.video)) return 'in review';
+    return compRendered(e) === e.episodes.length ? 'ready to build' : 'waiting for shorts';
+  }
+  if (['youtube', 'tiktok'].every((p) => postedOn(e.id, p))) return 'posted';
+  if (['youtube', 'tiktok'].every((p) => isReady(e.id, p))) return 'approved';
   return e.status;
 }
 
 /* ---------- platform text ---------- */
-function parts(e, p) {
-  const d = e[p] || {};
-  const tags = (d.hashtags || []).join(' ');
-  if (p === 'youtube') return { title: d.title || 'TODO', body: d.description || 'TODO', tags };
-  return { title: null, body: d.caption || 'TODO', tags };
+// YouTube: title + description (the description carries the hashtags). TikTok: title + hashtags only.
+// Instagram (one shared account, secondary): caption + hashtags.
+function fieldsFor(u, p) {
+  const tags = (d) => (d.hashtags && d.hashtags.length ? d.hashtags.join(' ') : 'TODO');
+  if (u.isComp) {
+    const m = compMeta(u) || {};
+    return [['title', 'Title', m.title || u.youtube.title, 2], ['description', 'Description', m.description || u.youtube.description, 14]];
+  }
+  const d = u[p] || {};
+  if (p === 'youtube') return [['title', 'Title', d.title || 'TODO', 2], ['description', 'Description', d.description || 'TODO', 10]];
+  if (p === 'tiktok') return [['title', 'Title', d.title || 'TODO', 2], ['hashtags', 'Hashtags', tags(d), 2]];
+  return [['caption', 'Caption', d.caption || 'TODO', 8], ['hashtags', 'Hashtags', tags(d), 2]];
 }
-const allText = (e, p) => { const x = parts(e, p); return x.body + (x.tags ? '\n\n' + x.tags : ''); };
 
 /* ---------- layout ---------- */
 const NAV = [['/', 'Home'], ['/review', 'Review'], ['/upload', 'Upload'], ['/calendar', 'Calendar'], ['/lessons', 'Lessons']];
@@ -102,53 +127,85 @@ ${body}
 }
 
 const chip = (s) => `<span class="chip s-${s.replace(/\s/g, '-')}">${esc(s)}</span>`;
-const tick = (ok) => (ok ? '<span class="ok" aria-hidden="true">✓</span> ' : '');
 
 function field(label, id, text, rows = 3) {
   return `<div class="field"><div class="fhead"><label for="${id}">${esc(label)}</label>
 <button type="button" class="btn small copy" data-copy-from="${id}" hidden>Copy</button></div>
 <textarea id="${id}" readonly rows="${rows}">${esc(text)}</textarea></div>`;
 }
+const fieldsHtml = (u, p) => fieldsFor(u, p).map(([k, label, text, rows]) => field(label, `${u.id}-${p}-${k}`, text, rows)).join('\n');
 
 function dlButtons(e) {
-  const items = [['video', 'Download video', e.video, `${slug(CH[e.channel].name)}-ep0${e.number}.mp4`, 'Video not rendered yet'],
-    ['cover', 'Download thumbnail', e.cover, '', 'Thumbnail not ready yet'],
-    ['srt', 'Download captions (.srt)', e.srt, '', 'Captions not ready yet']];
-  return items.map(([, label, rel, , missing]) => (fileExists(rel)
+  const items = [['Download video', e.video, 'Video not rendered yet'],
+    ['Download thumbnail', e.cover, 'Thumbnail not ready yet'],
+    ['Download captions (.srt)', e.srt, 'Captions not ready yet']];
+  return items.map(([label, rel, missing]) => (fileExists(rel)
     ? `<a class="btn" href="${mediaUrl(rel, true)}">${label}</a>`
     : `<span class="btn off" role="note">${missing}</span>`)).join('');
 }
+const thumbOf = (u) => (u.isComp ? u.thumbnail : u.cover);
+const dlLink = (rel, label, missing) => (fileExists(rel) ? `<a class="btn" href="${mediaUrl(rel, true)}">${label}</a>` : `<span class="btn off" role="note">${missing}</span>`);
 
 /* ---------- pages ---------- */
+// One badge per platform: what state is it in, and one tap to the next step.
+function pbadge(u, p) {
+  const nm = PLATFORMS[p].name;
+  const d = postedOn(u.id, p);
+  if (d) return `<a class="pb posted" href="${unitHref(u)}#${p}"><b>${nm}</b><span>Posted ✓ ${esc(d)}</span></a>`;
+  if (isReady(u.id, p)) return `<a class="pb ready" href="/upload#q-${u.id}-${p}"><b>${nm}</b><span>Ready: post it</span></a>`;
+  if (fileExists(u.video)) return `<a class="pb review" href="/review#${u.id}"><b>${nm}</b><span>Needs your OK</span></a>`;
+  return `<span class="pb none"><b>${nm}</b><span>Not rendered</span></span>`;
+}
+
+function compLine(k) {
+  const n = k.episodes.length; const have = compRendered(k);
+  const s = statusOf(k);
+  const what = s === 'posted' ? 'posted' : s === 'approved' ? 'ready to post' : s === 'in review' ? 'built, needs your OK'
+    : s === 'ready to build' ? 'all shorts done, ready to build' : `needs ${n - have} more short${n - have === 1 ? '' : 's'} (${have} of ${n} done)`;
+  return `Long video ${k.number}: ${what}`;
+}
+
 function homePage() {
-  const cards = catalog.channels.map((c) => {
+  let ready = 0;
+  Object.values(UNIT).forEach((u) => platformsOf(u).forEach((p) => { if (isReady(u.id, p) && !postedOn(u.id, p)) ready++; }));
+  const top = ready
+    ? `<p class="callout"><b>${ready} ready to post.</b> <a class="btn primary" href="/upload">Open the posting queue</a></p>`
+    : '<p class="lead">Nothing is waiting to be posted. Approve a video on the <a href="/review">Review</a> page and it shows up here.</p>';
+  const blocks = catalog.channels.map((c) => {
     const list = EPS.filter((e) => e.channel === c.id);
     const counts = {};
     list.forEach((e) => { const s = statusOf(e); counts[s] = (counts[s] || 0) + 1; });
-    const prog = Object.entries(counts).filter(([s]) => s !== 'planned').map(([s, n]) => `${n} of ${list.length} ${s}`).join(' · ') || `0 of ${list.length} started`;
+    const prog = Object.entries(counts).filter(([s]) => s !== 'planned').map(([s, n]) => `${n} of ${list.length} ${s}`).join(' · ') || `0 of ${list.length} shorts started`;
     const segs = list.map((e) => `<i class="seg s-${statusOf(e).replace(/\s/g, '-')}" title="Ep ${e.number}: ${esc(statusOf(e))}"></i>`).join('');
-    return `<li><a class="chcard" style="${esc(chStyle(c))}" href="/channel/${c.id}">
-<span class="chname">${esc(c.name)}</span><span class="chsub">${esc(c.subject)}</span>
-<span class="segs" aria-hidden="true">${segs}</span><span class="chprog">${esc(prog)}</span></a></li>`;
+    const rows = list.map((e) => (fileExists(e.video)
+      ? `<li><a class="pt" href="/episode/${e.id}"><span class="num">${e.number}</span><span>${esc(e.title)}</span></a>
+<span class="pbs">${pbadge(e, 'youtube')}${pbadge(e, 'tiktok')}</span></li>`
+      : `<li class="off"><a class="pt" href="/episode/${e.id}"><span class="num">${e.number}</span><span>${esc(e.title)} <em>· not rendered yet</em></span></a></li>`)).join('');
+    const longs = compsOf(c.id).map((k) => `<li class="long"><a class="pt" href="/compilation/${k.id}"><span class="num">▶</span><span>${esc(compLine(k))}</span></a>
+${fileExists(k.video) ? `<span class="pbs">${pbadge(k, 'youtube')}</span>` : ''}</li>`).join('');
+    return `<section class="chblock" style="${esc(chStyle(c))}" aria-labelledby="h-${c.id}">
+<a class="chtop" href="/channel/${c.id}"><h2 class="chname" id="h-${c.id}">${esc(c.name)}</h2><span class="chsub">${esc(c.subject)}</span>
+<span class="segs" aria-hidden="true">${segs}</span><span class="chprog">${esc(prog)}</span></a>
+<ul class="postrows">${rows}${longs}</ul></section>`;
   }).join('');
-  const ready = [];
-  EPS.forEach((e) => PKEYS.forEach((p) => { if (isReady(e.id, p) && !postedOn(e.id, p)) ready.push([e, p]); }));
-  const rl = ready.length
-    ? `<ul class="rows">${ready.map(([e, p]) => `<li><a href="/episode/${e.id}"><b>${esc(CH[e.channel].name)} · Ep ${e.number}</b><span>${esc(e.title)}</span></a><em>${PLATFORMS[p].name}</em></li>`).join('')}</ul>
-<p><a class="btn primary" href="/upload">Go to the posting queue</a></p>`
-    : `<p class="empty">Nothing is ready yet. Approve a video and its text on the <a href="/review">Review</a> page and it shows up here.</p>`;
-  return page('Home', '/', `<h1>Your channels</h1><ul class="cards">${cards}</ul>
-<section><h2>Ready to post</h2>${rl}</section>`);
+  return page('Home', '/', `<h1>Your channels</h1>${top}${blocks}`);
 }
 
 function channelPage(c) {
-  const rows = EPS.filter((e) => e.channel === c.id).map((e) => {
-    const s = statusOf(e);
-    return `<li><a href="/episode/${e.id}"><span class="num">${e.number}</span><span class="t">${esc(e.title)}</span>${chip(s)}</a></li>`;
-  }).join('');
+  const rows = EPS.filter((e) => e.channel === c.id).map((e) => `<li><a href="/episode/${e.id}"><span class="num">${e.number}</span><span class="t">${esc(e.title)}</span>${chip(statusOf(e))}</a></li>`).join('');
+  const longs = compsOf(c.id).map((k) => `<li><a href="/compilation/${k.id}"><span class="num">${k.number}</span><span class="t">${esc(k.title)}<span class="sub">${esc(compLine(k))}</span></span>${chip(statusOf(k))}</a></li>`).join('');
   return page(c.name, '/', `<p class="crumb"><a href="/">Home</a></p>
 <div class="chhead" style="${esc(chStyle(c))}"><h1>${esc(c.name)}</h1><p>${esc(c.subject)}</p></div>
-<ol class="eplist">${rows}</ol>`, { style: chStyle(c) });
+<h2>Shorts</h2><ol class="eplist">${rows}</ol>
+<h2>Long videos</h2>${longs ? `<ol class="eplist">${longs}</ol>` : '<p class="empty">No long video planned yet.</p>'}`, { style: chStyle(c) });
+}
+
+function platformPanel(u, p, secondary) {
+  const P = PLATFORMS[p]; const r = isReady(u.id, p); const d = postedOn(u.id, p);
+  return `<section class="panel${secondary ? ' secondary' : ''}" id="${p}"><h2>${P.name}${secondary ? ' <span class="small">(one shared account, optional)</span>' : ''} ${r ? '<span class="chip s-approved">ready</span>' : ''}${d ? `<span class="chip s-posted">posted ${esc(d)}</span>` : ''}</h2>
+${fieldsHtml(u, p)}
+<p class="row"><a class="btn" href="${P.url}" target="_blank" rel="noopener">Open ${P.name} upload page</a></p>
+${P.note ? `<p class="small">${P.note}</p>` : ''}</section>`;
 }
 
 function episodePage(e) {
@@ -160,24 +217,39 @@ function episodePage(e) {
     : `<div class="player empty-player"><p><b>Video not rendered yet</b></p><p>It will appear here as soon as it is ready.</p></div>`;
   const cover = hasCover ? `<img class="cover" src="${mediaUrl(e.cover)}" alt="Thumbnail for ${esc(e.title)}" width="180" height="320" loading="lazy">` : '';
   const g = e.gate ? `<p class="gate"><b>Fact check:</b> ${esc(e.gate.summary || '')}${e.gate.score != null ? ` Gate score ${esc(e.gate.score)}.` : ''}</p>` : '';
-  const panels = PKEYS.map((p) => {
-    const P = PLATFORMS[p]; const x = parts(e, p); const id = `${e.id}-${p}`;
-    const r = isReady(e.id, p); const d = postedOn(e.id, p);
-    return `<section class="panel" id="${p}"><h2>${P.name} ${r ? '<span class="chip s-approved">ready</span>' : ''}${d ? `<span class="chip s-posted">posted ${esc(d)}</span>` : ''}</h2>
-${x.title !== null ? field('Title', id + '-title', x.title, 2) : ''}
-${field(p === 'youtube' ? 'Description' : 'Caption', id + '-body', x.body, 10)}
-${field('Hashtags', id + '-tags', x.tags || 'TODO', 2)}
-<textarea id="${id}-all" hidden>${esc(allText(e, p))}</textarea>
-<p class="row"><button type="button" class="btn small copy" data-copy-from="${id}-all" hidden>Copy caption + hashtags</button>
-<a class="btn" href="${P.url}" target="_blank" rel="noopener">Open upload page</a></p>
-${P.note ? `<p class="small">${P.note}</p>` : ''}</section>`;
-  }).join('');
   return page(`${c.name} Ep ${e.number}`, '/', `<p class="crumb"><a href="/">Home</a> / <a href="/channel/${c.id}">${esc(c.name)}</a></p>
 <div class="chhead" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(c.name)} · Ep ${e.number}</p><h1>${esc(e.title)}</h1><p>${chip(statusOf(e))}</p></div>
 <div class="media">${player}${cover}</div>
 ${g}
 <div class="dl">${dlButtons(e)}</div>
-${panels}`, { style: chStyle(c) });
+${platformPanel(e, 'youtube')}${platformPanel(e, 'tiktok')}
+<h2 class="sec">Also, if you want it</h2>
+${platformPanel(e, 'instagram', true)}`, { style: chStyle(e.isComp ? CH[e.channel] : c) });
+}
+
+function compilationPage(k) {
+  const c = CH[k.channel];
+  const hasVideo = fileExists(k.video); const hasThumb = fileExists(k.thumbnail);
+  const meta = compMeta(k);
+  const player = hasVideo
+    ? `<video class="player wide" controls playsinline preload="metadata"${hasThumb ? ` poster="${mediaUrl(k.thumbnail)}"` : ''} src="${mediaUrl(k.video)}"></video>`
+    : `<div class="player wide empty-player"><p><b>Not built yet</b></p><p>${esc(compLine(k))}.</p><p class="small">It is built from the five finished shorts, in order.</p></div>`;
+  const thumb = hasThumb ? `<img class="thumb" src="${mediaUrl(k.thumbnail)}" alt="Thumbnail for ${esc(k.title)}" width="640" height="360" loading="lazy">` : '';
+  const inc = k.episodes.map((id) => EP[id]).filter(Boolean).map((e) => `<li><a href="/episode/${e.id}"><span class="num">${e.number}</span><span class="t">${esc(e.title)}</span>${fileExists(e.video) ? chip('rendered') : chip('not rendered')}</a></li>`).join('');
+  const mins = meta && meta.duration ? ` · ${Math.floor(meta.duration / 60)}:${String(Math.round(meta.duration % 60)).padStart(2, "0")}` : '';
+  const r = isReady(k.id, 'youtube'); const d = postedOn(k.id, 'youtube');
+  const step = hasVideo ? (d ? '' : r ? `<p><a class="btn primary" href="/upload#q-${k.id}-youtube">Post it: open the steps</a></p>` : `<p><a class="btn primary" href="/review#${k.id}">Approve it on the Review page</a></p>`) : '';
+  return page(`${c.name} Long video ${k.number}`, '/', `<p class="crumb"><a href="/">Home</a> / <a href="/channel/${c.id}">${esc(c.name)}</a></p>
+<div class="chhead" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(c.name)} · Long video ${k.number}${esc(mins)}</p><h1>${esc(k.title)}</h1><p>${chip(statusOf(k))}</p></div>
+<div class="media">${player}</div>
+<div class="dl two">${dlLink(k.video, 'Download video', 'Video not built yet')}${dlLink(k.thumbnail, 'Download thumbnail', 'Thumbnail not built yet')}</div>
+${thumb ? `<div class="media">${thumb}</div>` : ''}
+${step}
+<section class="panel" id="youtube"><h2>YouTube ${r ? '<span class="chip s-approved">ready</span>' : ''}${d ? `<span class="chip s-posted">posted ${esc(d)}</span>` : ''}</h2>
+${fieldsHtml(k, 'youtube')}
+${meta ? '' : '<p class="small">The chapter times are added to the description when the video is built.</p>'}
+<p class="row"><a class="btn" href="${PLATFORMS.youtube.url}" target="_blank" rel="noopener">Open YouTube upload page</a></p></section>
+<h2>The shorts inside</h2><ol class="eplist">${inc}</ol>`, { style: chStyle(c) });
 }
 
 function approveForm(e, p, kind, label) {
@@ -187,44 +259,48 @@ function approveForm(e, p, kind, label) {
 <button class="btn ${on ? 'on' : ''}" type="submit" aria-pressed="${on}">${on ? '✓ ' : ''}${label}${on ? ' approved' : ''}</button></form>`;
 }
 
-function reviewPage() {
-  const list = EPS.filter((e) => e.video);
-  const body = list.length ? list.map((e) => {
-    const c = CH[e.channel];
-    const rows = PKEYS.map((p) => `<div class="prow"><h3>${PLATFORMS[p].name}${isReady(e.id, p) ? ' <span class="chip s-approved">ready to post</span>' : ''}</h3>
-<div class="row">${approveForm(e, p, 'video', 'Approve video')}${approveForm(e, p, 'text', 'Approve text')}</div></div>`).join('');
-    return `<section class="panel" id="${e.id}" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(c.name)} · Ep ${e.number}</p>
-<h2><a href="/episode/${e.id}">${esc(e.title)}</a></h2>
-<p class="small">${fileExists(e.video) ? 'Watch the video and read the text on the episode page, then approve.' : 'The video is not rendered yet. You can approve once you have watched it.'}</p>
+function reviewCard(u) {
+  const c = CH[u.channel];
+  const rows = platformsOf(u).map((p) => `<div class="prow"><h3>${PLATFORMS[p].name}${p === 'instagram' ? ' <span class="small">(optional)</span>' : ''}${isReady(u.id, p) ? ' <span class="chip s-approved">ready to post</span>' : ''}</h3>
+<div class="row">${approveForm(u, p, 'video', 'Approve video')}${approveForm(u, p, 'text', 'Approve text')}</div></div>`).join('');
+  return `<section class="panel" id="${u.id}" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(unitName(u))}</p>
+<h2><a href="${unitHref(u)}">${esc(u.title)}</a></h2>
+<p class="small">${fileExists(u.video) ? 'Watch the video and read the text on its page, then approve.' : 'The video is not rendered yet. You can approve once you have watched it.'}</p>
 ${rows}</section>`;
-  }).join('') : '<p class="empty">No episode has a video yet.</p>';
+}
+
+function reviewPage() {
+  const shorts = EPS.filter((e) => e.video);
+  const longs = Object.values(COMPS).filter((k) => fileExists(k.video));
+  const body = (shorts.length ? `<h2>Shorts</h2>${shorts.map(reviewCard).join('')}` : '<p class="empty">No short has a video yet.</p>')
+    + `<h2>Long videos</h2>${longs.length ? longs.map(reviewCard).join('') : '<p class="empty">No long video has been built yet. One is built from every five finished shorts.</p>'}`;
   return page('Review', '/review', `<h1>Review</h1><p class="lead">Approve the video and the text for each platform. A platform is ready only when both are approved. Approving never posts anything.</p>${body}`);
+}
+
+function stepsFor(u, p) {
+  const P = PLATFORMS[p]; const out = [];
+  out.push(['Download video', `<p>${dlLink(u.video, 'Download video', 'Video not rendered yet')}</p>`]);
+  if (p !== 'tiktok') out.push(['Download thumbnail', `<p>${dlLink(thumbOf(u), 'Download thumbnail', 'Thumbnail not ready yet')}</p>`]);
+  fieldsFor(u, p).forEach(([k, label, text, rows]) => out.push([`Copy ${label.toLowerCase()}`, field(label, `${u.id}-${p}-${k}`, text, Math.min(rows, 7))]));
+  out.push([`Open ${P.name}`, `<p><a class="btn" href="${P.url}" target="_blank" rel="noopener">Open ${P.name}</a></p>${P.note ? `<p class="small">${P.note}</p>` : ''}`]);
+  out.push(['Mark as posted', `<p class="small">Press this after you have posted by hand. It records today's date.</p>
+<form method="post" action="/upload/posted"><input type="hidden" name="ep" value="${u.id}"><input type="hidden" name="platform" value="${p}"><input type="hidden" name="value" value="1"><button class="btn primary" type="submit">Mark as posted</button></form>`]);
+  return out;
 }
 
 function uploadPage() {
   const q = []; const done = [];
-  EPS.forEach((e) => PKEYS.forEach((p) => { if (isReady(e.id, p)) (postedOn(e.id, p) ? done : q).push([e, p]); }));
-  const items = q.map(([e, p]) => {
-    const c = CH[e.channel]; const P = PLATFORMS[p]; const x = parts(e, p); const id = `${e.id}-${p}`;
-    const v = fileExists(e.video) ? `<a class="btn" href="${mediaUrl(e.video, true)}">Download video</a>` : '<span class="btn off" role="note">Video not rendered yet</span>';
-    const t = fileExists(e.cover) ? `<a class="btn" href="${mediaUrl(e.cover, true)}">Download thumbnail</a>` : '<span class="btn off" role="note">Thumbnail not ready yet</span>';
-    return `<article class="panel queue" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(c.name)} · Ep ${e.number} → ${P.name}</p>
-<h2><a href="/episode/${e.id}">${esc(e.title)}</a></h2>
-<ol class="steps">
-<li><span class="n">1</span><div><b>Download video</b><p>${v}</p></div></li>
-<li><span class="n">2</span><div><b>Download thumbnail</b><p>${t}</p></div></li>
-<li><span class="n">3</span><div><b>Copy ${x.title !== null ? 'title, then description' : 'caption'}</b>
-${x.title !== null ? field('Title', id + '-title', x.title, 2) : ''}${field(x.title !== null ? 'Description' : 'Caption', id + '-body', x.body, 7)}</div></li>
-<li><span class="n">4</span><div><b>Copy hashtags</b>${field('Hashtags', id + '-tags', x.tags || 'TODO', 2)}</div></li>
-<li><span class="n">5</span><div><b>Open upload page</b><p><a class="btn" href="${P.url}" target="_blank" rel="noopener">Open ${P.name}</a></p>${P.note ? `<p class="small">${P.note}</p>` : ''}</div></li>
-<li><span class="n">6</span><div><b>Mark as posted</b><p class="small">Press this after you have posted by hand. It records today's date.</p>
-<form method="post" action="/upload/posted"><input type="hidden" name="ep" value="${e.id}"><input type="hidden" name="platform" value="${p}"><input type="hidden" name="value" value="1"><button class="btn primary" type="submit">Mark as posted</button></form></div></li>
-</ol></article>`;
+  Object.values(UNIT).forEach((u) => platformsOf(u).forEach((p) => { if (isReady(u.id, p)) (postedOn(u.id, p) ? done : q).push([u, p]); }));
+  const items = q.map(([u, p]) => {
+    const c = CH[u.channel]; const steps = stepsFor(u, p);
+    return `<article class="panel queue" id="q-${u.id}-${p}" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(unitName(u))} → ${PLATFORMS[p].name}</p>
+<h2><a href="${unitHref(u)}">${esc(u.title)}</a></h2>
+<ol class="steps">${steps.map(([t, h], i) => `<li><span class="n">${i + 1}</span><div><b>${esc(t)}</b>${h}</div></li>`).join('')}</ol></article>`;
   }).join('');
-  const doneHtml = done.length ? `<section><h2>Posted</h2><ul class="rows">${done.map(([e, p]) => `<li><a href="/episode/${e.id}"><b>${esc(CH[e.channel].name)} · Ep ${e.number}</b><span>${PLATFORMS[p].name} · ${esc(postedOn(e.id, p))}</span></a>
-<form method="post" action="/upload/posted"><input type="hidden" name="ep" value="${e.id}"><input type="hidden" name="platform" value="${p}"><input type="hidden" name="value" value="0"><button class="btn small" type="submit">Undo</button></form></li>`).join('')}</ul></section>` : '';
+  const doneHtml = done.length ? `<section><h2>Posted</h2><ul class="rows">${done.map(([u, p]) => `<li><a href="${unitHref(u)}"><b>${esc(unitName(u))}</b><span>${PLATFORMS[p].name} · ${esc(postedOn(u.id, p))}</span></a>
+<form method="post" action="/upload/posted"><input type="hidden" name="ep" value="${u.id}"><input type="hidden" name="platform" value="${p}"><input type="hidden" name="value" value="0"><button class="btn small" type="submit">Undo</button></form></li>`).join('')}</ul></section>` : '';
   return page('Upload', '/upload', `<h1>Posting queue</h1>
-${q.length ? `<p class="lead">${q.length} to post. Follow the six steps, top to bottom.</p>${items}` : '<p class="empty">The queue is empty. Items appear here once both the video and the text are approved on the <a href="/review">Review</a> page.</p>'}
+${q.length ? `<p class="lead">${q.length} to post. Follow the steps, top to bottom.</p>${items}` : '<p class="empty">The queue is empty. Items appear here once both the video and the text are approved on the <a href="/review">Review</a> page.</p>'}
 ${doneHtml}`);
 }
 
@@ -286,7 +362,7 @@ function lessonsPage() {
 }
 
 /* ---------- files ---------- */
-const MIME = { mp4: 'video/mp4', png: 'image/png', jpg: 'image/jpeg', srt: 'application/x-subrip; charset=utf-8', woff2: 'font/woff2', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8' };
+const MIME = { mp4: 'video/mp4', png: 'image/png', jpg: 'image/jpeg', srt: 'application/x-subrip; charset=utf-8', txt: 'text/plain; charset=utf-8', woff2: 'font/woff2', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8' };
 
 function sendFile(req, res, abs, { download, cache } = {}) {
   let st;
@@ -311,21 +387,25 @@ function sendFile(req, res, abs, { download, cache } = {}) {
 }
 
 function mediaPath(rel) {
-  // only channels/<channel>/**/out/<file>.(mp4|png|jpg|srt)
+  // channels/<channel>/**/out/<file>.(mp4|png|jpg|srt), and
+  // channels/<channel>/compilations/<cNN>/out/<file>.(mp4|png|jpg|txt)
   const segs = rel.split('/');
   if (segs.some((s) => s === '' || s === '.' || s === '..' || s.includes('\\') || s.includes('\0'))) return null;
   if (segs[0] !== 'channels' || segs.length < 4 || !segs.slice(2, -1).includes('out')) return null;
-  if (!/\.(mp4|png|jpg|srt)$/i.test(segs[segs.length - 1])) return null;
+  const comp = segs[2] === 'compilations';
+  if (comp && !(segs.length === 6 && segs[4] === 'out')) return null;
+  if (!(comp ? /\.(mp4|png|jpg|txt)$/i : /\.(mp4|png|jpg|srt)$/i).test(segs[segs.length - 1])) return null;
   const abs = path.join(ROOT, ...segs);
   if (!abs.startsWith(path.join(ROOT, 'channels') + path.sep)) return null;
   return abs;
 }
 function downloadName(rel) {
+  const ext = path.extname(rel).slice(1).toLowerCase();
+  const k = Object.values(COMPS).find((x) => x.video === rel || x.thumbnail === rel);
+  if (k) return `${slug(CH[k.channel].name)}-long-0${k.number}${rel === k.thumbnail ? '-thumbnail' : ''}.${ext}`;
   const e = EPS.find((x) => x.video === rel || x.cover === rel || x.srt === rel);
   if (!e) return path.basename(rel);
-  const ext = path.extname(rel).slice(1).toLowerCase();
-  const kind = rel === e.cover ? '-thumbnail' : '';
-  return `${slug(CH[e.channel].name)}-ep0${e.number}${kind}.${ext}`;
+  return `${slug(CH[e.channel].name)}-ep0${e.number}${rel === e.cover ? '-thumbnail' : ''}.${ext}`;
 }
 
 /* ---------- http plumbing ---------- */
@@ -375,7 +455,7 @@ async function handle(req, res) {
     let f;
     try { f = await readForm(req); } catch { return text(res, 400, 'Bad request'); }
     const ep = f.get('ep'); const pl = f.get('platform');
-    if (!EP[ep] || !PLATFORMS[pl]) return text(res, 400, 'Bad request');
+    if (!UNIT[ep] || !PLATFORMS[pl] || !platformsOf(UNIT[ep]).includes(pl)) return text(res, 400, 'Bad request');
     if (p === '/review/approve') {
       const kind = f.get('kind'); if (kind !== 'video' && kind !== 'text') return text(res, 400, 'Bad request');
       state.approvals[ep] = state.approvals[ep] || {}; state.approvals[ep][pl] = state.approvals[ep][pl] || {};
@@ -401,6 +481,7 @@ async function handle(req, res) {
   if (p === '/lessons') return html(res, lessonsPage());
   if ((m = /^\/channel\/([a-z0-9-]+)$/.exec(p)) && CH[m[1]]) return html(res, channelPage(CH[m[1]]));
   if ((m = /^\/episode\/([a-z0-9-]+)$/.exec(p)) && EP[m[1]]) return html(res, episodePage(EP[m[1]]));
+  if ((m = /^\/compilation\/([a-z0-9-]+)$/.exec(p)) && COMPS[m[1]]) return html(res, compilationPage(COMPS[m[1]]));
   if (p.startsWith('/media/')) {
     let rel; try { rel = decodeURIComponent(p.slice(7)); } catch { return text(res, 400, 'Bad request'); }
     const abs = mediaPath(rel); if (!abs) return text(res, 404, 'Not found');
