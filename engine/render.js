@@ -61,7 +61,7 @@ function serve() {
     const n = Math.round(tl.duration * FPS);
     const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
       ...(fs.existsSync(audio) ? ["-i", audio] : []),
-      "-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "16", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
+      "-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "17", "-maxrate", "10M", "-bufsize", "20M", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
       "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart",
       ...(fs.existsSync(audio) ? ["-c:a", "copy", "-t", String(n / FPS)] : []), partial], { stdio: ["pipe", "inherit", "inherit"] });
     const done = new Promise(r => ff.on("close", c => r(c)));
