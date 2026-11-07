@@ -56,7 +56,8 @@ function serve() {
     const tl = JSON.parse(fs.readFileSync(path.join(outDir, "timeline.json")));
     const audio = path.join(outDir, "audio.m4a");
     const name = (JSON.parse(fs.readFileSync(path.join(epDir, "script.json"))).slug || "episode").match(/^ep\d+/)[0] + ".mp4";
-    const outFile = path.join(outDir, name), partial = path.join(outDir, "." + name.replace(".mp4", ".partial.mp4"));
+    const wipDir = path.join(outDir, "wip"); fs.mkdirSync(wipDir, { recursive: true });
+    const outFile = path.join(wipDir, name), partial = path.join(wipDir, "." + name.replace(".mp4", ".partial.mp4"));
     const n = Math.round(tl.duration * FPS);
     const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
       ...(fs.existsSync(audio) ? ["-i", audio] : []),

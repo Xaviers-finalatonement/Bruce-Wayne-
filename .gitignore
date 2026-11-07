@@ -17,3 +17,4 @@ channels/*/*/out/cues.json
 # long compilation videos are built locally (several hundred MB)
 channels/*/compilations/*/out/*.mp4
 channels/*/*/out/.*.partial.mp4
+channels/*/*/out/wip/

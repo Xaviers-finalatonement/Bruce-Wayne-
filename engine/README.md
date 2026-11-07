@@ -17,3 +17,5 @@ Steps (each can be run alone):
 Previews: `node engine/render.js <ep> --frames 0.5,1.8,30 [--out dir]` (PNG stills), `node engine/render.js <ep> --cover` (`out/cover.png`).
 
 Python env: `run.sh` makes `~/.cache/studio/venv` from `engine/requirements.txt` (+ Pillow) unless `STUDIO_PY` points at a python. The page contract: `window.__ready`, `window.__seek(t)`, `window.__cues`, `window.__duration`; it must be a pure function of `t`.
+
+Output: the full render is written to `out/wip/epNN.mp4` (atomic: `.epNN.partial.mp4`, renamed when ffmpeg succeeds). `out/wip/` is git-ignored; the gate-passed film is copied to `out/epNN.mp4` and committed once by hand. Shared 3D building blocks: `engine/film/README.md`.
