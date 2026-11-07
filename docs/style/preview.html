@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Channel Style Sheets</title>
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:700;src:url(../../assets/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"JetBrains Mono";font-weight:400;src:url(../../assets/fonts/jetbrains-mono/jetbrains-mono-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Unbounded";font-weight:700;src:url(../../assets/fonts/unbounded/unbounded-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;src:url(../../assets/fonts/atkinson-hyperlegible/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;src:url(../../assets/fonts/bricolage-grotesque/bricolage-grotesque-latin-800-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"DM Sans";font-weight:700;src:url(../../assets/fonts/dm-sans/dm-sans-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Instrument Serif";font-weight:400;src:url(../../assets/fonts/instrument-serif/instrument-serif-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Manrope";font-weight:700;src:url(../../assets/fonts/manrope/manrope-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Fraunces";font-weight:700;src:url(../../assets/fonts/fraunces/fraunces-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Figtree";font-weight:700;src:url(../../assets/fonts/figtree/figtree-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Figtree";font-weight:400;src:url(../../assets/fonts/figtree/figtree-latin-400-normal.woff2) format("woff2");font-display:swap}
+
+:root{--bg:#F6F6F4;--fg:#18181B;--muted:#55575E;--line:#DCDCD8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111214;--fg:#EDEDEA;--muted:#A3A5AB;--line:#2A2C30}}
+:root[data-theme="dark"]{--bg:#111214;--fg:#EDEDEA;--muted:#A3A5AB;--line:#2A2C30}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.45 "Figtree",system-ui,sans-serif;padding:24px 16px 48px}
+main{max-width:430px;margin:0 auto}
+h1{font:700 22px/1.2 "Figtree",sans-serif;margin:0 0 4px}
+.lede{color:var(--muted);margin:0 0 20px}
+.ch{border-top:1px solid var(--line);padding:20px 0 24px}
+.ch h2{font:700 18px/1.2 "Figtree",sans-serif;margin:0 0 2px}
+.ch .sub{color:var(--muted);margin:0 0 14px;font-size:14px}
+.row{display:flex;gap:14px;align-items:flex-start}
+.frame{flex:0 0 160px;height:284px;border-radius:12px;position:relative;overflow:hidden;padding:18px 14px}
+.sw{flex:1;display:grid;gap:6px;font:400 12px/1.2 ui-monospace,monospace}
+.sw div{display:flex;align-items:center;gap:8px}
+.sw i{width:22px;height:22px;border-radius:5px;flex:0 0 22px;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+.fonts{margin-top:10px;font-size:12px;color:var(--muted)}
+.cap{position:absolute;left:12px;right:12px;bottom:40px;font-size:15px;line-height:1.2}
+.tag{font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.t{font-size:22px;line-height:1.05;margin-top:8px}
+
+/* 1 Reality Rulebook */
+.rr{background:#F3EFE6 linear-gradient(#BFD0E0 1px,transparent 1px) 0 0/100% 16px,linear-gradient(90deg,#BFD0E0 1px,transparent 1px) 0 0/16px 100%;background-color:#F3EFE6;color:#15171C}
+.rr .tag{font-family:"JetBrains Mono";color:#B8302A}
+.rr .t{font-family:"Space Grotesk";font-weight:700}
+.rr .t u{text-decoration-color:#B8302A;text-decoration-thickness:3px;text-underline-offset:4px}
+.rr .dia{position:absolute;left:52px;top:100px;width:56px;height:56px;border:2.5px solid #15171C;border-radius:50%;background:#F3EFE6}
+.rr .dia:after{content:"";position:absolute;left:24px;top:56px;width:2.5px;height:24px;background:#B8302A}
+.rr .cap{font-family:"Space Grotesk";font-weight:700}.rr .cap b{color:#B8302A}
+
+/* 2 One More Orbit */
+.omo{background:radial-gradient(circle at 120% 75%,#FFB547 0 2%,transparent 2.5%),#04060C;color:#E9EEFF}
+.omo .tag{font-family:"Atkinson Hyperlegible";font-weight:700;color:#8E97B5}
+.omo .t{font-family:"Unbounded";font-weight:700;font-size:18px}
+.omo .t b{color:#FFB547}
+.omo .pl{position:absolute;right:-50px;top:92px;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 15% 50%,#B9C3DA 0,#3A4560 38%,#04060C 62%)}
+.omo .orb{position:absolute;left:-30px;top:122px;width:240px;height:60px;border:1px solid #59DDE3;border-radius:50%;opacity:.7}
+.omo .cap{font-family:"Atkinson Hyperlegible";font-weight:700}.omo .cap b{color:#FFB547}
+
+/* 3 Possibility Lab */
+.pl3{background:#4B22D6;color:#FFF6E5}
+.pl3 .tag{font-family:"DM Sans";font-weight:700;color:#C8F135}
+.pl3 .t{font-family:"Bricolage Grotesque";font-weight:800;font-size:23px}
+.pl3 .t span{background:#C8F135;color:#1E1A26;padding:0 4px;border-radius:4px}
+.pl3 .blk{position:absolute;left:14px;top:132px;width:58px;height:58px;border-radius:14px;background:#FF6A55;box-shadow:0 10px 18px rgba(0,0,0,.25)}
+.pl3 .blk2{position:absolute;left:84px;top:114px;width:44px;height:76px;border-radius:22px;background:#FFF6E5;box-shadow:0 10px 18px rgba(0,0,0,.25)}
+.pl3 .cap{font-family:"DM Sans";font-weight:700}.pl3 .cap b{color:#C8F135}
+
+/* 4 Body Backstage */
+.bb{background:radial-gradient(circle at 55% 52%,rgba(240,86,107,.55) 0,rgba(243,185,180,.18) 22%,transparent 46%),radial-gradient(circle at 30% 40%,rgba(244,198,106,.35) 0,transparent 18%),#090C11;color:#EEE7DA}
+.bb .tag{font-family:"Manrope";font-weight:700;color:#7ED5CF}
+.bb .t{font-family:"Instrument Serif";font-size:28px}
+.bb .cap{font-family:"Manrope";font-weight:700}.bb .cap b{color:#F0566B}
+
+/* 5 Skin Sense */
+.ss{background:#FAF5EF;color:#3A2922}
+.ss .tag{font-family:"Figtree";font-weight:700;color:#4F6B5C}
+.ss .t{font-family:"Fraunces";font-weight:700;font-size:21px}
+.ss .t b{color:#9A553F}
+.ss .layers{position:absolute;left:0;right:0;top:142px;height:40px;background:linear-gradient(#F1D3BE 0 20%,#D9A47F 20% 40%,#A86F4C 40% 60%,#6B4330 60% 80%,#3E271C 80%);transform:skewY(-6deg)}
+.ss .cap{font-family:"Figtree";font-weight:700}.ss .cap b{color:#9A553F}
+.ss .edu{position:absolute;left:12px;bottom:14px;font:400 9px/1 "Figtree";color:#4F6B5C}
+</style>
+</head>
+<body>
+<main>
+<h1>Five channels, five looks</h1>
+<p class="lede">Draft style sheets for Season 1. Each mock frame shows the palette, fonts and caption style. Full sheets are in docs/style/channels.</p>
+
+<section class="ch"><h2>1 · Reality Rulebook</h2><p class="sub">Physics · annotated rulebook, ink on paper · measured pace</p>
+<div class="row"><div class="frame rr" role="img" aria-label="Reality Rulebook sample frame"><div class="tag">Rule No. 1</div><div class="t">Why do things <u>fall</u>?</div><div class="dia"></div><div class="cap">Here's the <b>rule</b> under your feet.</div></div>
+<div class="sw"><div><i style="background:#F3EFE6"></i>Paper #F3EFE6</div><div><i style="background:#15171C"></i>Ink #15171C</div><div><i style="background:#B8302A"></i>Rule Red #B8302A</div><div><i style="background:#555C68"></i>Graphite #555C68</div><div><i style="background:#F2C230"></i>Marker #F2C230</div><div><i style="background:#BFD0E0"></i>Grid #BFD0E0</div><div class="fonts">Space Grotesk + JetBrains Mono</div></div></div></section>
+
+<section class="ch"><h2>2 · One More Orbit</h2><p class="sub">Space · true-black void, one sun · slowest pace</p>
+<div class="row"><div class="frame omo" role="img" aria-label="One More Orbit sample frame"><div class="tag">One More Orbit</div><div class="t">How far is the <b>Moon</b>, really?</div><div class="orb"></div><div class="pl"></div><div class="cap">Hold that thought for <b>one more orbit</b>.</div></div>
+<div class="sw"><div><i style="background:#04060C"></i>Void #04060C</div><div><i style="background:#0D1630"></i>Deep #0D1630</div><div><i style="background:#E9EEFF"></i>Starlight #E9EEFF</div><div><i style="background:#FFB547"></i>Sun #FFB547</div><div><i style="background:#59DDE3"></i>Ion #59DDE3</div><div><i style="background:#8E97B5"></i>Dust #8E97B5</div><div class="fonts">Unbounded + Atkinson Hyperlegible</div></div></div></section>
+
+<section class="ch"><h2>3 · Possibility Lab</h2><p class="sub">What if · violet test chamber, clay shapes · fastest pace</p>
+<div class="row"><div class="frame pl3" role="img" aria-label="Possibility Lab sample frame"><div class="tag">What if · Trial 01</div><div class="t">What if the <span>Moon</span> vanished?</div><div class="blk"></div><div class="blk2"></div><div class="cap">Okay, but <b>what if</b>…</div></div>
+<div class="sw"><div><i style="background:#4B22D6"></i>Lab Violet #4B22D6</div><div><i style="background:#FFF6E5"></i>Cream #FFF6E5</div><div><i style="background:#C8F135"></i>Lime #C8F135</div><div><i style="background:#FF6A55"></i>Coral #FF6A55</div><div><i style="background:#1E1A26"></i>Charcoal #1E1A26</div><div class="fonts">Bricolage Grotesque + DM Sans</div></div></div></section>
+
+<section class="ch"><h2>4 · Body Backstage</h2><p class="sub">Human body · premium medical visualisation · cinematic pace</p>
+<div class="row"><div class="frame bb" role="img" aria-label="Body Backstage sample frame"><div class="tag">Backstage pass</div><div class="t">Inside a yawn</div><div class="cap">Right now, your <b>blood</b> is on the move.</div></div>
+<div class="sw"><div><i style="background:#090C11"></i>Backstage #090C11</div><div><i style="background:#EEE7DA"></i>Bone #EEE7DA</div><div><i style="background:#F0566B"></i>Plasma #F0566B</div><div><i style="background:#F3B9B4"></i>Membrane #F3B9B4</div><div><i style="background:#F4C66A"></i>Nerve #F4C66A</div><div><i style="background:#7ED5CF"></i>Clinical #7ED5CF</div><div><i style="background:#9AA3AE"></i>Fog #9AA3AE</div><div class="fonts">Instrument Serif + Manrope</div></div></div></section>
+
+<section class="ch"><h2>5 · Skin Sense</h2><p class="sub">Skin science · soft daylight, layer peel, every skin tone · calm pace</p>
+<div class="row"><div class="frame ss" role="img" aria-label="Skin Sense sample frame"><div class="tag">Myth / Fact</div><div class="t">Why do fingers <b>wrinkle</b> in water?</div><div class="layers"></div><div class="cap">Let's look a little <b>closer</b>.</div><div class="edu">Education, not medical advice.</div></div>
+<div class="sw"><div><i style="background:#FAF5EF"></i>Porcelain #FAF5EF</div><div><i style="background:#3A2922"></i>Cocoa #3A2922</div><div><i style="background:#9A553F"></i>Clay #9A553F</div><div><i style="background:#4F6B5C"></i>Sage #4F6B5C</div><div><i style="background:#C3DCE5"></i>Dew #C3DCE5</div><div><i style="background:linear-gradient(90deg,#F1D3BE,#D9A47F,#A86F4C,#6B4330,#3E271C)"></i>Skin range ×5</div><div class="fonts">Fraunces + Figtree</div></div></div></section>
+</main>
+</body>
+</html>
