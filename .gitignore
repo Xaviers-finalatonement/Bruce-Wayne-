@@ -2,3 +2,6 @@ node_modules/
 *.log
 .DS_Store
 renders/tmp/
+channels/*/*/out/audio/
+channels/*/*/out/frames/
+__pycache__/
