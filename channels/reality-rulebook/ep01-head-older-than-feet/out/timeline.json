@@ -167,7 +167,7 @@
      "text": "They took two",
      "start": 27.087,
      "end": 27.973,
-     "key": 1
+     "key": 2
     },
     {
      "text": "super-precise atomic clocks,",
@@ -225,7 +225,7 @@
      "text": "those two steps add up to about",
      "start": 38.528,
      "end": 40.546,
-     "key": 0
+     "key": 2
     },
     {
      "text": "ninety billionths of a second.",
@@ -279,7 +279,7 @@
      "text": "GPS satellites fly high,",
      "start": 47.233,
      "end": 49.056,
-     "key": 1
+     "key": 3
     },
     {
      "text": "so their clocks run fast.",

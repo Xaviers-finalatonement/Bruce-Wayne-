@@ -5,3 +5,11 @@ renders/tmp/
 channels/*/*/out/audio/
 channels/*/*/out/frames/
 __pycache__/
+__pycache__/
+*.pyc
+venv/
+channels/*/*/out/audio/
+channels/*/*/out/frames/
+channels/*/*/out/mix.wav
+channels/*/*/out/audio.m4a
+channels/*/*/out/cues.json
