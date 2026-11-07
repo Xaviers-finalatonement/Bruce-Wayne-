@@ -2,7 +2,7 @@
   "channel": "skin-receipts",
   "episode": 1,
   "slug": "ep01-bath-towel",
-  "title": "What's living on your bath towel",
+  "title": "What's growing on your towel",
   "voice": {
     "engine": "kokoro",
     "voice": "af_heart",
@@ -11,12 +11,14 @@
   "beats": [
     {
       "id": "b01",
-      "vo": "Is your bath towel a germ hotel?",
-      "claims": [],
-      "screen": [
-        "?"
+      "vo": "Your towel grows a film of bacteria.",
+      "claims": [
+        "C1"
       ],
-      "visual": "Clean white frame, receipt-paper texture. A folded towel on a bathroom shelf in soft window light; a receipt strip prints out at frame edge with a question mark. Slow lateral slide across the towel's loops. Reads in under 2 s."
+      "screen": [
+        "Your towel grows a film?"
+      ],
+      "visual": "Clean white frame, receipt-paper texture. A folded cotton towel on a shelf in soft window light; a receipt strip prints a question mark at the frame edge. Slow lateral slide across the towel loops. Reads in under 2 s."
     },
     {
       "id": "b02",
@@ -27,129 +29,132 @@
       "screen": [
         "CLAIM: disposable towels for ideal skin"
       ],
-      "visual": "The receipt strip prints the claim in Courier Prime, printer ticks on each word. Camera holds on the printing line; a hand of mid-brown skin tone lifts the towel (touch motivates the move)."
+      "visual": "The receipt strip prints the claim in Courier Prime, a printer tick on each word. A hand of mid-brown skin tone lifts the towel (touch motivates the move)."
     },
     {
       "id": "b03",
-      "vo": "Line one. Towels can pass on germs.",
+      "vo": "Line one. Does that film really form? One study gave new cotton towels to twenty-six households.",
       "claims": [
-        "C1",
         "C2"
       ],
       "screen": [
-        "LINE 1 · towels can pass germs"
+        "LINE 1 · does the film form?",
+        "26 households"
       ],
-      "visual": "Receipt line 1 prints. Macro push-in on the towel weave down to fibre scale: soft translucent shapes sit in the loops. Motivated macro push on the word germs."
+      "visual": "Receipt line 1 prints. Twenty-six small house icons tick onto the strip one after another, each with a folded white towel. Lateral slide along the row."
     },
     {
       "id": "b04",
-      "vo": "Staph, a common skin germ, can spread when you touch something that carries it. Like a towel.",
-      "claims": [
-        "C1"
-      ],
-      "screen": [
-        "staph"
-      ],
-      "visual": "Macro slide across a forearm of deep brown skin, then a fingertip touches a towel corner; a few teal microbe shapes transfer from towel loop to fingertip. Lateral slide follows the touch."
-    },
-    {
-      "id": "b05",
-      "vo": "Usually, it's minor, and it stays in the skin.",
+      "vo": "Six months of normal home use. Every two months, they tested the towels.",
       "claims": [
         "C2"
       ],
-      "screen": [],
-      "visual": "Macro of skin surface, light teal outline of microbes sitting on the surface layer only. Slow hold, no move."
+      "screen": [
+        "6 months",
+        "tested every 2 months"
+      ],
+      "visual": "A calendar strip prints with three tick marks at months 2, 4 and 6; a towel is lifted from a basket at each tick. Slow lateral slide follows the ticks."
+    },
+    {
+      "id": "b05",
+      "vo": "By month two, the towels smelled and looked dull. Under a microscope: biofilm.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [
+        "month 2: odour + dullness",
+        "biofilm seen"
+      ],
+      "visual": "Side-by-side towels, bright white and dull grey. A macro push-in on the weave of the dull one, down to fibre scale: pale teal film sits between the loops. Motivated macro push on the word biofilm."
     },
     {
       "id": "b06",
-      "vo": "Ringworm, a skin fungus, can ride on a towel too. It thrives where it's warm and humid.",
+      "vo": "Live bacteria counts were highest at month six. The film kept building.",
+      "claims": [
+        "C4"
+      ],
+      "screen": [
+        "live bacteria: highest at month 6"
+      ],
+      "visual": "A simple bar strip prints three bars for months 2, 4 and 6; the last bar rises tallest in Verified Teal. Locked-off, the bar grows on the word highest."
+    },
+    {
+      "id": "b07",
+      "vo": "That line holds up.",
       "claims": [
         "C3",
         "C4"
       ],
       "screen": [
-        "ringworm = fungus",
-        "warm + humid"
+        "HOLDS UP"
       ],
-      "visual": "Fair-skinned shoulder macro, thread-like fungus shapes drawn on the surface; a warm steam haze drifts into frame as the bathroom warms. Slow lateral slide."
-    },
-    {
-      "id": "b07",
-      "vo": "That's why dermatologists say never share towels.",
-      "claims": [
-        "C5"
-      ],
-      "screen": [
-        "never share towels"
-      ],
-      "visual": "Two towels hang side by side on separate hooks; a receipt strip prints 'Never share towels' and a Verified Teal HOLDS UP stamp lands on line 1. Static medium shot, stamp slams on the word share."
+      "visual": "A Verified Teal HOLDS UP stamp lands on line 1 with a soft printer tick. Static."
     },
     {
       "id": "b08",
-      "vo": "That line holds up. But it's about sharing, and about infections.",
+      "vo": "Line two. Is it your own skin's bacteria? Mostly not. Staph was well under one percent.",
       "claims": [
         "C5",
         "C6"
       ],
       "screen": [
-        "HOLDS UP",
-        "about sharing + infections"
+        "LINE 2 · from your skin?",
+        "Staph: under 1%"
       ],
-      "visual": "Stamp stays; receipt strip prints 'sharing' and 'infections' tags in Slate. Slow push-in on the stamp."
+      "visual": "Receipt line 2 prints. Macro slide across a forearm of deep brown skin, then a split frame: a skin-microbe swatch beside a towel-microbe swatch, clearly different shapes. A tiny Staph sliver on the towel side. Slow lateral slide."
     },
     {
       "id": "b09",
-      "vo": "Line two. Your own towel, on your own skin, for ideal skin. Different question.",
+      "vo": "The authors think bacteria that suit towel fibres move in and settle.",
       "claims": [
-        "C0"
+        "C7"
       ],
       "screen": [
-        "LINE 2 · your own towel, your own skin"
+        "towel-loving bacteria?"
       ],
-      "visual": "Receipt line 2 prints. A person of light-olive skin dries their cheek with a towel in close-up; camera drifts laterally with the towel pat."
+      "visual": "Macro of cotton loops, small teal shapes settle into the gaps between fibres and stay. Slow hold."
     },
     {
       "id": "b10",
-      "vo": "Dermatologists say pat your skin dry with a clean towel. Rubbing can irritate skin.",
+      "vo": "Line three. Does the film hurt your skin? The study never looked at anyone's skin health or infections.",
       "claims": [
-        "C7",
         "C8"
       ],
       "screen": [
-        "pat dry · clean towel",
-        "rubbing can irritate"
+        "LINE 3 · harm to skin?",
+        "not measured"
       ],
-      "visual": "Macro side-by-side: left a gentle pat on dark brown skin, skin surface calm; right rough rubbing, a pink flush appears. Split frame, locked off."
+      "visual": "Receipt line 3 prints. A person of light-olive skin dries their cheek with a towel in close-up; a Slate dashed outline marks the cheek with a question mark. Camera drifts laterally with the towel pat."
     },
     {
       "id": "b11",
-      "vo": "Clean towel. The word disposable never shows up.",
+      "vo": "And disposable towels? This study didn't test those either.",
       "claims": [
         "C9"
       ],
       "screen": [
-        "clean ≠ disposable"
+        "disposable: not tested here"
       ],
-      "visual": "The receipt prints 'clean' in teal; the word 'disposable' prints beneath in Slate with a thin strike-through line, then fades. Static over a towel stack."
+      "visual": "Plain unlabelled paper towels beside a cotton towel; both stay unbranded. The receipt prints 'not tested' in Slate. Slow push-in."
     },
     {
       "id": "b12",
-      "vo": "So disposable towels for better skin? None of the guidance I read says so.",
+      "vo": "What dermatologists do say: never share towels. And pat your skin dry with a clean one.",
       "claims": [
-        "C9",
-        "C10"
+        "C10",
+        "C11"
       ],
       "screen": [
-        "no source found"
+        "never share towels",
+        "pat dry · clean towel"
       ],
-      "visual": "Slow push-in on a plain unlabelled stack of paper towels beside a cotton towel; both stay unbranded. Receipt strip prints 'no source found'."
+      "visual": "Two towels hang on separate hooks; a receipt strip prints 'never share' and 'pat dry, clean towel'. Static medium shot."
     },
     {
       "id": "b13",
       "vo": "Receipt total: unknown.",
       "claims": [
-        "C10"
+        "C12"
       ],
       "screen": [
         "RECEIPT TOTAL",
@@ -159,23 +164,26 @@
     },
     {
       "id": "b14",
-      "vo": "Clean, dry, and not shared is what the guidance actually says. Disposable? No receipt.",
+      "vo": "The film is real. Harm to your skin? Unproven. Dermatologists say clean, and not shared.",
       "claims": [
-        "C7",
-        "C5",
-        "C10"
+        "C3",
+        "C8",
+        "C10",
+        "C11",
+        "C12"
       ],
       "screen": [
-        "clean · dry · not shared",
-        "disposable? no receipt"
+        "film: real",
+        "harm to skin: unproven",
+        "clean · not shared"
       ],
-      "visual": "The receipt strip finishes printing the one-line summary; camera pulls back to show the whole strip under a towel on a shelf. Calm pull-back."
+      "visual": "The strip finishes printing the one-line summary; camera pulls back to show the whole strip under a towel on a shelf. Calm pull-back."
     },
     {
       "id": "b15",
-      "vo": "If your skin needs a closer look, a dermatologist can check yours.",
+      "vo": "A dermatologist can check your skin.",
       "claims": [
-        "C11"
+        "C13"
       ],
       "screen": [
         "Education, not medical advice."
@@ -184,11 +192,11 @@
     }
   ],
   "end_card": {
-    "text": "Receipt total: UNKNOWN · Towels can pass on some infections, so don't share. Disposable towels for better skin? No receipt. Education, not medical advice.",
+    "text": "Receipt total: UNKNOWN · A film of bacteria does grow on towels in daily use. Harm to your skin? Unproven. Dermatologists say: clean, and not shared. Education, not medical advice.",
     "channel": "Skin Receipts"
   },
   "cover": {
-    "headline": "What's living on your bath towel",
+    "headline": "What's growing on your towel",
     "key_word": "towel"
   },
   "end_hold": 1.8,
