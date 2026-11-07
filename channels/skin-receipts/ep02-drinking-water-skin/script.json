@@ -1,0 +1,209 @@
+{
+  "channel": "skin-receipts",
+  "episode": 2,
+  "slug": "ep02-drinking-water-skin",
+  "title": "Does drinking water hydrate your skin?",
+  "voice": {
+    "engine": "kokoro",
+    "voice": "af_heart",
+    "speed": 0.97
+  },
+  "beats": [
+    {
+      "id": "b01",
+      "vo": "Drink more water, get better skin? Check the receipt.",
+      "claims": [
+        "C0"
+      ],
+      "screen": [
+        "?"
+      ],
+      "visual": "Clean white frame. A glass of water on a bathroom counter in soft window light; a receipt strip prints at frame edge with a question mark. Slow lateral slide past the glass. Reads in under 2 s."
+    },
+    {
+      "id": "b02",
+      "vo": "The claim: drinking water hydrates your skin.",
+      "claims": [
+        "C0"
+      ],
+      "screen": [
+        "CLAIM: drinking water hydrates your skin"
+      ],
+      "visual": "Receipt prints the claim in Courier Prime with printer ticks. A hand of deep brown skin tone lifts the glass (touch motivates the move)."
+    },
+    {
+      "id": "b03",
+      "vo": "Your body is over two-thirds water, by weight. So it sounds right.",
+      "claims": [
+        "C1"
+      ],
+      "screen": [
+        "over 2/3 of body weight is water"
+      ],
+      "visual": "Macro slide across a forearm of light skin, a faint teal water-droplet pattern fades in beneath the surface. Lateral slide, then a slow macro push to the skin."
+    },
+    {
+      "id": "b04",
+      "vo": "Line one. If you're really dehydrated, your skin shows it.",
+      "claims": [
+        "C2"
+      ],
+      "screen": [
+        "LINE 1 · dehydration shows in skin"
+      ],
+      "visual": "Receipt line 1 prints. Macro of dry, matte skin on a medium-tan hand beside the glass. Camera holds, then a gentle push on the dry texture."
+    },
+    {
+      "id": "b05",
+      "vo": "In severe cases, skin can look shriveled and lose its stretch.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [
+        "severe dehydration: dry, shriveled, less elastic skin"
+      ],
+      "visual": "Side macro: a fingertip gently pinches a fold of skin on a dark brown forearm and it sags back slowly. Locked-off macro; the pinch motivates the hold."
+    },
+    {
+      "id": "b06",
+      "vo": "That line holds up.",
+      "claims": [
+        "C2",
+        "C3"
+      ],
+      "screen": [
+        "HOLDS UP"
+      ],
+      "visual": "A Verified Teal HOLDS UP stamp lands on line 1 with a soft printer tick. Static."
+    },
+    {
+      "id": "b07",
+      "vo": "Line two. Everyday dry skin. That's skin that loses too much water and oil.",
+      "claims": [
+        "C4"
+      ],
+      "screen": [
+        "LINE 2 · everyday dry skin"
+      ],
+      "visual": "Receipt line 2 prints. Macro slide across a cheek of olive skin, fine flaking texture visible in raking light."
+    },
+    {
+      "id": "b08",
+      "vo": "The causes listed? Cold, dry air. Heating. Long showers. Some soaps.",
+      "claims": [
+        "C5"
+      ],
+      "screen": [
+        "cold dry air",
+        "heating",
+        "long showers",
+        "some soaps"
+      ],
+      "visual": "Four small printed receipt tags slide in one by one beside the skin. Camera drifts laterally with each tag."
+    },
+    {
+      "id": "b09",
+      "vo": "Not drinking enough isn't anywhere on that list.",
+      "claims": [
+        "C6"
+      ],
+      "screen": [
+        "not on the list"
+      ],
+      "visual": "The receipt prints a blank checkbox line labelled 'drinking too little' with no tick. Slow push-in on the empty box."
+    },
+    {
+      "id": "b10",
+      "vo": "That's not proof water doesn't matter. It's just not what that page blames.",
+      "claims": [
+        "C6"
+      ],
+      "screen": [],
+      "visual": "The empty box stays; a thin Slate bracket highlights it as 'this page'. Static hold."
+    },
+    {
+      "id": "b11",
+      "vo": "Dermatologists' dry-skin tips: short warm showers, pat dry, moisturizer, humid air.",
+      "claims": [
+        "C7"
+      ],
+      "screen": [
+        "short warm showers",
+        "pat dry",
+        "moisturizer",
+        "humid air"
+      ],
+      "visual": "Quick receipt tags print in order beside a bathroom sink, a towel patting wet skin, a humidifier mist. Lateral slide through the three small tableaux."
+    },
+    {
+      "id": "b12",
+      "vo": "Moisturizer plays a key role, they say. Drinking more? Not mentioned.",
+      "claims": [
+        "C8",
+        "C9"
+      ],
+      "screen": [
+        "moisturizer: key role",
+        "drinking more: not mentioned"
+      ],
+      "visual": "Fingertip glides cream across a warm brown forearm in macro; beside it the receipt prints 'drinking more' in Slate with a dash. Macro follow of the fingertip."
+    },
+    {
+      "id": "b13",
+      "vo": "So does extra water, on top of normal drinking, make healthy skin more hydrated? The guidance I read doesn't say.",
+      "claims": [
+        "C9",
+        "C10"
+      ],
+      "screen": [
+        "extra water → more hydrated skin?"
+      ],
+      "visual": "Glass of water and a cheek in a single frame; a Slate question mark prints between them. Slow push-in."
+    },
+    {
+      "id": "b14",
+      "vo": "Receipt total: unknown.",
+      "claims": [
+        "C10"
+      ],
+      "screen": [
+        "RECEIPT TOTAL",
+        "UNKNOWN"
+      ],
+      "visual": "Receipt total line prints; a Slate UNKNOWN stamp lands in Courier Prime. Printer tick, hold 1 s stillness."
+    },
+    {
+      "id": "b15",
+      "vo": "Truly dehydrated, your skin shows it. Extra water for glow? No receipt.",
+      "claims": [
+        "C2",
+        "C10"
+      ],
+      "screen": [
+        "extra water for glow? no receipt"
+      ],
+      "visual": "Calm pull-back from the stamp to the full receipt and the glass on the counter, soft light."
+    },
+    {
+      "id": "b16",
+      "vo": "If your skin stays dry, a dermatologist can check yours.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "Education, not medical advice."
+      ],
+      "visual": "Gentle lateral slide across a range of skin tones, final frame on the end-card text. Hold 1.8 s."
+    }
+  ],
+  "end_card": {
+    "text": "Receipt total: UNKNOWN · Real dehydration shows in skin. Extra water for glow? No receipt. Education, not medical advice.",
+    "channel": "Skin Receipts"
+  },
+  "cover": {
+    "headline": "Does drinking water hydrate your skin?",
+    "key_word": "water"
+  },
+  "end_hold": 1.8,
+  "sound": "skin-receipts"
+}
