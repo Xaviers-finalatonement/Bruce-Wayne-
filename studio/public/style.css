@@ -185,3 +185,4 @@ textarea{width:100%;font:inherit;font-size:1rem;line-height:1.45;color:var(--ink
 .postrows li.off .pt .num{color:var(--mute)}
 .postrows em{font-style:normal;font-size:.9rem}
 .empty-player .small{color:#fff}
+.s-built-locally{background:#FFE9B8;color:#5E4000}

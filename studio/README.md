@@ -28,4 +28,5 @@ Settings (environment variables): `STUDIO_PASSWORD`, `PORT` (default 8080), `DAT
 
 Check Railway's pricing page for the current free allowance.
 
-Videos live in `channels/*/out/` in the repo, so they must be committed to appear on the hosted site.
+Short videos live in `channels/*/out/` in the repo, so they must be committed to appear on the hosted site.
+Long videos (compilations, `channels/*/compilations/cNN/out/`) are several hundred MB and git-ignored: the page shows "built locally, not uploaded yet" until the mp4 is on the server's disk. See `engine/COMPILE.md`.

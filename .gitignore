@@ -13,3 +13,6 @@ channels/*/*/out/frames/
 channels/*/*/out/mix.wav
 channels/*/*/out/audio.m4a
 channels/*/*/out/cues.json
+
+# long compilation videos are built locally (several hundred MB)
+channels/*/compilations/*/out/*.mp4

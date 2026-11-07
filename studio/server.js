@@ -68,6 +68,7 @@ function statusOf(e) {
     if (postedOn(e.id, 'youtube')) return 'posted';
     if (isReady(e.id, 'youtube')) return 'approved';
     if (fileExists(e.video)) return 'in review';
+    if (compMeta(e)) return 'built locally';
     return compRendered(e) === e.episodes.length ? 'ready to build' : 'waiting for shorts';
   }
   if (['youtube', 'tiktok'].every((p) => postedOn(e.id, p))) return 'posted';
@@ -160,7 +161,7 @@ function pbadge(u, p) {
 function compLine(k) {
   const n = k.episodes.length; const have = compRendered(k);
   const s = statusOf(k);
-  const what = s === 'posted' ? 'posted' : s === 'approved' ? 'ready to post' : s === 'in review' ? 'built, needs your OK'
+  const what = s === 'posted' ? 'posted' : s === 'approved' ? 'ready to post' : s === 'in review' ? 'built, needs your OK' : s === 'built locally' ? 'built locally, not uploaded yet'
     : s === 'ready to build' ? 'all shorts done, ready to build' : `needs ${n - have} more short${n - have === 1 ? '' : 's'} (${have} of ${n} done)`;
   return `Long video ${k.number}: ${what}`;
 }
@@ -233,7 +234,9 @@ function compilationPage(k) {
   const meta = compMeta(k);
   const player = hasVideo
     ? `<video class="player wide" controls playsinline preload="metadata"${hasThumb ? ` poster="${mediaUrl(k.thumbnail)}"` : ''} src="${mediaUrl(k.video)}"></video>`
-    : `<div class="player wide empty-player"><p><b>Not built yet</b></p><p>${esc(compLine(k))}.</p><p class="small">It is built from the five finished shorts, in order.</p></div>`;
+    : meta
+      ? `<div class="player wide empty-player"><p><b>Built locally, not uploaded yet</b></p><p class="small">The video file is large, so it is not stored in the repo. The title, chapters and thumbnail are ready below.</p></div>`
+      : `<div class="player wide empty-player"><p><b>Not built yet</b></p><p>${esc(compLine(k))}.</p><p class="small">It is built from the five finished shorts, in order.</p></div>`;
   const thumb = hasThumb ? `<img class="thumb" src="${mediaUrl(k.thumbnail)}" alt="Thumbnail for ${esc(k.title)}" width="640" height="360" loading="lazy">` : '';
   const inc = k.episodes.map((id) => EP[id]).filter(Boolean).map((e) => `<li><a href="/episode/${e.id}"><span class="num">${e.number}</span><span class="t">${esc(e.title)}</span>${fileExists(e.video) ? chip('rendered') : chip('not rendered')}</a></li>`).join('');
   const mins = meta && meta.duration ? ` · ${Math.floor(meta.duration / 60)}:${String(Math.round(meta.duration % 60)).padStart(2, "0")}` : '';
@@ -242,7 +245,7 @@ function compilationPage(k) {
   return page(`${c.name} Long video ${k.number}`, '/', `<p class="crumb"><a href="/">Home</a> / <a href="/channel/${c.id}">${esc(c.name)}</a></p>
 <div class="chhead" style="${esc(chStyle(c))}"><p class="eyebrow">${esc(c.name)} · Long video ${k.number}${esc(mins)}</p><h1>${esc(k.title)}</h1><p>${chip(statusOf(k))}</p></div>
 <div class="media">${player}</div>
-<div class="dl two">${dlLink(k.video, 'Download video', 'Video not built yet')}${dlLink(k.thumbnail, 'Download thumbnail', 'Thumbnail not built yet')}</div>
+<div class="dl two">${dlLink(k.video, 'Download video', meta ? 'Built locally, not uploaded yet' : 'Video not built yet')}${dlLink(k.thumbnail, 'Download thumbnail', 'Thumbnail not built yet')}</div>
 ${thumb ? `<div class="media">${thumb}</div>` : ''}
 ${step}
 <section class="panel" id="youtube"><h2>YouTube ${r ? '<span class="chip s-approved">ready</span>' : ''}${d ? `<span class="chip s-posted">posted ${esc(d)}</span>` : ''}</h2>
