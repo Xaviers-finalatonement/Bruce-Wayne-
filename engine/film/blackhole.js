@@ -66,17 +66,17 @@ vec3 starLayer(vec3 d, float sc, float rad, float dens, float seed){
 vec3 sky(vec3 d){
   vec3 col = vec3(0.);
   float k = uStarK;
-  col += starLayer(d, 1500.*k, .22, .55, 1.) * .8;
-  col += starLayer(d, 720.*k, .20, .45, 7.) * 1.1;
-  col += starLayer(d, 300.*k, .16, .40, 13.) * 1.7;
-  float n = fbm(d*14. + vec3(3.,1.,uSeed)); float band = smoothstep(.45,.85,n) * (.5 + .5*fbm(d*40.+9.));
-  col += (vec3(.30,.20,.55)*.8 + vec3(.5,.18,.04)*.3) * band * .09 * uNeb;
+  col += starLayer(d, 1500.*k, .2, .30, 1.) * .8;
+  col += starLayer(d, 720.*k, .18, .24, 7.) * 1.1;
+  col += starLayer(d, 300.*k, .14, .20, 13.) * 1.7;
+  float n = fbm(d*5. + vec3(3.,1.,uSeed)); float band = smoothstep(.35,.95,n) * (.6 + .4*fbm(d*22.+9.));
+  col += (vec3(.30,.20,.55)*.8 + vec3(.5,.18,.04)*.3) * band * .04 * uNeb;
   return col * uStars;
 }
-vec3 ramp(float I, float g){
-  vec3 hz = vec3(1.0, .254, .023), uvc = vec3(.397, .258, 1.0);
-  vec3 c = hz * I; c += vec3(.55,.30,.10) * max(I-1.2, 0.) * .6;
-  c = mix(uvc*I*.55 + hz*I*.35, c, smoothstep(.35,.95,g));
+vec3 ramp(float I, float g, float r){
+  vec3 hz = vec3(1.0, .26, .025), cool = vec3(.42, .20, .95);
+  vec3 base = mix(hz, cool, smoothstep(9.,26.,r)*.75);
+  vec3 c = base * I; c += vec3(.60,.34,.12) * max(I-1.1, 0.) * .7;
   return c;
 }
 void main(){
@@ -107,13 +107,13 @@ void main(){
         float ang = atan(P.z, P.x);
         float om = 2.2*pow(6./r, 1.5);
         float a = ang - om*rot;
-        float tb = fbm(vec3(log(r)*9., cos(a)*2.2, sin(a)*2.2));
-        float tf = fbm(vec3(log(r)*30., cos(a*3.)*1.2, sin(a*3.)*1.2) + 4.);
-        float turb = .55 + 1.1*tb + .35*(tf-.5);
-        float em = pow(6./r, 2.1) * smoothstep(5.8,7.2,r) * smoothstep(27.,16.,r);
-        float I = 2.4 * em * turb * pow(g, 3.4) * uDisc * uHeat;
+        float tb = fbm(vec3(log(r)*13., cos(a)*1.7, sin(a)*1.7));
+        float tf = vn(vec3(log(r)*70., cos(a*2.)*3.2, sin(a*2.)*3.2) + 4.);
+        float turb = (.12 + 1.9*smoothstep(.22,.78,tb)) * (.5 + 1.0*tf);
+        float em = pow(6./r, 2.5) * smoothstep(5.8,7.0,r) * smoothstep(24.,12.,r);
+        float I = 2.6 * em * turb * pow(g, 3.4) * uDisc * uHeat;
         float alpha = .9 * smoothstep(5.8,7.0,r);
-        col += T*ramp(I, g)*alpha; T *= (1.-alpha);
+        col += T*ramp(I, g, r)*alpha; T *= (1.-alpha);
         if(T < .02) break;
       }
     }
@@ -125,11 +125,11 @@ void main(){
     col += T*sky(d);
   }
   // thin photon ring + soft halo (n=inf images), Doppler-lopsided
-  float lop = .5 + .9*smoothstep(-.8,.8, (e2.x*cr + e2.y*sr)*uFlip);
+  float lop = .2 + 1.0*smoothstep(-.8,.8, (e2.x*cr + e2.y*sr)*uFlip);
   float bb = (b - BC)/BC;
-  float ring = exp(-pow((bb-.006)/.0065, 2.)) * 1.7 + exp(-pow((bb-.03)/.035, 2.)) * .28;
+  float ring = exp(-pow((bb-.004)/.0042, 2.)) * 1.5 + exp(-pow((bb-.025)/.03, 2.)) * .16;
   if(bb < -.02) ring *= exp(-pow((bb+.02)/.02, 2.));
-  col += vec3(1.,.50,.16) * ring * lop * uRing * (.7 + .3*uHeat) + vec3(.4,.26,1.)*exp(-pow((bb-.012)/.01,2.))*.25*uRing*uDisc;
+  col += vec3(1.,.50,.16) * ring * lop * uRing * (.7 + .3*uHeat) ;
   gl_FragColor = vec4(col*uOpacity, uOpacity > .999 ? 1. : uOpacity);
 }`;
 
@@ -156,7 +156,7 @@ void main(){
     vec3 tint = mix(vec3(.8,.78,1.), vec3(1.,.62,.28), h2*h2);
     col += tint*lines*bright;
   }
-  float core = exp(-r*r*14.)*uCore; col *= (1. - .8*core); col += vec3(.18,.10,.5)*core*.25;
+  float core = exp(-r*r*10.)*uCore; col *= (1. - .85*core); col += vec3(.16,.09,.42)*exp(-r*r*70.)*uCore*.35;
   gl_FragColor = vec4(col*uOpacity, 1.);
 }`;
 

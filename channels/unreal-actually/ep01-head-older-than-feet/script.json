@@ -16,7 +16,7 @@
         "C1"
       ],
       "screen": [],
-      "visual": "Ink figure standing side-on on paper grid. Two small ink clocks: one at the head, one at the feet. Head clock's second hand visibly runs ahead. Must read in under 2 s."
+      "visual": "Rim-lit figure in deep shadow, head clock and feet clock, head hand ahead; Anton headline slams in by 0.3 s."
     },
     {
       "id": "b02",
@@ -27,7 +27,7 @@
       "screen": [
         "head +0.000 000 000 001 s"
       ],
-      "visual": "Mono counter beside the head clock ticking up in tiny increments. Camera: straight push-in (z) toward the head clock, motivated by the counter."
+      "visual": "Push to the head clock; number-free AHEAD meter fills."
     },
     {
       "id": "b03",
@@ -36,7 +36,7 @@
         "C2"
       ],
       "screen": [],
-      "visual": "Earth drawn as a wide ink arc at the bottom. Ink gravity arrows point down. The graph-paper grid compresses toward the ground (lines bunch closer near Earth) = time running slower."
+      "visual": "Faint spacetime grid sags toward a night-side Earth limb with city lights; thin atmosphere haze."
     },
     {
       "id": "b04",
@@ -48,7 +48,7 @@
         "slower",
         "faster"
       ],
-      "visual": "A vertical column of 4 identical clocks at rising heights; hands sweep at visibly rising speed with height. Small Graphite label 'speeds exaggerated'. Camera: straight tilt up the column (y)."
+      "visual": "Column of four clocks tilting up; tick trains show rates; small 'speeds exaggerated' label."
     },
     {
       "id": "b05",
@@ -58,7 +58,7 @@
         "C2"
       ],
       "screen": [],
-      "visual": "Back to the figure. Camera travels straight up (y) from the feet clock to the head clock as each is named. Red underline under 'faster' caption."
+      "visual": "Camera travels feet clock to head clock as each is named."
     },
     {
       "id": "b06",
@@ -70,7 +70,8 @@
         "2010",
         "NIST"
       ],
-      "visual": "Mono date stamp '2010 · NIST' slams in like a rubber stamp. Lab bench drawn line by line."
+      "visual": "2010 · NIST stamp over a dark lab; lasers light two atomic clocks.",
+      "tts": "Sounds made up. So in 2010, physicists at a US lab called NIST tested it."
     },
     {
       "id": "b07",
@@ -82,7 +83,7 @@
       "screen": [
         "33 cm ≈ 1 ft"
       ],
-      "visual": "Two clocks side by side on the bench. A two-step staircase draws in; one clock climbs the two steps. Dimension line with arrowheads labelled '33 cm ≈ 1 ft' in mono."
+      "visual": "Step rises; clock climbs two steps; dimension line 33 cm ≈ 1 ft."
     },
     {
       "id": "b08",
@@ -91,7 +92,7 @@
         "C4"
       ],
       "screen": [],
-      "visual": "Tick marks spray out of the higher clock slightly quicker than the lower. Red underline. Hold still ~1 s."
+      "visual": "Rate bars show the higher clock ticking faster."
     },
     {
       "id": "b09",
@@ -104,7 +105,7 @@
         "≈ 0.000 000 09 s",
         "90 billionths of a second"
       ],
-      "visual": "A long ink timeline labelled '79 years' runs across the frame; at its end a tiny gap labelled in mono '≈ 0.000 000 09 s'. Camera: straight push-in (z) on the tiny gap."
+      "visual": "79-year light filament in deep perspective; camera pushes along it to the microscopic gap labelled ≈ 0.000 000 09 s."
     },
     {
       "id": "b10",
@@ -113,7 +114,7 @@
         "C5"
       ],
       "screen": [],
-      "visual": "The gap shrinks to a single ink dot. Marker highlight behind 'real'."
+      "visual": "Gap collapses to a point of light; REAL."
     },
     {
       "id": "b11",
@@ -124,7 +125,7 @@
       "screen": [
         "GPS"
       ],
-      "visual": "Camera pulls straight back (z) then rises (y): Earth arc small at bottom, an ink-drawn GPS satellite high on a dashed path, with its own clock running fast. Still paper and ink, no black space."
+      "visual": "A phone with a map pin, then pull back to a dark GPS satellite above the Earth limb."
     },
     {
       "id": "b12",
@@ -136,7 +137,7 @@
       "screen": [
         "set slow before launch"
       ],
-      "visual": "The satellite clock on a ground bench; an ink hand turns its knob back. Cut to a simple street-grid map with a pin: pin drifts off the street (dashed), then snaps back onto it."
+      "visual": "Rack unit: knob turns the satellite clock slower; then a flat dark phone map where the Horizon pin drifts off the street and snaps back."
     },
     {
       "id": "b13",
@@ -149,7 +150,7 @@
         "TRUE",
         "The higher you are, the faster your time runs."
       ],
-      "visual": "Signature: 'CASE FILE 001' header, a big Anton 'TRUE' stamp slams in Horizon orange on 'True', the rule line below in Barlow. Hold 1 s of stillness."
+      "visual": "CASE FILE 001, TRUE stamp slams on 'True', rule line once."
     },
     {
       "id": "b14",
@@ -158,7 +159,7 @@
         "C4"
       ],
       "screen": [],
-      "visual": "Figure climbs a staircase; a tiny '+' tick pops at each step."
+      "visual": "Side-on figure climbs lit steps with a small + per step."
     },
     {
       "id": "b15",
@@ -167,7 +168,8 @@
         "C1"
       ],
       "screen": [],
-      "visual": "Back to the opening framing: figure with head and feet clocks. A single ink hair springs up on the head on 'By a hair'. End on the rule card for ~1 s."
+      "visual": "Back to the opening framing; a hair grows on 'By a hair'; end card with Unreal, Actually.",
+      "speed_mul": 0.92
     }
   ],
   "end_card": {
@@ -179,5 +181,22 @@
     "key_word": "older"
   },
   "end_hold": 1.8,
-  "sound": "unreal-actually"
+  "sound": "unreal-actually",
+  "gaps": {
+    "b01": 0.3,
+    "b02": 0.4,
+    "b03": 0.45,
+    "b04": 0.25,
+    "b05": 0.5,
+    "b06": 0.35,
+    "b07": 0.2,
+    "b08": 0.15,
+    "b09": 0.4,
+    "b10": 0.55,
+    "b11": 0.2,
+    "b12": 0.3,
+    "b13": 0.35,
+    "b14": 0.6,
+    "b15": 0
+  }
 }

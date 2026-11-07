@@ -119,22 +119,22 @@ const pathB = [{ t: S("b03"), p: [0, 2.6, 9], l: [0, -.7, -4], f: 32, fp: [0, -1
 // ===== C: a column of clocks at rising heights (b04) =====
 const Cs = shot("C", [0x08070d, .02]);
 const earthC = makeEarth(16, V3(.5, .5, .4)); earthC.position.set(0, -22.5, -10); Cs.g.add(earthC);
-const colClocks = [0, 1, 2, 3].map(i => { const c = makeClock(.46, lerpCol(UV, HOT, i / 3)); c.position.set(0, i * 1.55, 0); Cs.g.add(c); return c; });
+const colClocks = [0, 1, 2, 3].map(i => { const c = makeClock(.46, lerpCol(UV, HOT, i / 3)); c.position.set(0, i * 1.2, 0); Cs.g.add(c); return c; });
 function lerpCol(a, b, u) { return a.clone().lerp(b, u); }
 const spine = new THREE.Mesh(new THREE.BoxGeometry(.014, 6.4, .014), emis(UV, 1.3)); spine.position.set(0, 2.1, -.05); Cs.g.add(spine);
 const barC = new THREE.Mesh(new THREE.PlaneGeometry(.1, 6.4), new THREE.ShaderMaterial({ vertexShader: "varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: `varying vec2 vUv; void main(){ gl_FragColor=vec4(mix(vec3(.5,.4,1.),vec3(1.4,.6,.15),vUv.y)*1.6,1.); }` })); barC.position.set(2.5, 2.1, 0); Cs.g.add(barC);
 const trainN = 16, trains = []; for (let i = 0; i < 4; i++) { const im = new THREE.InstancedMesh(new THREE.BoxGeometry(.04, .38, .04), emis(lerpCol(UV, HOT, i / 3), 2.6), trainN); trains.push(im); Cs.g.add(im); }
-const leds = []; for (let i = 0; i < 4; i++) for (let k = 0; k < 4; k++) { const m = new THREE.Mesh(new THREE.BoxGeometry(.16, .16, .05), emis(k <= i ? HOT : HAZE, k <= i ? 2.6 : .35)); m.position.set(.85 + k * .26, i * 1.55, 0); Cs.g.add(m); }
+const leds = []; for (let i = 0; i < 4; i++) for (let k = 0; k < 4; k++) { const m = new THREE.Mesh(new THREE.BoxGeometry(.16, .16, .05), emis(k <= i ? HOT : HAZE, k <= i ? 2.6 : .35)); m.position.set(.85 + k * .26, i * 1.2, 0); Cs.g.add(m); }
 Cs.g.add(dir(0xff8a2a, 1.6, [3, 2, -3], [0, 2, 0]), dir(0xa98bff, 1.4, [-4, 3, 2], [0, 2, 0]), new THREE.HemisphereLight(0x3a2a70, 0x05040a, .8));
 Cs.g.add(dustField(180, [10, 10, 10], 0xc9b8ff, .04, 21)); Cs.g.position.y = 0;
 const dm = new THREE.Object3D();
 Cs.update = t => {
   const lt = t - S("b04"), rates = [.4, 1.1, 2.1, 3.4];
   colClocks.forEach((c, i) => { c.userData.set(lt * rates[i] * 1.4, { hot: .6 + i * .2 }); c.scale.setScalar(.01 + smooth((lt - .1 - i * .3) / .35)); });
-  trains.forEach((im, i) => { const gap = .9 / rates[i]; for (let k = 0; k < trainN; k++) { const x = -.8 - ((lt * .9 + k * gap) % (gap * trainN)); const vis = x > -3.6; dm.position.set(x, i * 1.55, 0); dm.scale.setScalar(vis ? 1 : 0); dm.updateMatrix(); im.setMatrixAt(k, dm.matrix); } im.instanceMatrix.needsUpdate = true; });
+  trains.forEach((im, i) => { const gap = .9 / rates[i]; for (let k = 0; k < trainN; k++) { const x = -.8 - ((lt * .9 + k * gap) % (gap * trainN)); const vis = x > -3.6; dm.position.set(x, i * 1.2, 0); dm.scale.setScalar(vis ? 1 : 0); dm.updateMatrix(); im.setMatrixAt(k, dm.matrix); } im.instanceMatrix.needsUpdate = true; });
   Cs.A = {};
 };
-const pathC = [{ t: S("b04"), p: [0, .2, 7.2], l: [0, .5, 0], f: 45, fp: [0, .2, 0], ap: .0005 }, { t: S("b04") + .6, p: [0, .3, 7.2], l: [0, .6, 0], f: 45, fp: [0, .2, 0], ap: .0005 }, { t: END("b04"), p: [0, 4.0, 7.6], l: [0, 4.5, 0], f: 42, fp: [0, 4.6, 0], ap: .0006 }];
+const pathC = [{ t: S("b04"), p: [0, .1, 6.4], l: [0, .15, 0], f: 42, fp: [0, 0, 0], ap: .0005 }, { t: S("b04") + .5, p: [0, .1, 6.4], l: [0, .15, 0], f: 42, fp: [0, 0, 0], ap: .0005 }, { t: END("b04") - .1, p: [0, 1.0, 9.6], l: [0, .9, 0], f: 35, fp: [0, 1.8, 0], ap: .0005 }];
 
 // ===== D: the NIST lab (b06-b08) =====
 const D = shot("D", [0x08070d, .04]);
@@ -154,8 +154,9 @@ function unitMesh(accent) {
   g.userData.clk = clk; return g;
 }
 const unitA = unitMesh(UV), unitB = unitMesh(HOT); D.g.add(unitA, unitB);
+const stepsD = new THREE.Group(); D.g.add(stepsD);
 const stepM = mat({ color: 0x1a1430, roughness: .4, metalness: .6, envMap, envMapIntensity: .7 });
-[[1.5, .3, 1.1], [2.65, .6, 1.2]].forEach(([x, h, w], i) => { const st = new THREE.Mesh(new THREE.BoxGeometry(w, h, 1.1), stepM); st.position.set(x, h / 2, 0); st.castShadow = st.receiveShadow = true; D.g.add(st); const e = new THREE.Mesh(new THREE.BoxGeometry(w, .02, .02), emis(UV, 2)); e.position.set(x, h, .56); D.g.add(e); });
+[[1.5, .3, 1.1], [2.65, .6, 1.2]].forEach(([x, h, w], i) => { const st = new THREE.Mesh(new THREE.BoxGeometry(w, h, 1.1), stepM); st.position.set(x, h / 2, 0); st.castShadow = st.receiveShadow = true; stepsD.add(st); const e = new THREE.Mesh(new THREE.BoxGeometry(w, .02, .02), emis(UV, 2)); e.position.set(x, h, .56); stepsD.add(e); });
 const scopeCv = document.createElement("canvas"); scopeCv.width = 768; scopeCv.height = 320; const scx = scopeCv.getContext("2d"), scopeTex = new THREE.CanvasTexture(scopeCv); scopeTex.colorSpace = THREE.SRGBColorSpace;
 const scope = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.5), new THREE.MeshBasicMaterial({ map: scopeTex, toneMapped: true })); scope.position.set(.2, 2.6, -2.2); D.g.add(scope);
 const dimBar = new THREE.Mesh(new THREE.BoxGeometry(.016, .6, .016), emis(TXT, 2)); dimBar.position.set(.55, 1.4, .4); D.g.add(dimBar);
@@ -163,6 +164,10 @@ const dimDash = new THREE.Mesh(new THREE.BoxGeometry(2.2, .008, .008), emis(HAZE
 D.g.add(spot(0xffe6cc, 120, [.6, 7, 3.5], [.6, 0, 0], .55, true), dir(0xff8a2a, 1.6, [6, 2, -2], [1, 1, 0]), dir(0xa98bff, 1.3, [-6, 3, -2], [0, 1, 0]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .5));
 const coneD = lightCone(TXT.clone(), 8, .2, 2.4, .1); coneD.position.set(.6, 8, 1.5); D.g.add(coneD);
 D.g.add(dustField(200, [10, 6, 6], 0xffd9b0, .04, 31));
+// extra events: lasers light the clocks, ion glow, rate bars (A slow, B fast)
+const lasers = [[V3(-3.4, 3.1, -1.6), 0], [V3(3.6, 3.3, -1.6), 1]].map(([from, k]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(.012, .012, 1, 8), emis(k ? HOT : UV, 3)); m.userData = { from, k }; D.g.add(m); return m; });
+const ionB = glowSprite(UV, 1.6, .6); D.g.add(ionB); const ionA = glowSprite(HOT, 1.3, .5); D.g.add(ionA);
+const barDim = new THREE.InstancedMesh(new THREE.BoxGeometry(.08, .16, .04), emis(HAZE, .5), 16), barLit = new THREE.InstancedMesh(new THREE.BoxGeometry(.08, .16, .04), emis(HOT, 3), 16); D.g.add(barDim, barLit);
 const sprayN = 22, spray = new THREE.InstancedMesh(new THREE.BoxGeometry(.025, .12, .025), emis(HOT, 3), sprayN * 2); D.g.add(spray);
 const unitPos = (which, t) => { if (which === "A") return [-1.6, 0]; const u = clamp((t - T.tRaise0) / (T.tRaise1 - T.tRaise0)); if (u <= 0) return [-.3, 0]; if (u >= 1) return [2.65, .6];
   const a = u < .5, e = eio(a ? u / .5 : (u - .5) / .5), s = a ? [-.3, 0, 1.5, .3] : [1.5, .3, 2.65, .6]; return [lerp(s[0], s[2], e), lerp(s[1], s[3], e) + Math.sin((a ? u / .5 : (u - .5) / .5) * Math.PI) * .22]; };
@@ -178,10 +183,19 @@ D.update = t => {
   [[pa, 1.6, 0], [pb, 3.2, 1]].forEach(([p, rate, k]) => { const cnt = Math.floor((t - t8) * rate) + 1; for (let i = Math.max(0, cnt - 4); i < cnt; i++) { const ti = t8 + i / rate, u = (t - ti) / .8; if (u < 0 || u > 1 || t < t8) continue;
     const ang = (Math.PI / 2 + (hash(i * 3 + k * 17) - .5) * 2.0), r1 = .45 + u * .7; dm.position.set(p[0] + r1 * Math.cos(ang), p[1] + .64 + r1 * Math.sin(ang), .4); dm.rotation.z = ang - Math.PI / 2; dm.scale.setScalar(1 - u * u); dm.updateMatrix(); spray.setMatrixAt(n++, dm.matrix); } });
   dm.rotation.z = 0; dm.scale.setScalar(0); dm.updateMatrix(); for (; n < sprayN * 2; n++) spray.setMatrixAt(n, dm.matrix); spray.instanceMatrix.needsUpdate = true;
-  const dp = new THREE.Vector3(.55, 1.4, .4); D.A = { dim: { x: proj(dp)[0] - 210, y: proj(dp)[1] } };
+  stepsD.position.y = -.75 * (1 - eo3((t - (T.tRaise0 - 1.3)) / 1.0)); stepsD.visible = t > T.tRaise0 - 1.4;
+  lasers.forEach(m => { const { from, k } = m.userData, p = k ? pb : pa, tgt = V3(p[0], p[1] + .64, .4), on = smooth((t - (S("b06") + 2.6 + k * 1.9)) / .25) * (t < S("b07") + 3 ? 1 : .35) * (.75 + .25 * Math.sin(t * 40));
+    const d = tgt.clone().sub(from), len = d.length(); m.position.copy(from).addScaledVector(d, .5); m.scale.set(1, Math.max(.001, len * (on > 0 ? 1 : 0)), 1); m.quaternion.setFromUnitVectors(V3(0, 1, 0), d.normalize()); m.material.color.copy(k ? HOT : UV).multiplyScalar(3 * on); });
+  ionB.position.set(pb[0], pb[1] + .64, .5); ionB.material.opacity = .6 * smooth((t - (S("b07") + .1)) / .4) * (.7 + .3 * Math.sin(t * 9)); ionA.position.set(pa[0], pa[1] + .64, .5); ionA.material.opacity = .45 * smooth((t - (S("b06") + 4.4)) / .4);
+  { const rateA = t < S("b08") ? 1.4 : 1.4, rateB = t < S("b08") - .2 ? 1.4 : 4.2; let nA = 0;
+    [[pa, rateA, 0], [pb, rateB, 8]].forEach(([p, rate, o], j) => { const vis = smooth((t - (S("b08") - .3)) / .3), lit = Math.floor(Math.max(0, t - (S("b08") - .3)) * rate) % 9;
+      for (let i = 0; i < 8; i++) { dm.position.set(p[0] - .35 + i * .1, p[1] + 1.35, .45); dm.scale.setScalar(vis * 1 + .001); dm.rotation.set(0, 0, 0); dm.updateMatrix(); barDim.setMatrixAt(o + i, dm.matrix);
+        dm.scale.setScalar(i < lit ? vis * 1.15 + .001 : .0001); dm.updateMatrix(); barLit.setMatrixAt(o + i, dm.matrix); } });
+    dm.scale.setScalar(1); barDim.instanceMatrix.needsUpdate = barLit.instanceMatrix.needsUpdate = true; }
+  const dp = new THREE.Vector3(.55, 1.4, .4); D.A = { dim: { x: proj(dp)[0] - 235, y: proj(dp)[1] } };
 };
-const pathD = [{ t: S("b06"), p: [.3, 1.2, 10], l: [.4, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 }, { t: END("b06"), p: [.5, 1.2, 9.4], l: [.6, .9, 0], f: 36, fp: [-1, .6, 0], ap: .0007 },
-  { t: S("b07"), p: [.7, 1.2, 9.8], l: [.8, .9, 0], f: 34, fp: [.6, .7, 0], ap: .0006 }, { t: S("b08"), p: [1.0, 1.2, 9.4], l: [1.0, .95, 0], f: 36, fp: [2.4, 1.0, 0], ap: .0008 }, { t: S("b09") - .1, p: [1.1, 1.2, 9.0], l: [1.1, 1.0, 0], f: 36, fp: [2.65, 1.1, 0], ap: .001 }];
+const pathD = [{ t: S("b06"), p: [.5, 1.3, 11.2], l: [.5, .95, 0], f: 30, fp: [0, .7, 0], ap: .0005 }, { t: END("b06"), p: [.5, 1.3, 10.6], l: [.55, .95, 0], f: 30, fp: [0, .7, 0], ap: .0005 },
+  { t: S("b07"), p: [.55, 1.3, 11.0], l: [.6, .95, 0], f: 30, fp: [.6, .7, 0], ap: .0005 }, { t: S("b08"), p: [.6, 1.3, 10.8], l: [.65, 1.0, 0], f: 30, fp: [1.2, 1.0, 0], ap: .0006 }, { t: S("b09") - .1, p: [.6, 1.3, 10.4], l: [.65, 1.0, 0], f: 30, fp: [1.2, 1.0, 0], ap: .0006 }];
 
 // ===== E: 79 years as a light filament receding in deep perspective; the microscopic gap at its end (b09, b10) =====
 const Es = shot("E", [0x08070d, .028]);
@@ -217,13 +231,13 @@ const pathE = [{ t: S("b09"), p: [.45, .3, 7.5], l: [0, 0, -30], f: 32, fp: [0, 
 
 // ===== F: GPS satellite above Earth (b11) =====
 const F = shot("F", [0x08070d, .006]);
-const earthF = makeEarth(18, V3(.8, .55, .2)); earthF.position.set(0, -20, -8); F.g.add(earthF);
+const earthF = makeEarth(18, V3(.8, .55, .2), { night: true }); earthF.position.set(0, -20, -8); F.g.add(earthF);
 const sat = new THREE.Group();
-{ const foil = canvasTex(256, 256, (x, w, h) => { x.fillStyle = "#6b4414"; x.fillRect(0, 0, w, h); for (let i = 0; i < 400; i++) { x.strokeStyle = `rgba(${hash(i) > .5 ? 255 : 40},${hash(i) > .5 ? 190 : 20},${hash(i) > .5 ? 100 : 5},.18)`; x.lineWidth = 1 + hash(i * 3) * 3; x.beginPath(); const px = hash(i * 5) * w, py = hash(i * 7) * h; x.moveTo(px, py); x.lineTo(px + (hash(i * 9) - .5) * 70, py + (hash(i * 11) - .5) * 70); x.stroke(); } });
+{ const foil = canvasTex(256, 256, (x, w, h) => { x.fillStyle = "#17121f"; x.fillRect(0, 0, w, h); for (let i = 0; i < 400; i++) { x.strokeStyle = `rgba(${hash(i) > .5 ? 169 : 255},${hash(i) > .5 ? 139 : 138},${hash(i) > .5 ? 255 : 42},.16)`; x.lineWidth = 1 + hash(i * 3) * 3; x.beginPath(); const px = hash(i * 5) * w, py = hash(i * 7) * h; x.moveTo(px, py); x.lineTo(px + (hash(i * 9) - .5) * 70, py + (hash(i * 11) - .5) * 70); x.stroke(); } });
   const foilBump = canvasTex(256, 256, (x, w, h) => { x.fillStyle = "#808080"; x.fillRect(0, 0, w, h); for (let i = 0; i < 500; i++) { x.fillStyle = `rgba(${hash(i) > .5 ? 255 : 0},${hash(i) > .5 ? 255 : 0},${hash(i) > .5 ? 255 : 0},.2)`; const px = hash(i * 5) * w, py = hash(i * 7) * h; x.beginPath(); x.moveTo(px, py); x.lineTo(px + 40 * (hash(i * 3) - .5), py + 40 * (hash(i * 4) - .5)); x.lineTo(px + 30 * (hash(i * 6) - .5), py + 50 * (hash(i * 8) - .5)); x.fill(); } }, false);
   const busM = mat({ map: foil, color: 0xffffff, metalness: .95, roughness: .38, bumpMap: foilBump, bumpScale: 3, envMap, envMapIntensity: 1.6 });
   const bus = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.5, 1.1), busM); bus.castShadow = true; sat.add(bus);
-  const cell = canvasTex(512, 256, (x, w, h) => { x.fillStyle = "#101040"; x.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) for (let j = 0; j < 4; j++) { const g2 = x.createLinearGradient(i * 64, j * 64, i * 64 + 64, j * 64 + 64); g2.addColorStop(0, "#26277a"); g2.addColorStop(1, "#14144a"); x.fillStyle = g2; x.fillRect(i * 64 + 3, j * 64 + 3, 58, 58); x.strokeStyle = "rgba(200,190,255,.35)"; x.lineWidth = 1; x.beginPath(); x.moveTo(i * 64 + 20, j * 64 + 3); x.lineTo(i * 64 + 20, j * 64 + 61); x.moveTo(i * 64 + 42, j * 64 + 3); x.lineTo(i * 64 + 42, j * 64 + 61); x.stroke(); } });
+  const cell = canvasTex(512, 256, (x, w, h) => { x.fillStyle = "#06050d"; x.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) for (let j = 0; j < 4; j++) { const g2 = x.createLinearGradient(i * 64, j * 64, i * 64 + 64, j * 64 + 64); g2.addColorStop(0, "#15143a"); g2.addColorStop(1, "#090919"); x.fillStyle = g2; x.fillRect(i * 64 + 3, j * 64 + 3, 58, 58); x.strokeStyle = "rgba(169,139,255,.55)"; x.lineWidth = 1.4; x.beginPath(); x.moveTo(i * 64 + 20, j * 64 + 3); x.lineTo(i * 64 + 20, j * 64 + 61); x.moveTo(i * 64 + 42, j * 64 + 3); x.lineTo(i * 64 + 42, j * 64 + 61); x.stroke(); } });
   const panM = mat({ map: cell, metalness: .7, roughness: .22, envMap, envMapIntensity: 1.8, bumpMap: scratchTex(8), bumpScale: .5 });
   [-1, 1].forEach(s => { const pn = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.35, .04), panM); pn.position.set(s * 3.05, 0, 0); pn.castShadow = true; sat.add(pn); const fr = new THREE.Mesh(new THREE.BoxGeometry(3.06, 1.41, .03), mat({ color: 0x24203a, metalness: .9, roughness: .4, envMap })); fr.position.set(s * 3.05, 0, -.03); sat.add(fr);
     const bm = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, .65, 12), mat({ color: 0xaaa7bb, metalness: 1, roughness: .3, envMap })); bm.rotation.z = Math.PI / 2; bm.position.set(s * .88, 0, 0); sat.add(bm); const re = new THREE.Mesh(new THREE.BoxGeometry(.02, 1.36, .05), emis(HOT, 1.6)); re.position.set(s * 4.55, 0, 0); sat.add(re); });
@@ -232,9 +246,15 @@ const sat = new THREE.Group();
   for (let i = 0; i < 4; i++) { const a = new THREE.Mesh(new THREE.CylinderGeometry(.04, .07, .26, 12), mat({ color: 0xcfcbe0, metalness: 1, roughness: .25, envMap })); a.position.set(-.3 + (i % 2) * .6, -.88, -.3 + Math.floor(i / 2) * .6); sat.add(a); const th = new THREE.Mesh(new THREE.ConeGeometry(.05, .12, 12), emis(UV, 1.5)); th.position.set(-.5 + i * .33, -.85, .6); th.rotation.x = Math.PI; sat.add(th); }
   const satClock = makeClock(.4, HOT); satClock.position.set(0, .05, .56); sat.add(satClock); sat.userData.clk = satClock; }
 sat.position.set(0, 3.8, -6); sat.rotation.set(.12, -.35, -.12); F.g.add(sat);
-const phone = new THREE.Mesh(new THREE.BoxGeometry(.07, .14, .01), emis(HOT, 2.4)); phone.position.set(0, -1.93, -8); F.g.add(phone); const phoneGlow = glowSprite(HOT, 1.0, .9); phoneGlow.position.copy(phone.position); F.g.add(phoneGlow);
+const phone = new THREE.Group();
+{ const body = new THREE.Mesh(new THREE.BoxGeometry(.27, .54, .025), mat({ color: 0x0b0914, metalness: .9, roughness: .3, envMap, envMapIntensity: 1 })); phone.add(body);
+  const mapTex = canvasTex(256, 512, (x, w, h) => { x.fillStyle = "#0a0813"; x.fillRect(0, 0, w, h); x.strokeStyle = "rgba(169,139,255,.45)"; x.lineWidth = 3; for (let i = 0; i < 7; i++) { x.beginPath(); x.moveTo(i * 44 - 10, 0); x.lineTo(i * 44 + 14, h); x.stroke(); } for (let j = 0; j < 12; j++) { x.beginPath(); x.moveTo(0, j * 46 + 10); x.lineTo(w, j * 46); x.stroke(); }
+    x.strokeStyle = "rgba(243,241,255,.8)"; x.lineWidth = 5; x.beginPath(); x.moveTo(128, h); x.lineTo(128, 250); x.stroke();
+    x.fillStyle = "#ff8a2a"; x.shadowColor = "#ff8a2a"; x.shadowBlur = 24; x.beginPath(); x.moveTo(128, 262); x.bezierCurveTo(78, 205, 82, 130, 128, 130); x.bezierCurveTo(174, 130, 178, 205, 128, 262); x.fill(); x.shadowBlur = 0; x.fillStyle = "#08070d"; x.beginPath(); x.arc(128, 190, 16, 0, 6.3); x.fill(); });
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.24, .5), new THREE.MeshBasicMaterial({ map: mapTex })); scr.position.z = .014; phone.add(scr); }
+phone.position.set(0, -1.72, -8); phone.rotation.x = -.12; F.g.add(phone); const phoneGlow = glowSprite(HOT, 1.4, .5); phoneGlow.position.set(0, -1.7, -7.9); F.g.add(phoneGlow);
 const sigN = 7, sig = new THREE.InstancedMesh(new THREE.SphereGeometry(.035, 8, 8), emis(HOT, 4), sigN); F.g.add(sig);
-F.g.add(dir(0xffd9b0, 4, [8, 5, 2], [0, 3, -6]), dir(0xa98bff, 1.8, [-8, 3, -2], [0, 3, -6]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .5), dustField(120, [20, 12, 16], 0xffffff, .035, 51));
+F.g.add(dir(0xff8a2a, 3.2, [8, 5, -3], [0, 3, -6]), dir(0xa98bff, 5, [-8, 3, -3], [0, 3, -6]), dir(0xf3f1ff, .4, [2, 2, 8], [0, 3, -6]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .5), dustField(120, [20, 12, 16], 0xffffff, .035, 51));
 F.update = t => {
   const lt = t - S("b11"), sc = .5 + .5 * eo3((lt - .3) / 1.0); sat.scale.setScalar(sc); sat.position.y = 3.8 + Math.sin(t * .5) * .05; sat.rotation.y = -.35 + Math.sin(t * .3) * .06;
   sat.userData.clk.userData.set(lt * 5.4, { hot: 1.3 }); earthF.userData.m.uniforms.t.value = t;
@@ -242,7 +262,7 @@ F.update = t => {
   for (let i = 0; i < sigN; i++) { const u = (t * .45 + i / sigN) % 1; dm.position.set(Math.sin(u * 9) * .04, lerp(-1.85, 3.2, u), -7.6 + u * 1.6); dm.scale.setScalar(sa * Math.sin(u * 3.14) + .0001); dm.rotation.z = 0; dm.updateMatrix(); sig.setMatrixAt(i, dm.matrix); } sig.instanceMatrix.needsUpdate = true;
   F.A = {};
 };
-const pathF = [{ t: S("b11"), p: [.35, -1.35, -2.4], l: [0, -1.75, -8], f: 50, fp: [0, -1.9, -8], ap: .0014 }, { t: S("b11") + .5, p: [.35, -1.3, -2.2], l: [0, -1.7, -8], f: 50, fp: [0, -1.9, -8], ap: .0014 },
+const pathF = [{ t: S("b11"), p: [.5, -1.3, -6.1], l: [0, -1.65, -8], f: 50, fp: [0, -1.72, -8], ap: .0012 }, { t: S("b11") + 1.3, p: [.45, -1.2, -5.7], l: [0, -1.6, -8], f: 50, fp: [0, -1.72, -8], ap: .0012 },
   { t: W("b11", "GPS satellites"), p: [0, 1.0, 5.4], l: [0, .9, -6], f: 32, fp: [0, 3.8, -6], ap: .0006 }, { t: W("b11", "clocks run"), p: [0, 2.6, 3.4], l: [0, 3.4, -6], f: 40, fp: [0, 3.9, -6], ap: .0007 }, { t: END("b11") + .2, p: [.2, 3.3, 1.2], l: [0, 3.8, -6], f: 50, fp: [0, 3.9, -6], ap: .0008 }];
 
 // ===== G: set slow before launch (b12, first half) =====
@@ -262,32 +282,34 @@ const dialS = t => { let a = 0; for (let s = S("b12") + .6; s < t; s += 1 / 30) 
 G.update = t => { const ka = smooth((t - T.tSlow0) / (T.tSlow1 - T.tSlow0)); bigC.userData.set(dialS(t), { hot: 1 + .3 * (1 - ka) }); knob.rotation.z = ka * 2.6; const kp = anchorOf(knob, .4); G.A = { knob: kp }; };
 const pathG = [{ t: S("b12"), p: [.2, -.4, 11], l: [.2, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow0, p: [.2, -.4, 10.6], l: [.2, -.6, 0], f: 50, fp: [1.15, -.7, .2], ap: .0010 }, { t: T.tSlow1, p: [.2, -.4, 10.2], l: [.2, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }, { t: T.th0, p: [.2, -.4, 10], l: [.2, -.6, 0], f: 50, fp: [-.5, .1, .2], ap: .0010 }];
 
-// ===== H: dark 3D city grid, the pin drifts and snaps back (b12 second half) =====
-const Hh = shot("H", [0x08070d, .018]);
-{ const city = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0x15102a, roughness: .5, metalness: .4, envMap, envMapIntensity: .6 }), 900); let n = 0; const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), ps = new THREE.Vector3();
-  for (let i = -9; i <= 9; i++) for (let j = -9; j <= 9; j++) { const bx = i * 2.4, bz = j * 2.4; for (let k = 0; k < 4 && n < 900; k++) { const hh = .15 + Math.pow(hash(i * 31 + j * 17 + k), 2.2) * 1.9 * (1 - Math.min(1, Math.hypot(i, j) / 13)) ; const w = .92; ps.set(bx + (k % 2 ? .55 : -.55), hh / 2, bz + (k > 1 ? .55 : -.55)); sc.set(w, hh, w); m4.compose(ps, q, sc); city.setMatrixAt(n++, m4); } }
-  city.count = n; city.castShadow = city.receiveShadow = true; Hh.g.add(city);
-  const road = new THREE.InstancedMesh(new THREE.BoxGeometry(1, .01, 1), emis(UV, .8), 80); n = 0; for (let i = -9; i <= 9; i++) { ps.set(i * 2.4 + 1.2 - 1.2, .005, 0); sc.set(.035, 1, 46); m4.compose(ps, q, sc); if (n < 80) road.setMatrixAt(n++, m4); ps.set(0, .005, i * 2.4); sc.set(46, 1, .035); m4.compose(ps, q, sc); if (n < 80) road.setMatrixAt(n++, m4); } road.count = n; Hh.g.add(road);
-  const grd = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), mat({ color: 0x0a0814, roughness: .5, metalness: .6, envMap, envMapIntensity: .4 })); grd.rotation.x = -Math.PI / 2; grd.receiveShadow = true; Hh.g.add(grd);
-  const route = new THREE.Mesh(new THREE.BoxGeometry(.03, .02, 5), emis(TXT, .7)); route.position.set(0, .02, 2.5); Hh.g.add(route); Hh.userData = { route }; }
-const pin = new THREE.Group(); { const pm_ = emis(HOT, 3); const head = new THREE.Mesh(new THREE.SphereGeometry(.26, 32, 24), pm_); head.position.y = .85; const cone = new THREE.Mesh(new THREE.ConeGeometry(.2, .6, 28), pm_); cone.rotation.x = Math.PI; cone.position.y = .38; pin.add(head, cone);
-  const hole = new THREE.Mesh(new THREE.SphereGeometry(.09, 16, 12), new THREE.MeshBasicMaterial({ color: 0x08070d })); hole.position.set(0, .85, .22); pin.add(hole); const pl = new THREE.PointLight(0xff8a2a, 18, 6, 2); pl.position.y = .9; pin.add(pl); const gs = glowSprite(HOT, 2.2, .8); gs.position.y = .85; pin.add(gs); }
+// ===== H: flat dark phone-map street grid; the Horizon pin drifts off the street and snaps back (b12 second half) =====
+const Hh = shot("H", [0x08070d, .012]);
+{ const gnd = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: 0x0b0914, roughness: .8, metalness: .1 })); gnd.rotation.x = -Math.PI / 2; Hh.g.add(gnd);
+  const blocks = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0x1d1838, roughness: .7, metalness: .1, emissive: 0x15112e }), 600); let n = 0; const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), ps = new THREE.Vector3();
+  for (let i = -8; i <= 8; i++) for (let j = -8; j <= 8; j++) { const w = 1.5 + hash(i * 7 + j * 3) * .5, h_ = 1.5 + hash(i * 5 + j * 11) * .5; ps.set(i * 2.4 + 1.2, .015, j * 2.4 + 1.2); sc.set(w, .03, h_); m4.compose(ps, q, sc); if (n < 600) blocks.setMatrixAt(n++, m4); }
+  blocks.count = n; Hh.g.add(blocks);
+  const mk = (x0, z0, x1, z1, w, c, k) => { const L = Math.hypot(x1 - x0, z1 - z0), m = new THREE.Mesh(new THREE.BoxGeometry(L, .012, w), emis(c, k)); m.position.set((x0 + x1) / 2, .035, (z0 + z1) / 2); m.rotation.y = -Math.atan2(z1 - z0, x1 - x0); Hh.g.add(m); return m; };
+  for (let i = -8; i <= 9; i++) { mk(i * 2.4, -20, i * 2.4, 20, i % 3 ? .02 : .05, i % 3 ? UV : HAZE, i % 3 ? .5 : .8); mk(-20, i * 2.4, 20, i * 2.4, i % 3 ? .02 : .05, i % 3 ? UV : HAZE, i % 3 ? .5 : .8); }
+  mk(-14, 10, 14, -10, .1, HAZE, .9);
+  const river = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V3(-14, .02, 4.5), V3(-6, .02, 3.2), V3(2, .02, 5.4), V3(10, .02, 3.6), V3(16, .02, 4.4)]), 60, .42, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(0x2a1f4d) })); river.scale.y = .05; Hh.g.add(river);
+  const route = mk(0, 0, 0, 6, .05, TXT, 1.3); Hh.userData = { route }; }
+const pin = new THREE.Group(); { const pm_ = emis(HOT, 1.5); const head = new THREE.Mesh(new THREE.SphereGeometry(.3, 32, 24), pm_); head.position.y = .95; const cone = new THREE.Mesh(new THREE.ConeGeometry(.23, .7, 28), pm_); cone.rotation.x = Math.PI; cone.position.y = .42; pin.add(head, cone);
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(.11, 16, 12), new THREE.MeshBasicMaterial({ color: 0xf3f1ff })); dot.position.set(0, .95, .22); pin.add(dot); const pl = new THREE.PointLight(0xff8a2a, 6, 5, 2); pl.position.y = 1.1; pin.add(pl); const gs = glowSprite(HOT, 1.6, .35); gs.position.y = .95; pin.add(gs); }
 Hh.g.add(pin);
-const errRing = new THREE.Mesh(new THREE.RingGeometry(.97, 1, 64), addMat(HOT, { opacity: .9, side: THREE.DoubleSide })); errRing.rotation.x = -Math.PI / 2; errRing.position.y = .03; Hh.g.add(errRing);
-const errFill = new THREE.Mesh(new THREE.CircleGeometry(1, 64), addMat(HOT, { opacity: .1, side: THREE.DoubleSide })); errFill.rotation.x = -Math.PI / 2; errFill.position.y = .028; Hh.g.add(errFill);
-const trailN = 16, trailM = new THREE.InstancedMesh(new THREE.SphereGeometry(.04, 8, 8), emis(HOT, 3), trailN); Hh.g.add(trailM);
-const rip = new THREE.Mesh(new THREE.RingGeometry(.97, 1, 64), addMat(TXT, { opacity: .9, side: THREE.DoubleSide })); rip.rotation.x = -Math.PI / 2; rip.position.y = .035; Hh.g.add(rip);
-Hh.g.add(spot(0xa98bff, 100, [-4, 9, 3], [0, 0, 0], .7, true), dir(0xff8a2a, 1.2, [4, 3, -3], [0, 0, 0]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .55), dustField(120, [14, 5, 12], 0xc9b8ff, .03, 71));
+const errRing = new THREE.Mesh(new THREE.RingGeometry(.97, 1, 64), addMat(HOT, { opacity: .9, side: THREE.DoubleSide })); errRing.rotation.x = -Math.PI / 2; errRing.position.y = .04; Hh.g.add(errRing);
+const errFill = new THREE.Mesh(new THREE.CircleGeometry(1, 64), addMat(HOT, { opacity: .1, side: THREE.DoubleSide })); errFill.rotation.x = -Math.PI / 2; errFill.position.y = .038; Hh.g.add(errFill);
+const trailN = 16, trailM = new THREE.InstancedMesh(new THREE.SphereGeometry(.05, 8, 8), emis(HOT, 3), trailN); Hh.g.add(trailM);
+const rip = new THREE.Mesh(new THREE.RingGeometry(.97, 1, 64), addMat(TXT, { opacity: .9, side: THREE.DoubleSide })); rip.rotation.x = -Math.PI / 2; rip.position.y = .045; Hh.g.add(rip);
+Hh.g.add(dir(0xa98bff, 1.2, [-3, 9, 4], [0, 0, 0]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .8), dustField(80, [14, 4, 12], 0xc9b8ff, .03, 71));
 Hh.update = t => {
   const lt = t - T.th0, kd = smooth((t - T.tDrift0) / (T.tDrift1 - T.tDrift0)), ks = eio((t - T.tSnap) / .35), k = kd * (1 - ks);
-  const P0 = [0, 0], P1 = [1.25, .55], px = lerp(P0[0], P1[0], k), pz = lerp(P0[1], P1[1], k); pin.position.set(px, Math.sin(Math.PI * clamp((t - T.tSnap) / .35)) * .25, pz); pin.scale.setScalar(smooth((lt - .7) / .3) * (1 + .15 * Math.sin(Math.PI * clamp((t - T.tSnap) / .3))) + .001);
-  errRing.position.set(px, .03, pz); errRing.scale.setScalar(.15 + 1.1 * k); errRing.material.opacity = k * .9; errFill.position.copy(errRing.position); errFill.position.y = .028; errFill.scale.copy(errRing.scale); errFill.material.opacity = k * .12;
-  for (let i = 0; i < trailN; i++) { const u = i / (trailN - 1); dm.position.set(lerp(P0[0], px, u), .05, lerp(P0[1], pz, u)); dm.scale.setScalar(kd > 0 && t < T.tSnap + .35 ? 1 : 0); dm.rotation.z = 0; dm.updateMatrix(); trailM.setMatrixAt(i, dm.matrix); } trailM.instanceMatrix.needsUpdate = true;
+  const P0 = [0, 0], P1 = [1.25, .7], px = lerp(P0[0], P1[0], k), pz = lerp(P0[1], P1[1], k); pin.position.set(px, Math.sin(Math.PI * clamp((t - T.tSnap) / .35)) * .25, pz); pin.scale.setScalar(smooth((lt - .7) / .3) * (1 + .15 * Math.sin(Math.PI * clamp((t - T.tSnap) / .3))) + .001);
+  errRing.position.set(px, .04, pz); errRing.scale.setScalar(.15 + 1.1 * k); errRing.material.opacity = k * .9; errFill.position.set(px, .038, pz); errFill.scale.copy(errRing.scale); errFill.material.opacity = k * .12;
+  for (let i = 0; i < trailN; i++) { const u = i / (trailN - 1); dm.position.set(lerp(P0[0], px, u), .06, lerp(P0[1], pz, u)); dm.scale.setScalar(kd > 0 && t < T.tSnap + .35 && i % 2 === 0 ? 1 : 0); dm.rotation.set(0, 0, 0); dm.updateMatrix(); trailM.setMatrixAt(i, dm.matrix); } trailM.instanceMatrix.needsUpdate = true; dm.scale.setScalar(1);
   const ru = (t - (T.tSnap + .3)) / .7; rip.visible = ru > 0 && ru < 1; rip.scale.setScalar(.15 + 1.2 * eo3(ru)); rip.material.opacity = (1 - ru) * .9;
-  Hh.userData.route.scale.z = smooth((lt - .4) / .5);
-  Hh.A = {};
+  Hh.userData.route.scale.x = smooth((lt - .4) / .5) + .001; Hh.A = {};
 };
-const pathH = [{ t: T.th0, p: [-.8, 6.6, 6.4], l: [.3, 0, .2], f: 40, fp: [0, 0, 0], ap: .0009 }, { t: T.tDrift1, p: [.2, 6.0, 5.0], l: [.7, 0, .3], f: 40, fp: [.6, 0, .3], ap: .0009 }, { t: E("b12"), p: [-.1, 6.3, 5.4], l: [.1, 0, .1], f: 40, fp: [0, 0, 0], ap: .0009 }];
+const pathH = [{ t: T.th0, p: [-.2, 8.2, 5.6], l: [.3, 0, .6], f: 40, fp: [0, 0, 0], ap: .0006 }, { t: T.tDrift1, p: [.3, 7.6, 5.0], l: [.6, 0, .6], f: 40, fp: [.6, 0, .3], ap: .0006 }, { t: E("b12"), p: [0, 7.9, 5.3], l: [.3, 0, .5], f: 40, fp: [0, 0, 0], ap: .0006 }];
 
 // ===== I: verdict void (b13) and end card =====
 const I = shot("I", [0x08070d, .03]);
@@ -298,23 +320,41 @@ I.update = t => { I.userData.ringV.rotation.z = t * .04; I.A = {}; };
 const pathI = [{ t: S("b13"), p: [0, 0, 8.5], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }, { t: T.tTrue, p: [0, 0, 8.5], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }, { t: S("b14"), p: [0, 0, 7.3], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }];
 const pathIend = [{ t: 0, p: [0, 0, 7.3], l: [0, .1, 0], f: 50, fp: [0, .2, -4], ap: .0004 }];
 
-// ===== J: climbing the stairs (b14) =====
-const J = shot("J", [0x08070d, .03]);
-const stepsJ = []; for (let i = 0; i <= T.NST; i++) { const st = new THREE.Mesh(new THREE.BoxGeometry(4 - i * .3, .45, 1.2), mat({ color: 0x1a1430, roughness: .38, metalness: .6, envMap, envMapIntensity: .8 })); st.position.set(0, .225 + i * .45 - .45, -i * 1.2 - .6); st.castShadow = st.receiveShadow = true; J.g.add(st);
-  const e = new THREE.Mesh(new THREE.BoxGeometry(4 - i * .3, .02, .02), emis(i % 2 ? UV : HOT, 2.2)); e.position.set(0, i * .45, -i * 1.2); J.g.add(e); stepsJ.push(st); }
-const figJ = makeFigure(); J.g.add(figJ); figJ.rotation.y = Math.PI; // from behind
-const doorJ = new THREE.Mesh(new THREE.PlaneGeometry(3, 3.4), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffa860).multiplyScalar(2.6) })); doorJ.position.set(0, 4.0, -8.1); J.g.add(doorJ);
-J.g.add(glowSprite(HOT, 9, .9)); J.g.children[J.g.children.length - 1].position.set(0, 4.0, -7.9);
-J.g.add(lightCone(0xffa860 && new THREE.Color(0xffa860), 9, .1, 2.8, .12)); { const c = J.g.children[J.g.children.length - 1]; c.position.set(0, 7.4, -5.5); c.rotation.x = .55; }
-J.g.add(spot(0xff8a2a, 140, [0, 5, -7], [0, 1, -2], .9, true), dir(0xa98bff, 1.6, [-4, 3, 4], [0, 1, -3]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .5), dustField(180, [8, 8, 12], 0xffd9b0, .045, 91));
-const stepTop = i => [0, i * .45, -i * 1.2];
+// ===== J: taking the stairs, side-on (b14) =====
+const J = shot("J", [0x08070d, .02]);
+const SW = .9, SH_ = .4;
+const treadM = mat({ color: 0x15102a, roughness: .45, metalness: .6, envMap, envMapIntensity: .5 });
+for (let i = 0; i < T.NST; i++) { const top = (i + 1) * SH_, st = new THREE.Mesh(new THREE.BoxGeometry(SW, top, 1.8), treadM); st.position.set(i * SW + SW / 2, top / 2, 0); st.castShadow = st.receiveShadow = true; J.g.add(st);
+  const e = new THREE.Mesh(new THREE.BoxGeometry(SW, .018, .02), emis(i % 2 ? UV : HOT, 2.4)); e.position.set(i * SW + SW / 2, top + .009, .9); J.g.add(e);
+  const e2 = new THREE.Mesh(new THREE.BoxGeometry(.018, SH_, .02), emis(UV, 1.2)); e2.position.set(i * SW, top - SH_ / 2, .9); J.g.add(e2); }
+{ const fl = new THREE.Mesh(new THREE.PlaneGeometry(40, 8), mat({ color: 0x0c0a16, roughness: .35, metalness: .7, envMap, envMapIntensity: .15 })); fl.rotation.x = -Math.PI / 2; fl.receiveShadow = true; J.g.add(fl);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 14), mat({ color: 0x050409, roughness: 1 })); wall.position.set(6, 5, -3); J.g.add(wall); }
+const poseShapes = (() => {
+  const head = [[6, -704], [34, -696], [48, -668], [44, -636], [28, -612], [4, -604], [-20, -614], [-36, -636], [-40, -668], [-26, -694]], neck = [[-8, -618], [18, -618], [22, -575], [-12, -575]];
+  const torso = [[-14, -596], [24, -594], [46, -566], [52, -510], [46, -430], [40, -336], [34, -288], [-30, -292], [-40, -350], [-48, -440], [-48, -530], [-36, -574]];
+  const armA = [[-10, -570], [14, -574], [34, -520], [62, -440], [78, -380], [70, -366], [50, -380], [22, -430], [0, -490], [-12, -530]], armB = [[-16, -570], [10, -572], [22, -500], [26, -420], [24, -350], [12, -336], [0, -348], [-4, -420], [-14, -500]];
+  const legBack = [[-30, -296], [14, -292], [14, -200], [8, -110], [40, -84], [44, -52], [-24, -52], [-24, -100], [-30, -200]], legFront = [[-20, -298], [32, -292], [110, -216], [118, -132], [156, -112], [158, -82], [88, -88], [76, -176], [6, -240]];
+  const legL = [[-34, -296], [8, -292], [8, -200], [4, -110], [34, -84], [38, -52], [-26, -52], [-28, -100], [-34, -200]], legR = [[-6, -296], [34, -292], [34, -200], [30, -110], [60, -84], [64, -52], [0, -52], [-2, -100], [-6, -200]];
+  return { A: [head, neck, torso, armA, legBack, legFront], B: [head, neck, torso, armB, legL, legR] };
+})();
+function profileFigure(parts) { const g = new THREE.Group(), m = rimMatJ;
+  parts.forEach(pts => { const cur = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(p[0], -p[1] - 52, 0)), true, "catmullrom", .5); const shape = new THREE.Shape(cur.getPoints(60).map(v => new THREE.Vector2(v.x, v.y)));
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: 40, bevelEnabled: true, bevelThickness: 12, bevelSize: 11, bevelSegments: 4, curveSegments: 6 }); geo.translate(0, 0, -20); const me = new THREE.Mesh(geo, m); me.castShadow = true; g.add(me); });
+  g.scale.setScalar(.0025); return g; }
+const rimMatJ = makeFigure().children[0].children[0].material;
+const figA = profileFigure(poseShapes.A), figB = profileFigure(poseShapes.B), figJ = new THREE.Group(); figJ.add(figA, figB); J.g.add(figJ);
+J.g.add(dir(0xff8a2a, 5, [6, 4, -4], [2, 1, 0]), dir(0xa98bff, 3, [-6, 3, -3], [2, 1, 0]), dir(0xf3f1ff, .12, [2, 3, 8], [2, 1, 0]), new THREE.HemisphereLight(0x2a2250, 0x05040a, .18));
+J.g.add(dustField(200, [10, 6, 8], 0xffd9b0, .08, 91));
+const standAt = i => [i < 0 ? -.55 : i * SW + SW / 2, i < 0 ? 0 : (i + 1) * SH_];
 J.update = t => {
-  let idx = 0; for (let i = 0; i < T.NST; i++) if (t >= T.arr(i)) idx = i; let a = stepTop(Math.max(0, idx)), y = a[1], z = a[2];
-  if (idx < T.NST - 1 && t > T.arr(idx + 1) - .35) { const u = eio((t - (T.arr(idx + 1) - .35)) / .35), b = stepTop(idx + 1); y = lerp(a[1], b[1], u) + Math.sin(u * Math.PI) * .22; z = lerp(a[2], b[2], u); }
-  if (t < T.arr(0) - .35) { y = 0; z = 0; } figJ.position.set(0, y, z - .3);
-  const hp = V3(0, y + 1.9, z - .3), p = proj(hp); J.A = { plus: { x: p[0], y: p[1] } };
+  let idx = -1; for (let i = 0; i < T.NST; i++) if (t >= T.arr(i)) idx = i;
+  let a = standAt(idx), x = a[0], y = a[1], hop = false;
+  const nx = idx + 1 < T.NST ? idx + 1 : -9; if (nx >= 0 && t > T.arr(nx) - .4) { const u = eio((t - (T.arr(nx) - .4)) / .4), b = standAt(nx); x = lerp(a[0], b[0], u); y = lerp(a[1], b[1], u) + Math.sin(u * Math.PI) * .25; hop = true; }
+  figJ.position.set(x, y, 0); figA.visible = hop; figB.visible = !hop;
+  const p = proj(V3(x, y + 1.9, 0)); J.A = { plus: { x: p[0], y: p[1] } };
 };
-const pathJ = [{ t: S("b14"), p: [0, .9, 4.6], l: [0, 1.6, -3], f: 35, fp: [0, .9, -.3], ap: .0006 }, { t: END("b14"), p: [0, 2.3, 1.6], l: [0, 3.2, -5], f: 35, fp: [0, 3.2, -5.5], ap: .0006 }];
+const pathJ = []; for (let i = -1; i < T.NST; i++) { const pp = standAt(i), tt = i < 0 ? S("b14") : T.arr(i) - .4; pathJ.push({ t: tt, p: [pp[0] + .35, pp[1] + .3, 7.2], l: [pp[0] + .35, pp[1] + .3, 0], f: 40, fp: [pp[0], pp[1] + .9, 0], ap: .0006 }); }
+pathJ.push({ t: END("b14"), p: [standAt(T.NST - 1)[0] + .35, standAt(T.NST - 1)[1] + .3, 7.2], l: [standAt(T.NST - 1)[0] + .35, standAt(T.NST - 1)[1] + .3, 0], f: 40, fp: [4, 2, 0], ap: .0006 });
 
 // ---------------- camera + shot control ----------------
 const SH = [

@@ -77,7 +77,10 @@ def ua_hit(gain=1.0):
     sub = np.sin(2 * np.pi * 31 * t) * env_exp(n, 0.5) * 0.6
     thump = lowpass(bandnoise(n, 40, 1800), 900) * env_exp(n, 0.05)
     air = bandnoise(n, 3000, 9000) * env_exp(n, 0.02) * 0.15
-    return (body + sub + 0.5 * thump + air) * db(-9) * gain
+    # audible on phone speakers: a 2-5 kHz transient click + a short mid "knock" (150-400 Hz) over the sub
+    click = bandnoise(n, 2000, 5500) * env_exp(n, 0.006) * 0.9
+    knock = np.sin(2 * np.pi * np.cumsum(180 + 220 * np.exp(-t / 0.03)) / SR) * env_exp(n, 0.07) * 0.6
+    return (body + sub + 0.5 * thump + air + click + knock) * db(-9) * gain
 
 
 def ua_swell(dur):
@@ -122,6 +125,17 @@ def ua_bed(sfx, dur):
     drone = (np.sin(2 * np.pi * 43 * t) + 0.5 * np.sin(2 * np.pi * 43.7 * t)) * (0.6 + 0.4 * np.sin(2 * np.pi * t / 9.0))
     fade = np.minimum(1, t / 1.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 1.0)
     sfx += drone * fade * db(-36)
+    # quiet music bed: slow minor pad (Dm9-ish) + a soft pulse, sits ~24 dB under the VO
+    pad = np.zeros(n)
+    for f, a in [(73.4, 1.0), (110.0, .8), (146.8, .7), (174.6, .55), (220.0, .4), (329.6, .25)]:
+        for det in (-.6, .6):
+            pad += a * np.sin(2 * np.pi * (f + det * f / 220.0) * t + det) * (0.7 + 0.3 * np.sin(2 * np.pi * t / (11.0 + f / 40)))
+    pad = lowpass(pad, 900)
+    beat = np.zeros(n)
+    for tt in np.arange(0.5, dur, 0.8):
+        i = int(tt * SR); m = min(n - i, int(0.18 * SR))
+        if m > 0: beat[i:i + m] += np.sin(2 * np.pi * 52 * np.arange(m) / SR) * env_exp(m, 0.05) + 0.35 * np.sin(2 * np.pi * 880 * np.arange(m) / SR) * env_exp(m, 0.012)
+    sfx += (pad * 0.5 + beat * 0.5) * fade * db(-30)
 
 
 PALETTES = {

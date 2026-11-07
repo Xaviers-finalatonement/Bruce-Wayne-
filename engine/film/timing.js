@@ -11,9 +11,11 @@ export const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; r
 export function makeBeatTiming(tl) {
   const B = {}; tl.beats.forEach(b => (B[b.id] = b));
   const S = id => B[id].start, E = id => B[id].next, END = id => B[id].end;
+  // time a spoken phrase starts: character fraction mapped onto the voiced (non-pause) part of the beat when timeline.json has segs
   const W = (id, phrase) => {
     const b = B[id], i = b.vo.toLowerCase().indexOf(phrase.toLowerCase());
     if (i < 0) throw new Error("phrase not found: " + phrase);
+    if (b.sents && b.sents.length) { const x = b.sents.find(q => i < q.c1) || b.sents[b.sents.length - 1]; return x.s + (x.e - x.s) * clamp((i - x.c0) / Math.max(1, x.c1 - x.c0)); }
     return b.start + (b.end - b.start) * i / b.vo.length;
   };
   const DUR = tl.duration;

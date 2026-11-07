@@ -102,26 +102,27 @@ float vn(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.-2.*f);
   return mix(mix(mix(hs(i),hs(i+vec3(1,0,0)),f.x),mix(hs(i+vec3(0,1,0)),hs(i+vec3(1,1,0)),f.x),f.y),
              mix(mix(hs(i+vec3(0,0,1)),hs(i+vec3(1,0,1)),f.x),mix(hs(i+vec3(0,1,1)),hs(i+vec3(1,1,1)),f.x),f.y),f.z); }
 float fbm(vec3 p){ float a=.5, s=0.; for(int i=0;i<4;i++){ s+=a*vn(p); p=p*2.03+7.1; a*=.5; } return s; }`;
-function makeEarth(R, sun) {
+function makeEarth(R, sun, opts) {
+  opts = opts || {};
   const g = new THREE.Group();
-  const m = new THREE.ShaderMaterial({ uniforms: { sun: { value: sun.clone().normalize() }, t: { value: 0 } },
+  const m = new THREE.ShaderMaterial({ uniforms: { sun: { value: sun.clone().normalize() }, t: { value: 0 }, nightK: { value: opts.night ? 1 : 0 } },
     vertexShader: "varying vec3 vN; varying vec3 vO; varying vec3 vW; void main(){ vO=position; vN=normalize(mat3(modelMatrix)*normal); vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }",
-    fragmentShader: NOISE + `uniform vec3 sun; uniform float t; varying vec3 vN; varying vec3 vO; varying vec3 vW;
+    fragmentShader: NOISE + `uniform vec3 sun; uniform float t, nightK; varying vec3 vN; varying vec3 vO; varying vec3 vW;
       void main(){ vec3 N=normalize(vN), V=normalize(cameraPosition-vW); vec3 p=normalize(vO)*3.2;
         float land=smoothstep(.5,.56,fbm(p)); float cl=smoothstep(.5,.8,fbm(p*1.7+vec3(t*.01,0.,0.)+9.));
         float d=dot(N,sun); float day=smoothstep(-.12,.25,d);
         vec3 ocean=mix(vec3(.01,.02,.06),vec3(.03,.07,.2),pow(max(d,0.),.6)); vec3 ground=mix(vec3(.02,.015,.04),vec3(.12,.1,.2),fbm(p*3.)) ;
-        vec3 c=mix(ocean,ground,land)*(.25+1.6*day);
+        vec3 c=mix(ocean,ground,land)*(.1+(1.6-nightK*1.35)*day);
         vec3 R=reflect(-sun,N); float spec=pow(max(dot(R,V),0.),50.)*(1.-land)*day; c+=vec3(1.,.7,.5)*spec*.9;
         c+=vec3(.55,.55,.65)*cl*.38*day;
-        float city=step(.62,fbm(p*9.))*land*(1.-day)*smoothstep(.55,.8,fbm(p*4.+3.)); c+=vec3(1.,.55,.18)*city*1.6;
-        float fr=pow(1.-max(dot(N,V),0.),3.); vec3 atm=mix(vec3(.45,.35,1.),vec3(1.,.45,.12),smoothstep(.2,.9,d)); c+=atm*fr*(.3+1.3*smoothstep(-.3,.7,d));
+        float city=step(.62-nightK*.1,fbm(p*9.))*land*(1.-day)*smoothstep(.5-nightK*.1,.8,fbm(p*4.+3.)); c+=vec3(1.,.55,.18)*city*(1.6+nightK*2.2);
+        float fr=pow(1.-max(dot(N,V),0.),3.+nightK*2.5); vec3 atm=mix(vec3(.45,.35,1.),vec3(1.,.45,.12),smoothstep(.2,.9,d)); c+=atm*fr*(.3+1.3*smoothstep(-.3,.7,d))*(1.-nightK*.75);
         gl_FragColor=vec4(c,1.); }` });
   g.add(new THREE.Mesh(new THREE.SphereGeometry(R, 160, 96), m));
-  const am = new THREE.ShaderMaterial({ transparent: true, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false, uniforms: { sun: { value: sun.clone().normalize() } },
+  const am = new THREE.ShaderMaterial({ transparent: true, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false, uniforms: { sun: { value: sun.clone().normalize() }, nk: { value: opts.night ? 1 : 0 } },
     vertexShader: "varying vec3 vN; varying vec3 vW; void main(){ vN=normalize(mat3(modelMatrix)*normal); vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }",
-    fragmentShader: "uniform vec3 sun; varying vec3 vN; varying vec3 vW; void main(){ vec3 V=normalize(cameraPosition-vW); float f=pow(max(dot(-vN,V),0.),2.2); float d=dot(normalize(vW-vec3(0.)),sun); gl_FragColor=vec4(mix(vec3(.4,.3,1.),vec3(1.,.5,.15),.5)*f*1.4,1.); }" });
-  const atm = new THREE.Mesh(new THREE.SphereGeometry(R * 1.05, 96, 64), am); g.add(atm);
+    fragmentShader: "uniform vec3 sun; uniform float nk; varying vec3 vN; varying vec3 vW; void main(){ vec3 V=normalize(cameraPosition-vW); float f=pow(max(dot(-vN,V),0.),2.2+nk*2.); float d=dot(normalize(vW-vec3(0.)),sun); gl_FragColor=vec4(mix(vec3(.4,.3,1.),vec3(1.,.5,.15),.5)*f*(1.4-nk*.7),1.); }" });
+  const atm = new THREE.Mesh(new THREE.SphereGeometry(R * (opts.night ? 1.012 : 1.05), 96, 64), am); g.add(atm);
   g.userData.m = m; return g;
 }
 

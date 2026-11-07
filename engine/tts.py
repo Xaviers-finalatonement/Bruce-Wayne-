@@ -69,6 +69,55 @@ def split_chunks(text):
     return [" ".join(c).replace("\u00b7", ".") for c in merged]
 
 
+def speech_segments(s, sr, t0, thr_db=-42, min_pause=0.12):
+    """Voiced segments [(start, end)] in film time, from 10 ms RMS; pauses >= min_pause split the beat."""
+    h = int(sr * 0.01); n = len(s) // h
+    r = np.sqrt(np.mean(np.asarray(s[:n * h]).reshape(n, h) ** 2, axis=1)) + 1e-9
+    on = 20 * np.log10(r) > thr_db
+    idx = np.where(on)[0]
+    if len(idx) == 0: return [(t0, t0 + len(s) / sr)]
+    segs, a, prev = [], idx[0], idx[0]
+    for i in idx[1:]:
+        if (i - prev) * 0.01 >= min_pause: segs.append((a, prev + 1)); a = i
+        prev = i
+    segs.append((a, prev + 1))
+    return [(t0 + x * 0.01, t0 + y * 0.01) for x, y in segs]
+
+
+def map_speech(segs, u):
+    """Time at which fraction u (0..1) of the voiced duration has been spoken; snaps to the end of a nearby pause."""
+    D = sum(b - a for a, b in segs); target = u * D; res = segs[-1][1]
+    for a, b in segs:
+        if target <= b - a: res = a + target; break
+        target -= b - a
+    for (a0, b0), (a1, b1) in zip(segs, segs[1:]):
+        if b0 - 0.55 <= res <= a1 + 0.1: return a1
+    return res
+
+
+SENT = r"(?<=[.?!])\s+(?=[A-Z])"
+
+
+def trim(x, sr, thr=0.004):
+    idx = np.where(np.abs(x) > thr)[0]
+    if len(idx) == 0: return x
+    a = max(0, idx[0] - int(0.02 * sr)); b = min(len(x), idx[-1] + int(0.03 * sr))
+    return x[a:b]
+
+
+def synth_beat(k, text, vo, voice, speed):
+    """One TTS call per sentence (exact sentence onsets for caption/picture sync), joined with short pauses."""
+    st, sv = re.split(SENT, text), re.split(SENT, vo)
+    if len(st) != len(sv): st = [text]; sv = [vo]
+    parts, sents, t, sr_, c = [], [], 0.0, 24000, 0
+    for i, (a, v) in enumerate(zip(st, sv)):
+        x, sr_ = k.create(a, voice=voice, speed=speed, lang="en-us"); x = trim(np.asarray(x, dtype=np.float32), sr_)
+        if i: pause = 0.24 if sv[i - 1].rstrip().endswith("?") else 0.14; parts.append(np.zeros(int(pause * sr_), dtype=np.float32)); t += pause
+        c0 = vo.find(v, c); c = c0 + len(v)
+        sents.append(dict(s=t, e=t + len(x) / sr_, c0=c0, c1=c)); parts.append(x); t += len(x) / sr_
+    return np.concatenate(parts), sr_, sents
+
+
 def norm(w): return re.sub(r"[^\w'-]", "", w.lower())
 
 
@@ -96,18 +145,18 @@ def main(ep):
     def synth(speed):
         res = []
         for b in sc["beats"]:
-            s, sr = k.create(b["vo"], voice=voice, speed=speed, lang="en-us")
-            res.append((np.asarray(s, dtype=np.float32), sr))
+            res.append(synth_beat(k, b.get("tts", b["vo"]), b["vo"], voice, speed * float(b.get("speed_mul", 1.0))))
         return res
 
     def layout(res, gap):
         t = LEAD; beats = []
-        for b, (s, sr) in zip(sc["beats"], res):
+        for b, (s, sr, _) in zip(sc["beats"], res):
             d = len(s) / sr
             hold = (sc.get("end_hold", EXTRA_HOLD) if b is sc["beats"][-1] else EXTRA_HOLD) if (b["id"] in HOLD_AFTER or b is sc["beats"][-1]) else 0
-            beats.append(dict(id=b["id"], start=round(t, 3), end=round(t + d, 3), next=round(t + d + gap + hold, 3)))
-            t += d + gap + hold
-        return beats, t - gap  # no trailing gap
+            g = float(sc.get("gaps", {}).get(b["id"], gap))
+            beats.append(dict(id=b["id"], start=round(t, 3), end=round(t + d, 3), next=round(t + d + g + hold, 3)))
+            t += d + g + hold
+        return beats, t - float(sc.get("gaps", {}).get(sc["beats"][-1]["id"], gap))  # no trailing gap
 
     speed_used, gap = speed, GAP
     res = synth(speed_used)
@@ -125,15 +174,19 @@ def main(ep):
     # fix last beat 'next' to the film end
     beats[-1]["next"] = round(total, 3)
     # write wavs, captions
-    for b, bt, (s, sr) in zip(sc["beats"], beats, res):
+    for b, bt, (s, sr, sents) in zip(sc["beats"], beats, res):
         sf.write(os.path.join(wavs, b["id"] + ".wav"), s, sr)
         chunks = split_chunks(b["vo"])
         wanted = set(norm(x) for x in kws.get(b["id"], []))
-        tot = sum(len(c) for c in chunks); t = bt["start"]; caps = []
-        for c in chunks:
-            d = (bt["end"] - bt["start"]) * len(c) / tot
-            caps.append(dict(text=c, start=round(t, 3), end=round(t + d, 3), key=pick_key(c, wanted)))
-            t += d
+        bt["sents"] = [dict(s=round(bt["start"] + x["s"], 3), e=round(bt["start"] + x["e"], 3), c0=x["c0"], c1=x["c1"]) for x in sents]
+        def at(ci):
+            for x in bt["sents"]:
+                if ci < x["c1"] or x is bt["sents"][-1]: return x["s"] + (x["e"] - x["s"]) * max(0, min(1, (ci - x["c0"]) / max(1, x["c1"] - x["c0"])))
+        cur = 0; caps = []
+        for i, c in enumerate(chunks):
+            ci = b["vo"].find(c, cur); cur = ci + len(c)
+            caps.append(dict(text=c, start=round(bt["start"] if i == 0 else at(ci), 3), key=pick_key(c, wanted)))
+        for i in range(len(caps)): caps[i]["end"] = caps[i + 1]["start"] if i + 1 < len(caps) else bt["end"]
         bt["captions"] = caps
         bt["vo"] = b["vo"]; bt["screen"] = b.get("screen", [])
     json.dump(dict(duration=round(total, 3), fps=30, speed=speed_used, gap=gap, sample_rate=res[0][1], beats=beats),

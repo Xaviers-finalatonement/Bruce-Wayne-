@@ -8,7 +8,7 @@ export function createOverlay(T, TH, cv) {
   const Ty = createType(cv, TH), { ctx, col, ANTON, BARL, txt, fitSize, tabText, slam, ring, rrect, line, tag, stampCard } = Ty;
   const HOOK = [["YOUR HEAD IS", TXT, 0, 760, 130], ["OLDER", HOT, .1, 620, 250], ["THAN YOUR FEET", TXT, .2, 800, 130]];
   const hook = t => Ty.hookHeadline(t, T.hookEnd, HOOK, 178);
-  const capHidden = c => c.beat === "b13" && (/^True/.test(c.text) || /^The higher/.test(c.text));
+  const capHidden = (c, t) => t < T.hookEnd + .4 || c.beat === "b13" && (/^True/.test(c.text) || /^The higher/.test(c.text));
   const captions = t => Ty.captions(t, T.tSign - .15, capHidden), initCaps = Ty.initCaps;
   // A = anchors from the 3D camera (pixels): headClock, feetClock {x,y,r}, lowClock, highClock, clk[4], gap {x,y,s}, bench..., pin
   function draw(t, A, shk) {
@@ -19,31 +19,33 @@ export function createOverlay(T, TH, cv) {
       const a = smooth(t / .4);
       tag("HEAD", A.head.x - A.head.r - 22, A.head.y + 14, { color: HOT, align: "right", a });
       if (A.feet.y < 1230) tag("FEET", A.feet.x - A.feet.r - 22, A.feet.y + 14, { color: UV, align: "right", a });
+      if (t < S("b02") || t >= S("b05")) tag("speeds exaggerated", 505, 1254, { size: 30, ls: 2, color: TXT, a: .9 });
       if (t < S("b03")) tag("AHEAD", (A.head.x + A.feet.x) / 2 - 20, (A.head.y + A.feet.y) / 2 + 12, { color: HOT, align: "right", a: smooth((t - .5) / .3), size: 34 });
       const g = W("b05", "Your feet"); ring(A.feet.x, A.feet.y, A.feet.r, A.feet.r + 90, (t - g) / .8, UV, 6);
       ring(A.head.x, A.head.y, A.head.r, A.head.r + 90, (t - W("b05", "Your head is")) / .8, HOT, 6); ring(A.head.x, A.head.y, A.head.r, A.head.r + 130, (t - W("b05", "faster")) / .9, HOT, 7);
     }
-    if (t >= S("b02") + .05 && t < S("b03") && A.head) { // b02 counter
-      const u = smooth((t - S("b02") - .05) / .25), a = u * (1 - smooth((t - (S("b03") - .3)) / .3)), roll = t >= W("b02", "a tiny bit"), cy = 470;
+    if (t >= S("b02") + .05 && t < S("b03")) { // number-free AHEAD meter (no figures: the real gain is ~2e-16 s per second)
+      const u = smooth((t - S("b02") - .05) / .25), a = u * (1 - smooth((t - (S("b03") - .3)) / .3)), cy = 470, fill = clamp((t - S("b02")) / (END("b02") - S("b02")));
       ctx.save(); ctx.globalAlpha = a; rrect(505 - 310, cy - 52, 620, 90, 14); ctx.fillStyle = col(ABY, .85); ctx.fill(); ctx.strokeStyle = col(HOT, .8); ctx.lineWidth = 2; ctx.stroke();
-      tabText("head +0.000 000 000 00" + (roll ? "1" : "0") + " s", 505, cy + 14, 42, roll && t < W("b02", "a tiny bit") + .25 ? TXT : HOT); ctx.restore();
-      ring(505 + 175, cy - 6, 8, 70, (t - W("b02", "a tiny bit")) / .6, HOT, 4);
+      txt("AHEAD", 215, cy + 14, { f: BARL, w: 800, size: 40, ls: 6, color: HOT, align: "left" });
+      for (let i = 0; i < 10; i++) { rrect(440 + i * 36, cy - 26, 26, 44, 6); ctx.fillStyle = i < fill * 10 + 1 ? HOT : col(HAZE, .3); ctx.shadowColor = HOT; ctx.shadowBlur = i < fill * 10 + 1 ? 14 : 0; ctx.fill(); }
+      ctx.restore();
     }
     if (t >= S("b03") && t < S("b04")) {
       txt("GRAVITY", 505, 330, { size: 96, color: HOT, ls: 8, glow: 24, a: smooth((t - W("b03", "Gravity")) / .25) });
       if (A.high) { tag("FAST", A.high.x, A.high.y + A.high.r + 64, { color: UV, a: smooth((t - T.tSag - .3) / .3), size: 32 }); tag("SLOW", A.low.x, A.low.y - A.low.r - 22, { color: HOT, a: smooth((t - T.tSag - .3) / .3), size: 32 }); }
     }
     if (t >= S("b04") && t < S("b05")) { const lt = t - S("b04");
-      txt("FASTER", 910, 200, { size: 64, color: HOT, align: "right", ls: 5, glow: 18, a: smooth((lt - 1.4) / .3) });
-      txt("SLOWER", 910, 1160, { size: 64, color: UV, align: "right", ls: 5, glow: 18, a: smooth((lt - .3) / .3) * (1 - smooth((lt - 2.4) / .3)) });
-      tag("speeds exaggerated", 505, 1200, { size: 28, ls: 2, color: HAZE, a: smooth((lt - 1) / .4) * (1 - smooth((lt - 2.6) / .3)) }); }
+      txt("FASTER", 910, 245, { size: 64, color: HOT, align: "right", ls: 5, glow: 18, a: smooth((lt - 1.4) / .3) });
+      txt("SLOWER", 910, 1235, { size: 64, color: UV, align: "right", ls: 5, glow: 18, a: smooth((lt - .3) / .3) * (1 - smooth((lt - 2.4) / .3)) });
+      tag("speeds exaggerated", 70, 1236, { align: "left", size: 40, ls: 2, color: TXT, a: smooth((lt - 1) / .4) * (1 - smooth((lt - 2.6) / .3)) }); }
     if (t >= S("b06") && t < S("b09")) {
       const tS = W("b06", "in 2010"), sl = slam(t, tS, .16);
       if (sl && t < S("b07") + 1.6) { ctx.save(); ctx.globalAlpha = 1 - smooth((t - (S("b07") + 1.2)) / .4);
         txt("2010 · NIST", 505, 360, { size: 124, color: HOT, sc: sl.sc, a: sl.a, glow: 28, ls: 2, rot: -.04 });
         if (sl.sc < 1.05) { ctx.save(); ctx.translate(505, 314); ctx.rotate(-.04); ctx.strokeStyle = HOT; ctx.lineWidth = 6; ctx.shadowColor = HOT; ctx.shadowBlur = 20; rrect(-330, -100, 660, 170, 10); ctx.stroke(); ctx.restore(); }
         ctx.restore(); ring(505, 300, 150, 560, (t - tS) / .6, HOT, 7); }
-      if (A.dim) { const dd = smooth((t - (W("b07", "Two steps") + .2)) / .4); if (dd > 0) tag("33 cm ≈ 1 ft", A.dim.x, A.dim.y, { a: dd, size: 40, ls: 1 }); }
+      if (A.dim) { const dd = smooth((t - (W("b07", "Two steps") + .2)) / .4); if (dd > 0) tag("33 cm ≈ 1 ft", A.dim.x, A.dim.y, { a: dd, size: 58, ls: 1 }); }
     }
     if (t >= S("b09") && t < S("b11")) {
       const a = smooth((t - W("b09", "seventy")) / .3) * (1 - smooth((t - W("b09", "about ninety") + .3) / .4));
@@ -52,9 +54,8 @@ export function createOverlay(T, TH, cv) {
       if (A.gap) { const k = A.gap.s;
         const a1 = smooth((t - W("b09", "about ninety")) / .3) * (1 - smooth((t - sh0) / .3));
         if (a1 > 0) { txt("≈ 0.000 000 09 s", A.gap.x, A.gap.y - 270 * k, { size: 72, color: HOT, glow: 20, a: a1 }); }
-        const a2 = smooth((t - W("b09", "ninety")) / .3) * (1 - smooth((t - sh0) / .3));
-        if (a2 > 0) txt("90 billionths of a second", A.gap.x, A.gap.y + 190 * k, { f: BARL, w: 800, size: 40, color: TXT, ls: 1, a: a2, glow: 8, gcol: ABY }); }
-      if (t >= W("b10", "But real")) { const u = (t - W("b10", "But real")) / 1.1; txt("REAL", 505, 560, { size: 250, color: HOT, glow: 40, a: smooth(u * 3) * (1 - smooth((t - E("b10") + .5) / .4)), sc: 1 + .12 * (1 - eo3(u * 1.6)) }); }
+      }
+      if (t >= W("b10", "But real")) { const u = (t - W("b10", "But real")) / 1.1; txt("REAL", 505, 560, { size: 250, color: HOT, glow: 40, a: smooth(u * 8) * (1 - smooth((t - E("b10") + .5) / .4)), sc: 1 + .12 * (1 - eo3(u * 1.6)) }); }
     }
     if (t >= S("b11") && t < S("b12")) { const g = W("b11", "GPS"); txt("GPS", 130, 330, { size: 150, color: TXT, glow: 24, gcol: HOT, align: "left", ls: 6, a: smooth((t - g) / .15), sc: 1 + .4 * (1 - eo3((t - g) / .16)) }); }
     if (t >= S("b12") && t < T.th0) { const ta = smooth((t - T.tSlow0 + .2) / .25), sc = 1 + .25 * (1 - eo3((t - T.tSlow0 + .2) / .2));

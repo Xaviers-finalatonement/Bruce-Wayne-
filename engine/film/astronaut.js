@@ -3,7 +3,7 @@
 import * as THREE from "three";
 
 export function makeAstronaut(envMap) {
-  const root = new THREE.Group(), U = { uRoot: { value: new THREE.Matrix4() }, uRootInv: { value: new THREE.Matrix4() }, uK: { value: 0 }, uGap: { value: 0 }, uTearY: { value: .5 }, uRed: { value: 0 }, uAlpha: { value: 1 } };
+  const root = new THREE.Group(), U = { uRoot: { value: new THREE.Matrix4() }, uRootInv: { value: new THREE.Matrix4() }, uK: { value: 0 }, uGap: { value: 0 }, uTearY: { value: .5 }, uRed: { value: 0 }, uAlpha: { value: 1 }, uDark: { value: 0 } };
   const mk = (color, rough, metal, envI) => {
     const m = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, envMap, envMapIntensity: envI, transparent: true });
     m.onBeforeCompile = sh => {
@@ -21,21 +21,22 @@ export function makeAstronaut(envMap) {
          wp = uRoot * lp;
          vec4 mvPosition = viewMatrix * wp;
          gl_Position = projectionMatrix * mvPosition;`);
-      sh.fragmentShader = "uniform float uRed, uAlpha;\n" + sh.fragmentShader.replace("#include <opaque_fragment>",
+      sh.fragmentShader = "uniform float uRed, uAlpha, uDark;\n" + sh.fragmentShader.replace("#include <opaque_fragment>",
         `#include <opaque_fragment>
          float lum = dot(gl_FragColor.rgb, vec3(.3, .55, .15));
          gl_FragColor.rgb = mix(gl_FragColor.rgb, lum * vec3(1.0, .20, .06) * 1.3, uRed) * (1.0 - .6 * uRed);
+         gl_FragColor.rgb *= (1.0 - uDark);
          gl_FragColor.a *= uAlpha;`);
     };
     return m;
   };
-  const suit = mk(0xd8d4e6, .5, .05, .25), dark = mk(0x16131f, .6, .2, .1), visor = mk(0x050309, .08, .9, 1.4), trim = mk(0x8d8aa6, .4, .5, .3);
+  const suit = mk(0xb9b5c9, .5, .05, .2), dark = mk(0x16131f, .6, .2, .1), visor = mk(0x050309, .08, .9, 1.4), trim = mk(0x8d8aa6, .4, .5, .3);
   const add = (parent, geo, m, x = 0, y = 0, z = 0, sx = 1, sy = 1, sz = 1) => { const me = new THREE.Mesh(geo, m); me.position.set(x, y, z); me.scale.set(sx, sy, sz); parent.add(me); return me; };
   const J = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
   const body = J(root, 0, 0, 0);
   add(body, new THREE.CapsuleGeometry(.082, .15, 6, 16), suit, 0, .69, 0, 1.18, 1, .8);       // torso
   add(body, new THREE.CapsuleGeometry(.072, .06, 6, 12), suit, 0, .55, 0, 1.2, 1, .85);       // hips
-  add(body, new THREE.BoxGeometry(.17, .23, .1), suit, 0, .72, -.09);                // backpack
+  add(body, new THREE.CapsuleGeometry(.055, .12, 5, 12), suit, 0, .72, -.1, 1.55, 1, 1);                // backpack
   add(body, new THREE.BoxGeometry(.12, .07, .02), dark, 0, .74, .075);               // chest box
   add(body, new THREE.CylinderGeometry(.05, .06, .04, 16), trim, 0, .83, 0);                  // neck ring
   const head = J(body, 0, .905, 0);

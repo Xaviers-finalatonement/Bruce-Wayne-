@@ -41,7 +41,7 @@ export function createType(cv, TH) {
     ctx.save(); ctx.font = `400 100px ${ANTON}`; const capR = ctx.measureText("H").actualBoundingBoxAscent / 100; ctx.restore();
     let yy = top == null ? 178 : top; ctx.globalAlpha = 1 - exit;
     lines.forEach(([s, color, d, w, max]) => { const size = fitSize(s, w, max), base = yy + capR * size; yy = base + 30; const sl = slam(t, d + .02, .13); if (!sl) return;
-      ctx.save(); ctx.translate(0, -exit * 160); txt(s, 505, base, { size, color, sc: sl.sc, a: sl.a, glow: color === HOT ? 30 : 0, gcol: HOT, ls: 2 }); ctx.restore(); });
+      ctx.save(); txt(s, 505, base, { size, color, sc: sl.sc, a: sl.a, glow: color === HOT ? 30 : 0, gcol: HOT, ls: 2 }); ctx.restore(); });
     ctx.globalAlpha = 1;
   }
 
@@ -87,7 +87,7 @@ export function createType(cv, TH) {
   }
   function captions(t, until, hide) {
     let c = null; for (const k of allCaps) if (t >= k.start && t < k.end + .12) c = k;
-    if (!c || (hide && hide(c)) || t >= (until == null ? 1e9 : until)) { capEl.style.opacity = 0; capCache = null; return; }
+    if (!c || (hide && hide(c, t)) || t >= (until == null ? 1e9 : until)) { capEl.style.opacity = 0; capCache = null; return; }
     if (capCache !== c) { build(c); capCache = c; } capEl.style.opacity = clamp((t - c.start) / .09);
   }
 
