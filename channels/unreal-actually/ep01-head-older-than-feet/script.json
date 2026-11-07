@@ -177,5 +177,7 @@
   "cover": {
     "headline": "Your head is older than your feet",
     "key_word": "older"
-  }
+  },
+  "end_hold": 1.8,
+  "sound": "unreal-actually"
 }

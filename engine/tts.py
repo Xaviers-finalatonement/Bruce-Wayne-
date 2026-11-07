@@ -104,7 +104,7 @@ def main(ep):
         t = LEAD; beats = []
         for b, (s, sr) in zip(sc["beats"], res):
             d = len(s) / sr
-            hold = EXTRA_HOLD if (b["id"] in HOLD_AFTER or b is sc["beats"][-1]) else 0
+            hold = (sc.get("end_hold", EXTRA_HOLD) if b is sc["beats"][-1] else EXTRA_HOLD) if (b["id"] in HOLD_AFTER or b is sc["beats"][-1]) else 0
             beats.append(dict(id=b["id"], start=round(t, 3), end=round(t + d, 3), next=round(t + d + gap + hold, 3)))
             t += d + gap + hold
         return beats, t - gap  # no trailing gap

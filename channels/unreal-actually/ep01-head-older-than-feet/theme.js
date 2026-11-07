@@ -1,32 +1,28 @@
-// THEME: the only place that knows this channel's look. Swap this file to restyle an episode.
-// Everything (colours, fonts, background grid, caption styling, ink style) is read from here by scene.js.
+// THEME: the only place that knows this channel's look ("Unreal, Actually"). Swap this file to restyle an episode.
+// scene.js reads colours, fonts, caption style, safe areas and the look (grain/vignette) from here.
 window.THEME = {
-  brand: "Reality Rulebook",
+  brand: "Unreal, Actually",
   colors: {
-    paper: "#F3EFE6", ink: "#15171C", red: "#B8302A", graphite: "#555C68", marker: "#F2C230", grid: "#BFD0E0",
-    // semantic roles used by scene.js
-    bg: "#F3EFE6", line: "#15171C", accent: "#B8302A", label: "#555C68", highlight: "#F2C230",
-    faceFill: "#F3EFE6", shirt: "#BFD0E0", pants: "#555C68", ground: "#BFD0E0",
+    abyss: "#08070D", static: "#F3F1FF", horizon: "#FF8A2A", ultraviolet: "#A98BFF", haze: "#8D8AA6",
+    // derived tones used for depth (all on-palette: tints of Abyss / Ultraviolet)
+    panel: "#120F1C", panel2: "#1B1629", deep: "#2A1F4D",
+    bg: "#08070D", text: "#F3F1FF", hot: "#FF8A2A", accent: "#A98BFF", sub: "#8D8AA6",
   },
   fonts: {
-    display: { family: "Space Grotesk", faces: [
-      { weight: 500, url: "/assets/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2" },
-      { weight: 700, url: "/assets/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2" } ] },
-    mono: { family: "JetBrains Mono", faces: [
-      { weight: 400, url: "/assets/fonts/jetbrains-mono/jetbrains-mono-latin-400-normal.woff2" },
-      { weight: 700, url: "/assets/fonts/jetbrains-mono/jetbrains-mono-latin-700-normal.woff2" } ] },
+    display: { family: "Anton", faces: [{ weight: 400, url: "/assets/fonts/anton/anton-latin-400-normal.woff2" }] },
+    body: { family: "Barlow", faces: [
+      { weight: 500, url: "/assets/fonts/barlow/barlow-latin-500-normal.woff2" },
+      { weight: 800, url: "/assets/fonts/barlow/barlow-latin-800-normal.woff2" } ] },
   },
-  background: { grid: { size: 60, color: "#BFD0E0", width: 2 } },
-  ink: { width: 5, wobble: 1.8, seed: 1337 },
+  look: { grain: 0.07, vignette: 0.72 },
+  sound: "unreal-actually",
   caption: {
-    font: "display", weight: 700, size: 64, lineHeight: 1.2,
-    color: "#15171C", keyColor: "#B8302A", numberFont: "mono",
-    backing: "rgba(243,239,230,0.9)", padX: 22, padY: 4, radius: 16,
-    // caption box in px: text centred between left and (1080 - right); bottom edge measured from the top
-    left: 56, right: 140, bottomY: 1500,
+    font: "body", weight: 800, size: 68, lineHeight: 1.16,
+    color: "#F3F1FF", keyColor: "#FF8A2A",
+    backing: "rgba(8,7,13,0.80)", padX: 24, padY: 4, radius: 16,
+    // caption box in px: text centred between left and (1080 - right); bottom edge measured from the top (band y 62-76 %)
+    left: 70, right: 130, bottomY: 1452,
     maxLineChars: 24,
-    // per-beat variants for the key word: 'underline' (red + underline) or 'marker' (Ink on Marker)
-    variants: { b05: "underline", b08: "underline", b10: "marker" },
   },
   safe: { top: 154, bottom: 1536, right: 950 },
 };

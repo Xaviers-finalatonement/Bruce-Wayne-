@@ -1,5 +1,5 @@
 {
- "duration": 72.607,
+ "duration": 73.415,
  "fps": 30,
  "speed": 1.0,
  "gap": 0.25,
@@ -48,47 +48,47 @@
   {
    "id": "b03",
    "start": 6.631,
-   "end": 11.068,
-   "next": 11.318,
+   "end": 11.025,
+   "next": 11.275,
    "captions": [
     {
-     "text": "Here's the rule.",
+     "text": "Here's the thing.",
      "start": 6.631,
-     "end": 7.675,
-     "key": 2
+     "end": 7.714,
+     "key": 0
     },
     {
      "text": "Gravity doesn't just pull on you.",
-     "start": 7.675,
-     "end": 9.828,
+     "start": 7.714,
+     "end": 9.815,
      "key": 0
     },
     {
      "text": "It slows down time.",
-     "start": 9.828,
-     "end": 11.068,
+     "start": 9.815,
+     "end": 11.025,
      "key": 1
     }
    ],
-   "vo": "Here's the rule. Gravity doesn't just pull on you. It slows down time.",
+   "vo": "Here's the thing. Gravity doesn't just pull on you. It slows down time.",
    "screen": []
   },
   {
    "id": "b04",
-   "start": 11.318,
-   "end": 14.667,
-   "next": 14.917,
+   "start": 11.275,
+   "end": 14.625,
+   "next": 14.875,
    "captions": [
     {
      "text": "The closer you are to Earth,",
-     "start": 11.318,
-     "end": 12.992,
+     "start": 11.275,
+     "end": 12.95,
      "key": 1
     },
     {
      "text": "the slower your clock ticks.",
-     "start": 12.992,
-     "end": 14.667,
+     "start": 12.95,
+     "end": 14.625,
      "key": 1
     }
    ],
@@ -100,26 +100,26 @@
   },
   {
    "id": "b05",
-   "start": 14.917,
-   "end": 20.037,
-   "next": 20.287,
+   "start": 14.875,
+   "end": 19.995,
+   "next": 20.245,
    "captions": [
     {
      "text": "Your feet are closer.",
-     "start": 14.917,
-     "end": 16.228,
+     "start": 14.875,
+     "end": 16.186,
      "key": 3
     },
     {
      "text": "Your head is higher.",
-     "start": 16.228,
-     "end": 17.477,
+     "start": 16.186,
+     "end": 17.435,
      "key": 3
     },
     {
      "text": "So your head's time runs a little faster.",
-     "start": 17.477,
-     "end": 20.037,
+     "start": 17.435,
+     "end": 19.995,
      "key": 7
     }
    ],
@@ -128,26 +128,26 @@
   },
   {
    "id": "b06",
-   "start": 20.287,
-   "end": 26.837,
-   "next": 27.087,
+   "start": 20.245,
+   "end": 26.794,
+   "next": 27.044,
    "captions": [
     {
      "text": "Sounds made up.",
-     "start": 20.287,
-     "end": 21.633,
+     "start": 20.245,
+     "end": 21.591,
      "key": 0
     },
     {
      "text": "So in 2010,",
-     "start": 21.633,
-     "end": 22.62,
+     "start": 21.591,
+     "end": 22.578,
      "key": 2
     },
     {
      "text": "physicists at a U.S. lab called NIST tested it.",
-     "start": 22.62,
-     "end": 26.837,
+     "start": 22.578,
+     "end": 26.794,
      "key": 7
     }
    ],
@@ -159,32 +159,32 @@
   },
   {
    "id": "b07",
-   "start": 27.087,
-   "end": 33.7,
-   "next": 33.95,
+   "start": 27.044,
+   "end": 33.657,
+   "next": 33.907,
    "captions": [
     {
      "text": "They took two",
-     "start": 27.087,
-     "end": 27.973,
+     "start": 27.044,
+     "end": 27.93,
      "key": 2
     },
     {
      "text": "super-precise atomic clocks,",
-     "start": 27.973,
-     "end": 29.882,
+     "start": 27.93,
+     "end": 29.839,
      "key": 0
     },
     {
      "text": "and raised one by about a foot.",
-     "start": 29.882,
-     "end": 31.996,
+     "start": 29.839,
+     "end": 31.953,
      "key": 1
     },
     {
      "text": "Two steps up a staircase.",
-     "start": 31.996,
-     "end": 33.7,
+     "start": 31.953,
+     "end": 33.657,
      "key": 4
     }
    ],
@@ -195,14 +195,14 @@
   },
   {
    "id": "b08",
-   "start": 33.95,
-   "end": 35.934,
-   "next": 36.184,
+   "start": 33.907,
+   "end": 35.891,
+   "next": 36.141,
    "captions": [
     {
      "text": "The higher clock ticked faster.",
-     "start": 33.95,
-     "end": 35.934,
+     "start": 33.907,
+     "end": 35.891,
      "key": 4
     }
    ],
@@ -211,26 +211,26 @@
   },
   {
    "id": "b09",
-   "start": 36.184,
-   "end": 42.499,
-   "next": 42.749,
+   "start": 36.141,
+   "end": 42.456,
+   "next": 42.706,
    "captions": [
     {
      "text": "Over a whole seventy-nine year life,",
-     "start": 36.184,
-     "end": 38.528,
+     "start": 36.141,
+     "end": 38.485,
      "key": 3
     },
     {
      "text": "those two steps add up to about",
-     "start": 38.528,
-     "end": 40.546,
+     "start": 38.485,
+     "end": 40.503,
      "key": 2
     },
     {
      "text": "ninety billionths of a second.",
-     "start": 40.546,
-     "end": 42.499,
+     "start": 40.503,
+     "end": 42.456,
      "key": 0
     }
    ],
@@ -243,20 +243,20 @@
   },
   {
    "id": "b10",
-   "start": 42.749,
-   "end": 45.159,
-   "next": 45.409,
+   "start": 42.706,
+   "end": 45.117,
+   "next": 45.367,
    "captions": [
     {
      "text": "Far too small to feel.",
-     "start": 42.749,
-     "end": 44.459,
+     "start": 42.706,
+     "end": 44.417,
      "key": 2
     },
     {
      "text": "But real.",
-     "start": 44.459,
-     "end": 45.159,
+     "start": 44.417,
+     "end": 45.117,
      "key": 1
     }
    ],
@@ -265,26 +265,26 @@
   },
   {
    "id": "b11",
-   "start": 45.409,
-   "end": 50.956,
-   "next": 51.206,
+   "start": 45.367,
+   "end": 50.913,
+   "next": 51.163,
    "captions": [
     {
      "text": "And your phone feels it.",
-     "start": 45.409,
-     "end": 47.233,
+     "start": 45.367,
+     "end": 47.19,
      "key": 2
     },
     {
      "text": "GPS satellites fly high,",
-     "start": 47.233,
-     "end": 49.056,
+     "start": 47.19,
+     "end": 49.014,
      "key": 3
     },
     {
      "text": "so their clocks run fast.",
-     "start": 49.056,
-     "end": 50.956,
+     "start": 49.014,
+     "end": 50.913,
      "key": 4
     }
    ],
@@ -295,26 +295,26 @@
   },
   {
    "id": "b12",
-   "start": 51.206,
-   "end": 57.606,
-   "next": 57.856,
+   "start": 51.163,
+   "end": 57.563,
+   "next": 57.813,
    "captions": [
     {
      "text": "So engineers set them slower on the ground,",
-     "start": 51.206,
-     "end": 53.986,
+     "start": 51.163,
+     "end": 53.943,
      "key": 4
     },
     {
      "text": "before launch.",
-     "start": 53.986,
-     "end": 54.891,
+     "start": 53.943,
+     "end": 54.848,
      "key": 0
     },
     {
      "text": "Without that fix, your map would be wrong.",
-     "start": 54.891,
-     "end": 57.606,
+     "start": 54.848,
+     "end": 57.563,
      "key": 7
     }
    ],
@@ -325,51 +325,58 @@
   },
   {
    "id": "b13",
-   "start": 57.856,
-   "end": 62.016,
-   "next": 63.066,
+   "start": 57.813,
+   "end": 61.824,
+   "next": 62.874,
    "captions": [
     {
-     "text": "Rule number one.",
-     "start": 57.856,
-     "end": 58.93,
+     "text": "The verdict?",
+     "start": 57.813,
+     "end": 58.577,
      "key": 1
     },
     {
+     "text": "True.",
+     "start": 58.577,
+     "end": 58.895,
+     "key": 0
+    },
+    {
      "text": "The higher you are, the faster your time runs.",
-     "start": 58.93,
-     "end": 62.016,
+     "start": 58.895,
+     "end": 61.824,
      "key": 5
     }
    ],
-   "vo": "Rule number one. The higher you are, the faster your time runs.",
+   "vo": "The verdict? True. The higher you are, the faster your time runs.",
    "screen": [
-    "RULE NO. 1",
+    "CASE FILE 001",
+    "TRUE",
     "The higher you are, the faster your time runs."
    ]
   },
   {
    "id": "b14",
-   "start": 63.066,
-   "end": 67.653,
-   "next": 67.903,
+   "start": 62.874,
+   "end": 67.461,
+   "next": 67.711,
    "captions": [
     {
      "text": "So next time you take the stairs,",
-     "start": 63.066,
-     "end": 65.228,
+     "start": 62.874,
+     "end": 65.036,
      "key": 6
     },
     {
      "text": "you just aged a little faster.",
-     "start": 65.228,
-     "end": 67.194,
+     "start": 65.036,
+     "end": 67.002,
      "key": 5
     },
     {
      "text": "Barely.",
-     "start": 67.194,
-     "end": 67.653,
+     "start": 67.002,
+     "end": 67.461,
      "key": 0
     }
    ],
@@ -378,26 +385,26 @@
   },
   {
    "id": "b15",
-   "start": 67.903,
-   "end": 71.807,
-   "next": 72.607,
+   "start": 67.711,
+   "end": 71.615,
+   "next": 73.415,
    "captions": [
     {
      "text": "Which means your head really",
-     "start": 67.903,
-     "end": 69.666,
+     "start": 67.711,
+     "end": 69.474,
      "key": 4
     },
     {
      "text": "is older than your feet.",
-     "start": 69.666,
-     "end": 71.177,
+     "start": 69.474,
+     "end": 70.985,
      "key": 1
     },
     {
      "text": "By a hair.",
-     "start": 71.177,
-     "end": 71.807,
+     "start": 70.985,
+     "end": 71.615,
      "key": 2
     }
    ],
