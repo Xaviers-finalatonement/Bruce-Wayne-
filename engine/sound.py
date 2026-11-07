@@ -230,10 +230,60 @@ def pt_bed(sfx, dur):  # light acoustic feel: 92 bpm plucked pattern in G major 
     sfx += bed * fade * db(-27)
 
 
+# ---- palette "skin-receipts": thermal-printer ticks, soft paper/rubber stamp, water + fabric textures, light airy pad ----
+def sr_tick(tock=False):  # thermal print head: tiny dry click + a high ping
+    n = int(0.05 * SR); t = np.arange(n) / SR
+    click = bandnoise(n, 2200, 9000) * env_exp(n, 0.0025)
+    ping = np.sin(2 * np.pi * (3300 if tock else 2900) * t) * env_exp(n, 0.006)
+    return (0.8 * click + 0.35 * ping) * db(-27)
+
+
+def sr_hit(gain=1.0):  # rubber stamp on paper: soft low thud + short paper slap
+    n = int(0.4 * SR); t = np.arange(n) / SR
+    body = np.sin(2 * np.pi * (95 + 45 * np.exp(-t / 0.03)) * t) * env_exp(n, 0.07)
+    slap = bandnoise(n, 700, 4200) * env_exp(n, 0.015)
+    return (body * 0.9 + slap * 0.45) * db(-18) * gain
+
+
+def sr_swell(dur):  # water / fabric texture: soft band noise breathing in and out
+    n = int(dur * SR); t = np.arange(n) / SR
+    x = bandnoise(n, 500, 2600) * (0.6 + 0.4 * np.sin(2 * np.pi * 5.5 * t + 1.0) * np.sin(2 * np.pi * 1.7 * t))
+    return x * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 2 * db(-30)
+
+
+def sr_riser(dur): return sr_swell(dur)
+
+
+def sr_sweep(dur):  # towel / cloth swish
+    n = int(dur * SR); t = np.arange(n) / SR
+    return bandnoise(n, 1800, 7000) * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.5 * db(-31)
+
+
+def sr_pop(): return sr_tick(False) * 1.2
+
+
+def sr_bed(sfx, dur):
+    n = len(sfx); t = np.arange(n) / SR
+    fade = np.minimum(1, t / 2.0) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 1.2)
+    pad = np.zeros(n)
+    for f, a in [(130.8, .7), (261.6, 1.0), (329.6, .8), (392.0, .7), (493.9, .45), (587.3, .3)]:
+        for det in (-.5, .5):
+            pad += a * np.sin(2 * np.pi * (f + det) * t + det) * (0.65 + 0.35 * np.sin(2 * np.pi * t / (9.0 + f / 70)))
+    pad = lowpass(pad, 1700)
+    sfx += pad * fade * db(-35)
+    r = np.random.default_rng(11)
+    for tt in np.arange(1.2, dur, 1.7):  # faint water droplets
+        tt += r.uniform(-.4, .4); i = int(tt * SR); m = min(n - i, int(.25 * SR))
+        if m > 0 and i > 0:
+            f = r.uniform(1100, 2100); tm = np.arange(m) / SR
+            sfx[i:i + m] += np.sin(2 * np.pi * (f + 900 * tm) * tm) * env_exp(m, 0.03) * db(-42)
+
+
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
                        custom=dict(sizzle=pt_sizzle, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
+    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.6),
 }
 
 
