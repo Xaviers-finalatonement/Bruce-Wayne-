@@ -56,6 +56,10 @@ const FL = .095;
 const panCoins = [[-.42, -.15], [.62, -.5], [.6, .42], [-.72, .5], [.0, .38], [-.12, -.8], [.9, -.05], [-.3, .98]].map((p, i) => { const o = mesh(coinGeos[i % 4], i ? coinMat : coinMat, GK, p[0], FL + .085 + (i ? .0 : .0), p[1], (hash(i) - .5) * .18, hash(i * 3) * 6.28, (hash(i * 5) - .5) * .18); o.userData.rest = o.position.clone(); return o; });
 panCoins[0].position.y += .0; panCoins[0].userData.rest.copy(panCoins[0].position);
 const panStrips = [[.38, -.02, .5], [-.5, .28, -.4], [.12, .78, 1.2], [-.2, -.62, 2.3]].map((p, i) => { const o = mesh(stripGeos[i], stripMat, GK, p[0], FL + .1, p[1], 0, p[2], 0); o.userData.rest = o.position.clone(); return o; });
+const ringMat = new THREE.MeshPhysicalMaterial({ color: "#FFE3A0", roughness: .04, metalness: 0, transparent: true, opacity: 0, clearcoat: 1, envMapIntensity: 3 }), bubGeo = new THREE.SphereGeometry(.03, 12, 8), bubMat = new THREE.MeshPhysicalMaterial({ color: "#FFF3D0", roughness: .03, transparent: true, opacity: .0, clearcoat: 1, envMapIntensity: 3.5 });
+const filmAll = [], bubs = [];
+panCoins.forEach((c, i) => { const r = new THREE.Mesh(new THREE.TorusGeometry(.35, .012, 8, 44), ringMat); r.rotation.x = PI / 2; r.position.set(c.position.x, FL + .05, c.position.z); r.scale.set(1 + .06 * hash(i), 1 + .06 * hash(i * 3), 1); GK.add(r); filmAll.push(r);
+  for (let k = 0; k < 6; k++) { const a = hash(i * 7 + k) * 6.28, rad = .38 + .12 * hash(i + k * 3), b = new THREE.Mesh(bubGeo, bubMat); b.position.set(c.position.x + Math.cos(a) * rad, FL + .03, c.position.z + Math.sin(a) * rad); b.userData.s = .5 + 1.1 * hash(i * 3 + k); b.scale.setScalar(b.userData.s); GK.add(b); filmAll.push(b); bubs.push(b); } });
 // piles at the hook
 const pileC = new THREE.Group(), pileP = new THREE.Group(); GK.add(pileC, pileP);
 for (let i = 0; i < 24; i++) { const a = hash(i * 2.3) * 6.28, r = Math.sqrt(hash(i * 1.7)) * .62; mesh(coinGeos[i % 4], coinMatRaw, pileC, Math.cos(a) * r, .075 + .2 * (1 - r / .62) * hash(i * 9) + (i % 3) * .02, Math.sin(a) * r, (hash(i * 4) - .5) * .7, hash(i) * 6.28, (hash(i * 6) - .5) * .7); }
@@ -75,8 +79,9 @@ const ribbonCount = ribbon.geometry.index.count;
 // steam + heat (transparent, kept out of the depth pass)
 const Gfx = new THREE.Group(); GK.add(Gfx); noDepth.push(Gfx);
 const steam = []; for (let i = 0; i < 34; i++) { const q = quad(puffTex, "#FFF8EC", false, 0); q.rotation.x = -PI / 2; Gfx.add(q); steam.push(q); }
+const wisps = []; for (let i = 0; i < 14; i++) { const q = quad(puffTex, "#FFE2B8", true, 0); q.rotation.x = -PI / 2; Gfx.add(q); wisps.push(q); }
 const heatQ = []; for (let i = 0; i < 7; i++) { const q = quad(softTex, "#C4381E", true, 0); q.rotation.x = -PI / 2; Gfx.add(q); heatQ.push(q); }
-const gleams = [[-.62, -.5, .9, .22, .6], [-.9, .05, .5, .14, 1.2], [.7, .62, .45, .12, -.5]].map(g => { const q = quad(softTex, "#FFF1CC", true, 0); q.rotation.x = -PI / 2; q.rotation.z = g[4]; q.scale.set(g[2], g[3], 1); q.position.set(g[0], .17, g[1]); Gfx.add(q); return q; });
+const gleams = [[-.62, -.5, .9, .22, .6], [-.9, .05, .5, .14, 1.2], [.7, .62, .45, .12, -.5], [-.3, -.95, .8, .05, .15], [.2, -1.0, .6, .04, .3], [-1.0, .5, .7, .05, 1.3], [.95, -.3, .5, .05, -.9]].map(g => { const q = quad(softTex, "#FFF1CC", true, 0); q.rotation.x = -PI / 2; q.rotation.z = g[4]; q.scale.set(g[2], g[3], 1); q.position.set(g[0], .17, g[1]); Gfx.add(q); return q; });
 const glowRight = quad(softTex, "#E0451F", true, 0); glowRight.rotation.x = -PI / 2; glowRight.scale.set(3.4, 3.4, 1); glowRight.position.set(.9, .5, 0); Gfx.add(glowRight);
 // board with raw peppers, broccoli, tomato halves
 const board = new THREE.Group(); board.position.set(X_BOARD, 0, 0); GK.add(board);
@@ -175,8 +180,9 @@ function setCam(p, l, f, fp, ap, up) { camera.up.set(...(up || [0, 1, 0])); came
   bokeh.uniforms.focus.value = camera.position.distanceTo(V(...fp)); bokeh.uniforms.aperture.value = ap; bokeh.uniforms.maxblur.value = .014; }
 // overhead camera keys: [t, x, z0 (look z), h]; height interpolated in log space, eased
 const HERO = [-.42, -.15];
+const tiltAt = t => t < S("b02") - .05 ? .38 : t < E("b02") - .3 ? .38 * (1 - smooth((t - S("b02") + .05) / (E("b02") - S("b02") - .25))) : t < S("b13") - 1 ? 0 : t < S("b13") ? 0 : .3 * smooth((t - S("b13")) / 1.2);
 const camKeys = [
-  [0, 0, .16, 11.5], [S("b02") - .05, 0, .16, 11.5], [E("b02") - .3, 0, .55, 8.6],
+  [0, 0, .05, 10.4], [S("b02") - .05, 0, .05, 10.4], [E("b02") - .3, 0, .55, 8.6],
   [T.diveFrom, 0, .55, 8.6], [T.dive1, HERO[0], HERO[1], .8],
   [S("b06"), HERO[0], HERO[1], .8], [S("b06") + 1.6, 0, .55, 8.6], [S("b07") - .9, 0, .55, 8.6], [S("b07") + .5, 0, 1.19, 9.8], [E("b07") - .5, 0, 1.19, 9.8],
   [S("b08") + .15, 0, .5, 8.6], [S("b08") + 1.45, X_BOARD, .5, 8.6], [T.diveFrom2 = S("b09") - 1.7, X_BOARD, .5, 8.6], [T.dive2, X_BOARD - .8, -.6, .8],
@@ -215,7 +221,9 @@ function animKitchen(t, A) {
   steam.forEach((q, i) => { const per = 3.8 + hash(i) * 2, ph = (t / per + hash(i * 3)) % 1, bx = (hash(i * 5) - .5) * 2.3, bz = (hash(i * 7) - .5) * 2.0;
     const h = .35 + ph * 3.6; q.position.set(bx + Math.sin(t * .6 + i) * .3 * ph + ph * .4, h, bz - ph * .35 + Math.cos(t * .5 + i * 2) * .25 * ph); const s = .7 + ph * 1.9 * (.7 + hash(i * 9)); q.scale.set(s, s, 1); q.rotation.z = i + t * .1 * (i % 2 ? 1 : -1);
     q.material.opacity = .06 * sk * Math.sin(PI * ph) ** 1.2 * (.6 + .4 * hash(i * 13)); q.visible = q.material.opacity > .004; });
+  filmAll.forEach(o => (o.visible = oilU > .05)); ringMat.opacity = .55 * oilU; bubMat.opacity = .7 * oilU; bubs.forEach((b, i) => b.scale.setScalar(b.userData.s * (1 + .12 * Math.sin(t * 3 + i * 1.7))));
   gleams.forEach((q, i) => { q.material.opacity = .55 * oilU * (.8 + .2 * Math.sin(t * 1.3 + i * 2)); q.visible = oilU > .02 && pan.visible; });
+  wisps.forEach((q, i) => { const per = 3.2 + hash(i * 3) * 2.2, ph = (t / per + hash(i * 5)) % 1; q.position.set(-.9 + hash(i * 7) * 1.0 + Math.sin(t * .7 + i) * .25 * ph, .4 + ph * 3.0, (hash(i * 9) - .5) * 1.8 - ph * .3); const s2 = .5 + ph * 1.5; q.scale.set(s2 * .7, s2, 1); q.rotation.z = i * 1.3 + ph; q.material.opacity = .16 * sk * Math.sin(PI * ph); q.visible = q.material.opacity > .004; });
   // heat shimmer on the right half (b02)
   const hk = smooth(clamp((t - T.tHeat + .3) / .8)) * (1 - smooth(clamp((t - E("b02") - .4) / .8))), hk2 = hk;
   glowRight.material.opacity = .34 * hk2 * (.85 + .15 * Math.sin(t * 6)); glowRight.visible = hk2 > .01;
@@ -301,7 +309,7 @@ function stage(t, A) {
     pan.visible = !(inTrio || inCmp || inBal) || false; pileC.visible = pileP.visible = t < S("b04") + 1; panCoins.forEach(o => (o.visible = pan.visible)); panStrips.forEach(o => (o.visible = pan.visible)); oil.visible = pan.visible && oil.visible; ribbon.visible = ribbon.visible && pan.visible;
     steam.forEach(q => (q.visible = pan.visible && q.visible)); heatQ.forEach(q => (q.visible = pan.visible && q.visible)); glowRight.visible = glowRight.visible && pan.visible;
     animKitchen(t, A); animBalance(t);
-    pan.visible = !(inTrio || inCmp || inBal); panCoins.forEach(o => (o.visible = pan.visible)); panStrips.forEach(o => (o.visible = pan.visible));
+    pan.visible = !(inTrio || inCmp || inBal); filmAll.forEach(o => (o.visible = o.visible && pan.visible)); panCoins.forEach(o => (o.visible = pan.visible)); panStrips.forEach(o => (o.visible = pan.visible));
     dropIns.forEach(o => { if (!pan.visible) o.visible = false; });
     pan.userData; const G = (g, v) => (g.visible = v); G(trio, inTrio); G(cmp, inCmp); G(bal, inBal); G(board, t >= S("b08") - .5 && t < S("b10")); tileC.visible = tileC.visible && (t >= S("b08") - .5 && t < S("b10"));
     ["vA", "vD", "vE", "vK"].forEach(k => (tiles[k].visible = tiles[k].visible && !(inTrio || inCmp || inBal) && t < S("b08") + 1.2));
@@ -311,7 +319,7 @@ function stage(t, A) {
     const f = 40, fa = inBal ? .0 : 0;
     // light follows the camera
     key.position.set(px - 5.5, 10.5, (cz || 0) + 3.5); key.target.position.set(px, 0, cz); key.target.updateMatrixWorld();
-    setCam([cx + Math.sin(t * .3) * .02, h, cz + Math.cos(t * .27) * .015], [cx, 0, cz], h < 2 ? 50 : f, [cx, h < 2 ? .15 : .12, cz], h < 2 ? .012 : .0085, [0, 0, -1]);
+    const tl_ = tiltAt(t); setCam([cx + Math.sin(t * .3) * .02, h, cz + Math.cos(t * .27) * .015 + tl_ * h], [cx, 0, cz], h < 2 ? 50 : f, [cx, h < 2 ? .15 : .12, cz], h < 2 ? .012 : .0085 + .006 * tl_ / .38, [0, 0, -1]);
     bloom.strength = .2; bloom.radius = .5; bloom.threshold = 1.1; A.proj = projector(); A.cam = { cx, cz, h };
   } else {
     bloom.strength = .6; bloom.radius = .7; bloom.threshold = .8;
@@ -326,7 +334,7 @@ window.__seek = function (t) {
     const tt = T.tOil + 6; show("K"); trio.visible = bal.visible = cmp.visible = false; board.visible = false; tileC.visible = false; pileC.visible = pileP.visible = false;
     animKitchen(tt, A); Object.values(tiles).forEach(g => (g.visible = false));
     key.position.set(-4.5, 10.5, 4); key.target.position.set(0, 0, -.75); key.target.updateMatrixWorld();
-    setCam([0, 9.4, -.75], [0, 0, -.75], 40, [0, .12, -.75], .0085, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
+    setCam([0, 9.4, -.45 + 9.4 * .42], [0, 0, -.45], 40, [0, .12, -.45], .014, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
   }
   stage(t, A);
   filmPass.uniforms.time.value = (t * 30 | 0) * .017;

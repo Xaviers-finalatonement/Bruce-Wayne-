@@ -36,12 +36,16 @@ export function makeCoin(seed = 0, R = .3, T = .07) { // carrot coin: lathe, wob
   for (let a = 0; a <= 8; a++) { const th = a / 8 * Math.PI; pts.push(new THREE.Vector2((.26 + .04 * Math.sin(th)) * k, -T * Math.cos(th))); }
   [.22, .19, .16, .13, .10, .07, .04, 0].forEach(r => pts.push(new THREE.Vector2(r * k, T)));
   const g = new THREE.LatheGeometry(pts, 40);
-  mapVerts(g, (x, y, z) => { const r = Math.hypot(x, z), an = Math.atan2(z, x), w = 1 + .05 * vn(Math.cos(an) * 1.6 + seed * 7, Math.sin(an) * 1.6, seed * 3.1) + .02 * vn(Math.cos(an) * 4 + seed, Math.sin(an) * 4, 2.2);
-    return [x * w, y + (y > 0 ? .02 : .008) * vn(x * 5 + seed, 1.3, z * 5) - (y > 0 ? .012 * (1 - Math.min(1, r / R) ** 2) : 0), z * w]; });
+  mapVerts(g, (x, y, z) => { const r = Math.hypot(x, z), an = Math.atan2(z, x), w = 1 + .08 * vn(Math.cos(an) * 1.6 + seed * 7, Math.sin(an) * 1.6, seed * 3.1) + .035 * vn(Math.cos(an) * 4 + seed, Math.sin(an) * 4, 2.2) + .012 * vn(Math.cos(an) * 11 + seed, Math.sin(an) * 11, 5.5);
+    return [x * w, y + (y > 0 ? .03 : .01) * vn(x * 5 + seed, 1.3, z * 5) + (y > 0 ? .008 * vn(x * 22, 2.1, z * 22) : 0) - (y > 0 ? .012 * (1 - Math.min(1, r / R) ** 2) : 0), z * w]; });
   g.computeVertexNormals();
   const cx = C_("#F2892A"), core = C_("#F8B866"), ring = C_("#DB6A14"), edge = C_("#D96F1C");
+  const caramel = C_("#9A4D14"), dkb = C_("#6E3410");
   colorize(g, (c, x, y, z, nx, ny) => { const r = Math.hypot(x, z) / k, an = Math.atan2(z, x);
-    if (ny < .55 || y < 0) c.copy(edge); else { c.copy(cx); const streak = .5 + .5 * vn(an * 3 + seed, r * 12, 1.7); c.lerp(core, smooth((.17 - r) / .05) * .95); c.lerp(ring, Math.exp(-Math.pow((r - .205) / .018, 2)) * .85); c.multiplyScalar(.94 + .06 * streak); } });
+    if (ny < .55 || y < 0) { c.copy(edge).lerp(caramel, clamp(.55 - y / T * .55 + .15 * vn(an * 5, 1, seed))); if (y < -T * .5) c.lerp(dkb, .5); }
+    else { c.copy(cx); const fibre = vn(an * 16 + seed, r * 4, 1.7), streak = .5 + .5 * vn(an * 3 + seed, r * 12, 1.7);
+      c.lerp(core, smooth((.17 - r) / .05) * .95); c.lerp(ring, Math.exp(-Math.pow((r - .205) / .016, 2)) * .9); c.lerp(ring, Math.exp(-Math.pow((r - .11) / .01, 2)) * .45); c.lerp(ring, Math.exp(-Math.pow((r - .255) / .02, 2)) * .5);
+      c.multiplyScalar(.9 + .1 * streak + .09 * fibre * smooth((r - .06) / .1)); c.lerp(caramel, smooth((r - .21) / .06) * .35 + .12 * (.5 + .5 * vn(x * 9, 4, z * 9))); } });
   return g;
 }
 export function makeStrip(seed = 0, L = 1.15, W = .27) { // bell-pepper strip: curved, lens cross-section, skin outside / pale flesh inside
@@ -106,7 +110,7 @@ export function makePan(R = 1.6, H = .44) { // cast-iron skillet, handle toward 
   const g = new THREE.LatheGeometry(pts, 72);
   const tex = (() => { const c = document.createElement("canvas"); c.width = c.height = 256; const x = c.getContext("2d"); x.fillStyle = "#808080"; x.fillRect(0, 0, 256, 256); const im = x.getImageData(0, 0, 256, 256);
     for (let i = 0; i < 256 * 256; i++) { const v = 128 + (hash(i * .37) - .5) * 70 + (hash(i * 1.7 + 4) - .5) * 40; im.data[i * 4] = im.data[i * 4 + 1] = im.data[i * 4 + 2] = v; } x.putImageData(im, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(6, 3); return t; })();
-  const mat = new THREE.MeshStandardMaterial({ color: "#24211F", metalness: .7, roughness: .62, roughnessMap: tex, bumpMap: tex, bumpScale: .4 });
+  const mat = new THREE.MeshPhysicalMaterial({ color: "#24211F", metalness: .7, roughness: .6, roughnessMap: tex, bumpMap: tex, bumpScale: .9, clearcoat: .35, clearcoatRoughness: .42 });
   const body = new THREE.Mesh(g, mat); body.castShadow = body.receiveShadow = true;
   const hg = roundBox(.34, .13, 1.55, .05); xf(hg, [0, H * .72, R + .62], [-.06, 0, 0]);
   const handle = new THREE.Mesh(hg, mat); handle.castShadow = true;
