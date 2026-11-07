@@ -23,7 +23,7 @@ export function createOverlay(T, TH, cv) {
     const k = slam(t, .02, .13); let base = y + capR * 58;
     if (k) { ctx.save(); ctx.translate(0, ex); txt("TO EVERYONE WATCHING,", 505, base, { size: 58, color: TXT, ls: 7, sc: k.sc, a: k.a }); ctx.restore(); }
     y = base + 34;
-    const s2 = fitSize("YOU'D FREEZE", 900, 250); base = y + capR * s2; const l2 = slam(t, .08, .13);
+    const s2 = fitSize("YOU'D FREEZE", 870, 250); base = y + capR * s2; const l2 = slam(t, .08, .13);
     if (l2) mixLine([["YOU'D ", TXT, 0], ["FREEZE", HOT, 1]], 505, base, s2, 2, l2, ex);
     y = base + 34; const s3 = fitSize("AT THE EDGE", 640, 124); base = y + capR * s3; const l3 = slam(t, .16, .13);
     if (l3) { ctx.save(); ctx.translate(0, ex); txt("AT THE EDGE", 505, base, { size: s3, color: TXT, ls: 10, sc: l3.sc, a: l3.a }); ctx.restore(); }
@@ -34,7 +34,7 @@ export function createOverlay(T, TH, cv) {
     let y = 270; const one = s => { const sz = fitSize(s, 860, 150); const b = y + capR * sz; y = b + 30; return [sz, b]; };
     let [sz, b] = one("FALL INTO"); txt("FALL INTO", 505, b, { size: sz, color: TXT, ls: 4 });
     [sz, b] = one("A BLACK HOLE"); txt("A BLACK HOLE", 505, b, { size: sz, color: TXT, ls: 4 });
-    const s2 = fitSize("AND FREEZE", 880, 190); b = y + capR * s2; mixLine([["AND ", TXT, 0], ["FREEZE", HOT, 1]], 505, b, s2, 3, { sc: 1, a: 1 }, 0);
+    const s2 = fitSize("AND FREEZE", 860, 190); b = y + capR * s2; mixLine([["AND ", TXT, 0], ["FREEZE", HOT, 1]], 505, b, s2, 3, { sc: 1, a: 1 }, 0);
     ctx.save(); rrect(90, 170, 420, 62, 31); ctx.fillStyle = col(ABY, .85); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 3; ctx.stroke(); ctx.restore();
     txt("UNREAL, ACTUALLY", 305, 214, { f: BARL, w: 800, size: 30, ls: 5 }); ctx.fillStyle = HOT; ctx.beginPath(); ctx.arc(120, 201, 6, 0, 6.3); ctx.fill();
   };
@@ -56,14 +56,14 @@ export function createOverlay(T, TH, cv) {
     ctx.save(); const sc = o.scale || 1, ccx = 505, ccy = o.cy == null ? 800 : o.cy; ctx.translate(ccx, ccy); ctx.scale(sc, sc); ctx.translate(-ccx, -ccy - (o.dy || 0));
     txt("CASE FILE 002", 505, 392, { f: BARL, w: 800, size: 46, ls: 14, color: HAZE, a: smooth(lt / .25), glow: 6 });
     line([[170, 430], [840, 430]], col(HAZE, .6), 2, 0, smooth(lt / .4));
-    const sl = slam(t, o.tStamp, .16), cy = 740, sz = fitSize("UNPROVEN", 830, 290);
-    if (!sl) { ctx.save(); ctx.globalAlpha = .5 + .3 * Math.sin(t * 20); ctx.setLineDash([16, 14]); ctx.strokeStyle = UV; ctx.lineWidth = 5; ctx.shadowColor = UV; ctx.shadowBlur = 16; rrect(150, cy - 200, 710, 310, 14); ctx.stroke(); ctx.restore();
+    const sl = slam(t, o.tStamp, .16), cy = 740, sz = fitSize("UNPROVEN", 800, 280);
+    if (!sl) { ctx.save(); ctx.globalAlpha = .5 + .3 * Math.sin(t * 20); ctx.setLineDash([16, 14]); ctx.strokeStyle = UV; ctx.lineWidth = 5; ctx.shadowColor = UV; ctx.shadowBlur = 16; rrect(140, cy - 190, 730, 330, 14); ctx.stroke(); ctx.restore();
       txt("VERDICT", 505, cy + 4, { size: 110, color: col(HAZE, .9), ls: 14 }); }
     else { const age = t - o.tStamp;
       if (age < .8) { ring(505, cy - 30, 150, 700, age / .7, UV, 10); ring(505, cy - 30, 100, 520, (age - .08) / .6, TXT, 4);
         ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = col(UV, .4 * Math.max(0, 1 - age / .25)); ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); }
-      txt("UNPROVEN", 505, cy + sz * capR * .5, { size: sz, color: UV, sc: sl.sc, a: sl.a, rot: -.04, glow: 46, ls: 5 });
-      if (sl.sc < 1.02) { ctx.save(); ctx.translate(505, cy - 30); ctx.rotate(-.04); ctx.strokeStyle = UV; ctx.lineWidth = 8; ctx.shadowColor = UV; ctx.shadowBlur = 24; rrect(-425, -190, 850, 340, 14); ctx.stroke(); ctx.lineWidth = 3; rrect(-443, -208, 886, 376, 18); ctx.stroke(); ctx.restore(); } }
+      txt("UNPROVEN", 505, cy - 22 + sz * capR * .5, { size: sz, color: UV, sc: sl.sc, a: sl.a, rot: -.04, glow: 30, ls: 5 });
+      if (sl.sc < 1.02) { ctx.save(); ctx.translate(505, cy - 22); ctx.rotate(-.04); ctx.strokeStyle = UV; ctx.lineWidth = 8; ctx.shadowColor = UV; ctx.shadowBlur = 24; rrect(-440, -165, 880, 330, 14); ctx.stroke(); ctx.lineWidth = 3; rrect(-458, -183, 916, 366, 18); ctx.stroke(); ctx.restore(); } }
     if (o.lines != null && o.lines > 0) { const u = smooth(o.lines);
       line([[170, 1000], [840, 1000]], col(HAZE, .6), 2, 0, u);
       txt("Nobody has fallen in.", 505, 1090, { f: BARL, w: 800, size: 66, a: u, glow: 6, gcol: ABY });
@@ -80,6 +80,9 @@ export function createOverlay(T, TH, cv) {
     hook(t);
     // b02: far observer
     if (t >= S("b02") && t < S("b03")) { const lt = t - S("b02");
+      if (A.ledge) { ctx.save(); const g = ctx.createLinearGradient(0, 1640, 0, 1800); g.addColorStop(0, col(C.panel2, 1)); g.addColorStop(1, col(ABY, 1)); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, 1640);
+        [[70, 1644], [150, 1639], [260, 1646], [350, 1641], [430, 1650], [492, 1662]].forEach(p => ctx.lineTo(p[0], p[1])); ctx.lineTo(470, 1800); ctx.lineTo(0, 1800); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = col(HOT, .6); ctx.lineWidth = 3; ctx.shadowColor = HOT; ctx.shadowBlur = 10; ctx.beginPath(); ctx.moveTo(0, 1640); [[70, 1644], [150, 1639], [260, 1646], [350, 1641], [430, 1650], [492, 1662]].forEach(p => ctx.lineTo(p[0], p[1])); ctx.stroke(); ctx.restore(); }
       lab("WHAT THEY SEE", 505, 262, smooth(lt / .3) * (1 - smooth((t - END("b02") + .3) / .3)), { color: HAZE, size: 30, ls: 8 });
       const g = smooth((t - S("b02") - .2) / .3) * (1 - smooth((t - END("b02") + .3) / .3)); if (g > 0 && A.tau != null) { gauge(850, 400, 62, A.tau, g, t > T.tStop + .2); lab("HIS CLOCK", 850, 520, g, { color: A.rate < .08 ? HAZE : HOT, size: 26, ls: 5 }); }
       const a1 = smooth((t - T.tSlow) / .15) * (1 - smooth((t - T.tStop + .05) / .12)); if (a1 > 0) txt("SLOWS", 505, 372, { size: 130, color: HOT, glow: 28, ls: 8, a: a1, sc: 1 + .35 * (1 - eo3((t - T.tSlow) / .16)) });
@@ -118,7 +121,7 @@ export function createOverlay(T, TH, cv) {
         ctx.restore(); } }
     // b10: SPAGHETTIFICATION
     if (t >= S("b10") && t < S("b11")) { const sl = slam(t, T.tSpag, .16), out = 1 - smooth((t - E("b10") + .15) / .25);
-      if (sl) { const age = t - T.tSpag, st = 1 + 1.0 * smooth(age / 1.5), sz = fitSize("SPAGHETTIFICATION", 920, 150);
+      if (sl) { const age = t - T.tSpag, st = 1 + 1.0 * smooth(age / 1.5), sz = fitSize("SPAGHETTIFICATION", 870, 150);
         ctx.save(); ctx.globalAlpha = out; ctx.translate(505, 640); ctx.scale(sl.sc * (1 - .06 * smooth(age / 1.5)), sl.sc * st); ctx.translate(-505, -640);
         txt("SPAGHETTIFICATION", 505, 640, { size: sz, color: TXT, ls: 2, a: sl.a, glow: 30, gcol: HOT });
         ctx.restore(); } }
@@ -130,8 +133,8 @@ export function createOverlay(T, TH, cv) {
     // b12: the question mark whose dot is the singularity
     if (t >= S("b12") && t < S("b13") && A.pin) { const u = clamp((t - T.tQ + .3) / 1.1), out = 1 - smooth((t - E("b12") + .3) / .3);
       if (u > 0) { ctx.save(); ctx.globalAlpha = smooth(u * 1.6) * out; const bl = (1 - eo3(u)) * 26; ctx.filter = `blur(${bl.toFixed(1)}px)`;
-        ctx.font = `400 520px ${ANTON}`; ctx.textAlign = "center"; ctx.fillStyle = UV; ctx.shadowColor = UV; ctx.shadowBlur = 30;
-        ctx.beginPath(); ctx.rect(0, 0, 1080, A.pin.y - 34); ctx.clip(); ctx.fillText("?", A.pin.x, A.pin.y + 8); ctx.restore(); }
+        const q = qMark(); ctx.font = `400 ${q.size}px ${ANTON}`; ctx.textAlign = "center"; ctx.fillStyle = UV; ctx.shadowColor = UV; ctx.shadowBlur = 30;
+        const base = A.pin.y + q.dotC; ctx.beginPath(); ctx.rect(0, 0, 1080, base - q.cutUp); ctx.clip(); ctx.fillText("?", A.pin.x, base); ctx.restore(); }
       lab("singularity = ?", 505, 1120, smooth((t - T.tPin) / .3) * out, { size: 38, ls: 4, color: TXT }); }
     // b13 verdict, b14 pull-back, end card
     if (t >= S("b13") && t < S("b15")) { const fade = t < S("b14") ? 1 : 1 - smooth((t - S("b14")) / 1.8), sc = t < S("b14") ? 1 : lerp(1, .5, eio((t - S("b14")) / 2.2));
@@ -142,8 +145,17 @@ export function createOverlay(T, TH, cv) {
       lab("frozen at the edge", 295, 1100, smooth((t - S("b15") - 1.1) / .4), { size: 28, ls: 3, color: TXT }); lab("falls right through", 770, 1100, smooth((t - T.tYou - .3) / .4), { size: 28, ls: 3, color: HOT }); }
     if (t >= T.tSign - .35) { const u = smooth((t - (T.tSign - .35)) / .3); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.save(); ctx.globalAlpha = u * .94; ctx.fillStyle = ABY; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); ctx.translate(shk[0], shk[1]);
       ctx.save(); ctx.globalAlpha = u; card(t, { t0: T.tSign - .35, tStamp: -1e9, lines: smooth((t - (T.tSign - .15)) / .5), sign: T.tSign, cy: 740 }); ctx.restore(); }
+    ctx.getImageData(0, 0, 1, 1);
   }
-  function split(x, a) { if (a <= 0) return; x = x || 530; ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = col(TXT, .85); ctx.lineWidth = 3; ctx.shadowColor = HOT; ctx.shadowBlur = 14; ctx.beginPath(); ctx.moveTo(x, 190); ctx.lineTo(x, 1400); ctx.stroke(); ctx.restore(); }
+  let qm = null;
+  function qMark() { // measure the "?" glyph once: where the stem ends and the dot starts, so the singularity itself can be the dot
+    if (qm) return qm; const size = 520, c = document.createElement("canvas"); c.width = 400; c.height = 800; const x = c.getContext("2d", { willReadFrequently: true });
+    x.font = `400 ${size}px ${ANTON}`; x.textAlign = "center"; x.fillStyle = "#fff"; x.fillText("?", 200, 650);
+    const d = x.getImageData(0, 0, 400, 800).data, rowOn = y => { for (let i = 0; i < 400; i++) if (d[(y * 400 + i) * 4 + 3] > 40) return true; return false; };
+    let top = 0, bot = 799; while (!rowOn(top)) top++; while (!rowOn(bot)) bot--;
+    let y = bot; while (rowOn(y)) y--; const dotTop = y + 1; let gy = y; while (!rowOn(gy)) gy--; // gy: last row of the stem
+    qm = { size, dotC: -(650 - (dotTop + bot) / 2) * -1 + 0, cutUp: 0 }; const dotCenter = (dotTop + bot) / 2; qm.dotC = 650 - dotCenter; qm.cutUp = 650 - (gy + dotTop) / 2; return qm; }
+  function split(x, a) { if (a <= 0) return; x = x || 530; ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = col(TXT, .55); ctx.lineWidth = 2; ctx.shadowColor = UV; ctx.shadowBlur = 12; ctx.beginPath(); ctx.moveTo(x, 190); ctx.lineTo(x, 1400); ctx.stroke(); ctx.restore(); }
   function tabText0(s, cx, y, size, color, sc, a, glowK) { // big tabular Anton numerals (fixed pitch) with a hot glow
     ctx.save(); ctx.globalAlpha = a; ctx.font = `400 ${size}px ${ANTON}`; ctx.textAlign = "left"; ctx.letterSpacing = "4px";
     const pitch = ctx.measureText("0").width, adv = [...s].map(ch => /[0-9]/.test(ch) ? pitch : ctx.measureText(ch).width), w = adv.reduce((p, q) => p + q, 0);
