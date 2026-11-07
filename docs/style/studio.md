@@ -1,19 +1,18 @@
 # Studio style — the rules every episode follows
 
-Owner: Bruce Wayne · Time zone: Pacific (America/Los_Angeles) · Season 1: 6 episodes × 5 channels = 30 films.
+Owner: Bruce Wayne · Time zone: Pacific (America/Los_Angeles) · Season 1: 6 episodes × 3 channels = 18 films.
 
 ## 1. Channels and where they post
 
-| # | Channel | YouTube | TikTok | Instagram |
-|---|---|---|---|---|
-| 1 | Reality Rulebook | TODO handle | TODO handle | shared account |
-| 2 | One More Orbit | TODO handle | TODO handle | shared account |
-| 3 | Possibility Lab | TODO handle | TODO handle | shared account |
-| 4 | Body Backstage | TODO handle | TODO handle | shared account |
-| 5 | Skin Sense | TODO handle | TODO handle | shared account |
+| # | Channel (draft names) | Subject | YouTube | TikTok | Instagram |
+|---|---|---|---|---|---|
+| 1 | Pan Theory | food and cooking science | TODO handle | TODO handle | shared account |
+| 2 | Skin Receipts | skin-care habits vs evidence | TODO handle | TODO handle | shared account |
+| 3 | Unreal, Actually | insane-but-true facts: space, time, mysteries | TODO handle | TODO handle | shared account |
 
-That makes 5 YouTube channels, 5 TikTok accounts and **1 shared Instagram** (TODO handle) that posts for all five.
-On Instagram every post carries the channel name first in the caption (e.g. "Reality Rulebook · Ep 1") and a small channel badge on the cover, so viewers can tell the five shows apart.
+That makes 3 YouTube channels, 3 TikTok accounts and **1 shared Instagram** (TODO handle) that posts for all three.
+On Instagram every post carries the channel name first in the caption (e.g. "Pan Theory · Ep 1") and a small channel badge on the cover.
+The first five-channel lineup (Nov 2026) is retired and kept only in `archive/`.
 Each channel keeps its own look, voice and palette (see `channels/`). Nothing from one channel's identity is reused in another.
 
 ## 2. Deliverables per episode
@@ -62,7 +61,7 @@ Score every episode from 1 to 5 on each line:
 - A claim is **OK** only after a person has opened the source and found the line. If it was checked only from a search excerpt, it is **OPEN**.
 - Claims table columns: ID · claim as spoken · source (title + link) · where in the source · hedge used · status (OK/OPEN) · checked by · date.
 - Hedge only as far as the source goes. Animal or lab data is never "your body". Use "about" and "up to".
-- No medical advice on any channel. Skin Sense captions always carry **"Education, not medical advice."**
+- No medical advice on any channel. Skin Receipts captions always carry **"Education, not medical advice."** Pan Theory is food education, never diet advice.
 - No product recommendations, no brands paid or unpaid, no diagnosis, no dosing.
 - Skin and body visuals show a range of skin tones and bodies.
 - An episode with any OPEN claim cannot pass the gate.
@@ -87,6 +86,7 @@ Any stand-in (phone number, email, price, handle, link) is written as `TODO: …
 
 ## Open TODOs
 
-- TODO: YouTube handles ×5, TikTok handles ×5, Instagram handle ×1.
+- TODO: YouTube handles ×3, TikTok handles ×3, Instagram handle ×1.
+- TODO: final channel names (the three names are drafts).
 - TODO: Railway account (setup steps come later, phone-friendly).
-- TODO: Voice track source (decision needed; see the latest summary).
+- Voice: free Kokoro voices (open licence), one distinct voice per channel.
