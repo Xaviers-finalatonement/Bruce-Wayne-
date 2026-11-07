@@ -1,0 +1,182 @@
+{
+  "channel": "pan-theory",
+  "episode": 1,
+  "slug": "ep01-sauteing-veggies",
+  "title": "What sautéing does to your veggies",
+  "voice": {
+    "engine": "kokoro",
+    "voice": "af_bella",
+    "speed": 1.0
+  },
+  "beats": [
+    {
+      "id": "b01",
+      "vo": "Oil helps your carrots. Heat costs your peppers.",
+      "claims": [
+        "C7",
+        "C5"
+      ],
+      "screen": [],
+      "visual": "Overhead on a warm countertop: a pile of matte, chunky orange carrot coins on the left, red pepper strips on the right, a cast-iron pan between them. Soft window light. Reads in under 2 s."
+    },
+    {
+      "id": "b02",
+      "vo": "One pan. Two opposite things happening to your veggies.",
+      "claims": [
+        "C7"
+      ],
+      "screen": [
+        "+ oil",
+        "- heat"
+      ],
+      "visual": "Straight overhead push-in on the pan as a ribbon of oil slides in; Tomato-red heat shimmer rises on the right half. Motivated by the oil pour."
+    },
+    {
+      "id": "b03",
+      "vo": "Bright veggies like carrots are full of plant pigments called carotenoids. Your body turns them into vitamin A.",
+      "claims": [
+        "C1",
+        "C2"
+      ],
+      "screen": [
+        "carotenoids",
+        "→ vitamin A"
+      ],
+      "visual": "Overhead on a carrot coin; camera drops straight down into the orange flesh to a field of glowing orange pigment molecules, then a soft arrow turns them into a small 'A' tile."
+    },
+    {
+      "id": "b04",
+      "vo": "Here's the catch. Those pigments get absorbed better with a little fat.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [
+        "better with a little fat"
+      ],
+      "visual": "Raw vs cooked split frame: left, pigment molecules drifting past a gut-wall surface and sliding by; right, the same molecules wrapped in small golden oil droplets that dock into the surface."
+    },
+    {
+      "id": "b05",
+      "vo": "Think of it like a ride. The pigments travel along with the oil.",
+      "claims": [
+        "C3",
+        "C4"
+      ],
+      "screen": [],
+      "visual": "Oil droplets carry orange molecules like little buses along the surface; side-lit by warm light. Camera glides slowly along the path (follow)."
+    },
+    {
+      "id": "b06",
+      "vo": "So a splash of oil isn't just for flavor.",
+      "claims": [
+        "C3"
+      ],
+      "screen": [],
+      "visual": "Pull back up out of the molecule scale to the overhead pan; oil glints around the carrot coins as they brown."
+    },
+    {
+      "id": "b07",
+      "vo": "Same story for vitamins E and K, in spinach and broccoli. Fat helps them in.",
+      "claims": [
+        "C4",
+        "C6"
+      ],
+      "screen": [
+        "vitamins A · D · E · K",
+        "absorbed more easily with fat"
+      ],
+      "visual": "Overhead over a handful of spinach and broccoli florets hitting the pan; four chunky letter tiles A D E K land on the countertop beside it and glow where oil touches."
+    },
+    {
+      "id": "b08",
+      "vo": "Now the flip side. Peppers, broccoli and tomatoes are packed with vitamin C.",
+      "claims": [
+        "C5"
+      ],
+      "screen": [
+        "vitamin C"
+      ],
+      "visual": "Overhead tilt-free pan to the side where red pepper strips, broccoli and a cut tomato sit on the board; a bright Herb-green 'C' tile pops above them."
+    },
+    {
+      "id": "b09",
+      "vo": "Vitamin C dissolves in water, and cooking can lower how much is left.",
+      "claims": [
+        "C5",
+        "C8"
+      ],
+      "screen": [
+        "water-soluble",
+        "cooking can lower it"
+      ],
+      "visual": "Camera drops into a pepper strip: Herb-green C molecules floating in watery cells; heat shimmer arrives and a few of them fade out."
+    },
+    {
+      "id": "b10",
+      "vo": "Microwaving and steaming can lower it too, so it's not just the pan.",
+      "claims": [
+        "C9"
+      ],
+      "screen": [
+        "also: microwaving · steaming"
+      ],
+      "visual": "Cut to an overhead trio on the countertop: a pan, a steamer basket, a microwave plate, each with a few C tiles fading. Static overhead, tiles dim on each name."
+    },
+    {
+      "id": "b11",
+      "vo": "That's why raw fruit and veg top the vitamin C lists.",
+      "claims": [
+        "C10"
+      ],
+      "screen": [
+        "raw = best sources"
+      ],
+      "visual": "Raw vs cooked side-by-side: left a raw pepper with a full row of C tiles; right a cooked one with fewer. Straight overhead, no move."
+    },
+    {
+      "id": "b12",
+      "vo": "So sautéing isn't good or bad. It's a trade.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "a trade"
+      ],
+      "visual": "Two chunky scale pans on the countertop balance level, oil droplet on one, heat shimmer on the other. Slow overhead push-in on the balance."
+    },
+    {
+      "id": "b13",
+      "vo": "This isn't a diet rule. It's just what your pan is doing.",
+      "claims": [
+        "C11"
+      ],
+      "screen": [
+        "education, not a diet rule"
+      ],
+      "visual": "Back to the full overhead pan, veggies browning, steam curling up. Hold steady."
+    },
+    {
+      "id": "b14",
+      "vo": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+      "claims": [
+        "C3",
+        "C7"
+      ],
+      "screen": [
+        "The Pan Theory:",
+        "carrots + a little oil"
+      ],
+      "visual": "Signature card on the Countertop beige: 'The Pan Theory:' in Rubik with Tomato-red key word, one line below on a Butter highlight. Overhead pan with carrots behind; hold 1 s."
+    }
+  ],
+  "end_card": {
+    "text": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+    "channel": "Pan Theory"
+  },
+  "cover": {
+    "headline": "What sautéing does to your veggies",
+    "key_word": "trade"
+  },
+  "end_hold": 1.8,
+  "sound": "pan-theory"
+}
