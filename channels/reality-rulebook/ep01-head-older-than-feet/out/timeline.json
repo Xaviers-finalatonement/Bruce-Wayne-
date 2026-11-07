@@ -272,14 +272,20 @@
     {
      "text": "And your phone feels it.",
      "start": 45.409,
-     "end": 47.208,
+     "end": 47.233,
      "key": 2
     },
     {
-     "text": "GPS satellites fly high, so their clocks run fast.",
-     "start": 47.208,
+     "text": "GPS satellites fly high,",
+     "start": 47.233,
+     "end": 49.056,
+     "key": 1
+    },
+    {
+     "text": "so their clocks run fast.",
+     "start": 49.056,
      "end": 50.956,
-     "key": 8
+     "key": 4
     }
    ],
    "vo": "And your phone feels it. GPS satellites fly high, so their clocks run fast.",

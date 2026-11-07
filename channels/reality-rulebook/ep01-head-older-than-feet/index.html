@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1080,height=1920">
+<title>Reality Rulebook Ep 1</title>
+<style id="theme-css"></style>
+<style>
+  html,body{margin:0;padding:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  #stage{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #cap{position:absolute;white-space:nowrap;text-align:center;opacity:0;font-kerning:normal}
+  #cap .ln{display:block;margin:0}
+  #cap .bk{display:inline-block;white-space:nowrap}
+  #cap .key{color:var(--key)}
+  #cap .key.underline{text-decoration:underline;text-decoration-thickness:7px;text-underline-offset:9px}
+  #cap .key.marker{color:var(--ink);background:var(--marker);padding:0 8px;border-radius:6px}
+  #cap .num{font-family:var(--numfont);font-weight:700;letter-spacing:-0.04em}
+</style></head>
+<body>
+<svg id="stage" xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<div id="cap"></div>
+<script src="theme.js"></script>
+<script src="scene.js"></script>
+</body></html>

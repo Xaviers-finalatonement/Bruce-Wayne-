@@ -13,7 +13,7 @@ LEAD = 0.20      # silence before first word
 GAP = 0.25       # between beats
 EXTRA_HOLD = 0.8  # after b13 and the final beat
 HOLD_AFTER = {"b13"}
-LINE_MAX = 26    # chars per caption line (safe width at ~68 px); spec allows up to 32
+LINE_MAX = 24    # chars per caption line (fits the safe width at ~64 px); spec allows up to 32
 STOP = set("the a an and or but so to of in on at it its it's is are was you your you're they their them one that this for with by as be".split())
 
 
