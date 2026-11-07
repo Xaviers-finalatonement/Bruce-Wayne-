@@ -25,7 +25,7 @@ const PI = Math.PI, ez = (t, a, b, f = 0, g = 1, fn = smooth) => lerp(f, g, fn(c
 const noDepth = []; { const br = bokeh.render.bind(bokeh); bokeh.render = function (...a) { const v = noDepth.map(o => o.visible); noDepth.forEach(o => (o.visible = false)); br(...a); noDepth.forEach((o, i) => (o.visible = v[i])); }; }
 
 // ---------- lights ----------
-const key = new THREE.DirectionalLight(0xffe0b4, 1.25); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
+const key = new THREE.DirectionalLight(0xffe0b4, 1.25); key.castShadow = true; key.shadow.mapSize.set(1536, 1536);
 Object.assign(key.shadow.camera, { left: -7.5, right: 7.5, top: 7.5, bottom: -7.5, near: .5, far: 40 }); key.shadow.bias = -.0005; key.shadow.normalBias = .025; key.shadow.radius = 5;
 scene.add(key, key.target, new THREE.HemisphereLight(0xfff3e2, 0xe6d3b4, .22));
 const mLight = new THREE.PointLight(0xffc27a, 0, 0, 2); scene.add(mLight); // molecule-world key
@@ -308,7 +308,7 @@ function stage(t, A) {
     const px = inTrio ? X_TRIO : inCmp ? X_CMP : inBal ? X_BAL : cx;
     pan.visible = !(inTrio || inCmp || inBal) || false; pileC.visible = pileP.visible = t < S("b04") + 1; panCoins.forEach(o => (o.visible = pan.visible)); panStrips.forEach(o => (o.visible = pan.visible)); oil.visible = pan.visible && oil.visible; ribbon.visible = ribbon.visible && pan.visible;
     steam.forEach(q => (q.visible = pan.visible && q.visible)); heatQ.forEach(q => (q.visible = pan.visible && q.visible)); glowRight.visible = glowRight.visible && pan.visible;
-    animKitchen(t, A); animBalance(t);
+    bokeh.enabled = !(inTrio || inCmp || inBal); animKitchen(t, A); animBalance(t);
     pan.visible = !(inTrio || inCmp || inBal); filmAll.forEach(o => (o.visible = o.visible && pan.visible)); panCoins.forEach(o => (o.visible = pan.visible)); panStrips.forEach(o => (o.visible = pan.visible));
     dropIns.forEach(o => { if (!pan.visible) o.visible = false; });
     pan.userData; const G = (g, v) => (g.visible = v); G(trio, inTrio); G(cmp, inCmp); G(bal, inBal); G(board, t >= S("b08") - .5 && t < S("b10")); tileC.visible = tileC.visible && (t >= S("b08") - .5 && t < S("b10"));
@@ -323,6 +323,7 @@ function stage(t, A) {
     bloom.strength = .2; bloom.radius = .5; bloom.threshold = 1.1; A.proj = projector(); A.cam = { cx, cz, h };
   } else {
     bloom.strength = .6; bloom.radius = .7; bloom.threshold = .8;
+    bokeh.enabled = z !== "M2a" && z !== "M2b";
     if (z === "M1") animM1(t, A); else if (z === "M2a") animM2(t, A, false); else if (z === "M2b") animM2(t, A, true); else animM3(t, A);
     key.visible = false;
   }
