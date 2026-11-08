@@ -112,3 +112,82 @@ All other scores are ≥ 3, and (a) and (g) are at the minimum of 4.
     - Regenerate `out/render-report.md` and the contact sheet from the shipped `out/ep01.mp4`.
     - Update the `script.json` visual notes to match the build.
     - Add "checked by" and "date" columns to `claims.md` (F3).
+
+---
+
+## Round 2 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode).
+**Reviewed:** `out/wip/ep01.mp4` (73.10 s, 1080×1920, 30 fps, 2193 frames, 84.7 MB, 9.27 Mb/s), `out/ep01.srt`, `out/timeline.json`, `script.json`, `claims.md`, `out/render-report.md`, `out/cover.png`, `overlay.js`, `engine/film/timing.js`, `engine/sound.py`.
+**Method:** I pulled stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s, then one frame every 1.5 s from 2.5 to 73.0 s, plus closer frames at 8.5, 17.6, 32.8, 34.6, 45.2, 47.6 and 70.8 s and the cover. I also ran pause detection on `out/audio/b13.wav` against the SRT cues.
+**Audio caveat:** I cannot hear the film. I judged sound only from the render report, `engine/sound.py` and pause detection.
+
+### Scores
+
+| | Criterion | R1 | R2 | Evidence |
+|---|---|---|---|---|
+| a | Hook in first 2 s | 4 | **4** | **What works:** the VO starts at 0.2 s and the Anton title is up by 0.5 s. The burned caption no longer repeats the title (0.5–2.4 s). **What's unchanged from R1:** the neon-outline figure; two clocks that differ only by hand position; "AHEAD" still sitting on the connector line (1.0 s); and the bottom ~55 % of the frame is empty floor. |
+| b | One thread | 4 | **4** | Same script, same clean thread. GPS (44.5–56 s, ~16 % of runtime) is still a side trip, tied back through "your phone" and the map. The head-vs-feet amount is still never given. |
+| c | Picture moves with the sentence | 3 | **4** | **Now landing on its word:** rate bars plus FASTER/SLOWER (13.0–14.6); feet→head travel (16–19); the clock rises on "raised one by about a foot" (31.0); a pin "phone" on "your phone" (44.5); pin plus WRONG (55.0); "+" per step (64–67); a hair grows on "By a hair" (70.8). **Misses:** both atomic clocks arrive at 22.0 / 23.5 s, about 5 s before "two super-precise atomic clocks" (27.5–29.3), which then gets nothing new. "The higher clock ticked faster" (33.1–34.9) is shown only by a small orange bar over a clock about 135 px wide. 35.0–36.8 is a near-empty frame (a small ring) under "Over a whole seventy-nine year life". |
+| d | Motivated camera | 4 | **4** | Moves are still motivated: push to the head clock (2.4–6.4), the clock column, feet→head travel, pull back to orbit. The lab is now a locked wide with both clocks fully in shot. At that size the clocks are tiny, and the frame holds for about 14 s (20.4–34.9). The b05 travel crops the figure at the left edge and the feet clock at the bottom (16–18.5). |
+| e | Voice carries meaning, screen carries figures | 3 | **4** | The worst repeats are gone: the hook caption and the "90 billionths" label. The figures are on screen (2010 · NIST, 33 cm ≈ 1 ft, 79 YEARS, ≈ 0.000 000 09 s), and the voice says what they mean ("far too small to feel"). **Still repeated:** SET SLOW / BEFORE LAUNCH sits over a caption with the same words (52–53.7). The 90 ns figure still has no comparison (§4). |
+| f | Rhythm | 3 | **4** | **Fixed:** gaps now vary from 0.15 to 0.6 s; b15 is slowed to 0.92, so "By a hair." holds ≈ 0.87 s; lab events land at 22 / 23.5 / 25 / 31 / 32.5 / 34 s. 192 words in 73.1 s is ≈ 158 wpm, on target. **Holes left:** 25–31 s (only the laser drifts), 35.0–36.8 (near-empty), and the rack unit (50–53.7), which is one frame with a knob turning. |
+| g | Ending | 4 | **4** | It rings back to the opening frame (68.5–70), and a single Horizon hair sprouts on "By a hair" (70.8), which is a good button. The stairs no longer read as "walking into the light" (62.5–67). **What keeps it off 5:** the verdict lands at 58 s; the case-file card plays twice (56.4–61 and 71.3–73.1); and "By a hair." gets under 1 s before the cut to the card. |
+| h | Production value | 3 | **3** | **Better and on palette:** the map grid and pin (55), the stairs (62–67), the rack unit (50–54), the verdict card and the 79-year filament all look designed. **Still a motion-graphics template, not filmed CG:** <br>• **Earth** is still the day-side blue globe with white clouds (7–11.4, 46 s). <br>• **Satellite** is a box with a noisy texture and a literal clock face, flat blue-grey panels and a disc-on-a-stick dish (46–50). <br>• **"Lab"** is a row of neon bars with a floating sine wave and tiny clocks (20–35). <br>• **"Phone"** is a wireframe grid rectangle in orange haze over a flat pink plane (44.5–45.9). <br>• **Neon-outline human** is a stock explainer trope, and it carries the most-seen frames (hook, cover, b05, stairs, ending). |
+
+### Round-1 fix list: status
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| 1 | Remove the b02 counter | **Done** | A number-free AHEAD meter is on screen (4.0–5.5 s). **Leftover:** `script.json` b02 `screen` still lists "head +0.000 000 000 001 s". |
+| 2 | Readable hedge | **Partly** | **Done:** the b04 tag is 40 px. **Not done:** it shows only ≈ 12.6–14.1 s (about 1.5 s of the 3.2 s beat). On the hook, b05 and the ending it is 30 px (`overlay.js` l.22) and overlaps the connector or FEET label (17.6, 19.0). |
+| 3 | Rebuild satellite / Earth / map | **Partly** | **Map:** done (55.0). **Satellite:** partly. It is darker and has a dish, but keeps the noise texture, blue-grey panels and a clock face, with no foil and no hard key. **Earth:** not done, still day-side blue and white (8.5). |
+| 4 | Legible NIST compare | **Partly** | **Done:** both clocks are in shot and events were added. **Not done:** the "dimension line" is a leader from the label, not an arrowed line spanning the clocks. The "faster" proof is a small bar. The clocks are about 135 px and land about 5 s before the line that names them. |
+| 5 | Re-stage the stairs | **Done** | Side-on figure, lit steps, "+" per step, no doorway, caption clear of the figure. |
+| 6 | Phone on "your phone" | **Partly** | It is a wireframe grid with a pin. There is no device body and no hand, and it sits in a muddy orange and pink frame. |
+| 7 | Captions and safe area | **Partly** | **Done:** FASTER moved to y ≈ 245; the hook title fades; 13.0–14.6 and the stairs are clear. **Not done:** 17.4–18.5, where the caption still covers the feet clock (17.6). "By a hair." slightly overlaps the figure's arm. |
+| 8 | Sync to real audio | **Done (phrase level)** | The b13 cues "True." and "The higher…" sit within ≈ 20 ms of the voiced onsets in `b13.wav`. "US" is respelled for TTS, gaps are varied, and b15 is at 0.92. Word slams inside a phrase still use character share (`timing.js` l.14), but now only over the voiced spans. |
+| 9 | Cut duplicate text | **Done** | No hook caption under the title, and no "90 billionths" label. A §4 comparison was not added (it was optional). |
+| 10 | Phone-audible sound and paperwork | **Partly** | **Done:** hits gained a 2–5.5 kHz click and a 150–400 Hz knock; a Dm9 pad plus pulse bed was added at −30 dB; the render report now describes this render; claims.md has "checked by" and "date" columns. **Not done:** LRA is now 1.9 LU (it was 2.1). `out/ep01.mp4` is still the round-1 file (94.8 MB, 7 Nov). `script.json` `screen` fields are stale. claims.md is still titled "Reality Rulebook". |
+
+### Factual and ethical items
+
+- **F1 — CLOSED.** No figure is shown for the head's gain. The AHEAD meter has no units. Delete the stale string from `script.json` so a rebuild can't bring it back.
+- **F2 — partly fixed, not blocking.** The hedge is present and readable at 40 px in b04, and tiny (30 px) elsewhere. It is on the fix list below.
+- **F3 — process note for Bruce (unchanged).** `claims.md` is still certified by Claude, not by a person (§5). Bruce should spot-check C3–C5 and C7, or accept an AI check.
+- **On-screen and spoken audit:** every line maps to an OK claim. 2010 · NIST → C3; 33 cm ≈ 1 ft → C4; 79 YEARS and ≈ 0.000 000 09 s → C5 (90 × 10⁻⁹ s ✓); SET SLOW BEFORE LAUNCH → C7; WRONG → C8; TRUE plus the rule → C2; FASTER/SLOWER/AHEAD → C1/C2; the stairs line → C4. **Nothing factual is open.**
+
+### Verdict: **FAIL**
+
+(h) = 3, and the gate needs ≥ 4. Everything else clears: no score < 3, (a) = 4, (g) = 4, nothing factual open.
+
+### FIX LIST (round 2 → round 3)
+
+1. **Night-side Earth (7.0–11.4 s and 45.9–49 s).** This is round-1 fix 3, not yet done.
+   - Near-black land and ocean, with Horizon city-light clusters (an emissive map or instanced points).
+   - A thin Ultraviolet fresnel atmosphere rim, and a hard terminator with the sun behind the limb.
+   - No blue ocean, no white clouds.
+2. **Rebuild the lab as a real optical-clock bench, and make the proof readable on a phone (20.4–35.0 s).**
+   - Build an optical table with a breadboard hole grid and steel posts and mounts under a hard key light. Show the laser with visible haze scatter. Delete the neon bars and the floating sine wave.
+   - Push in until each clock housing is ≥ 300 px wide.
+   - Use 20.4–27.5 for the bench, the laser and 2010 · NIST. Land the two clocks on "two super-precise atomic clocks" (≈ 27.5–29.3).
+   - Draw a vertical dimension line with arrowheads between the two clock centres, labelled "33 cm ≈ 1 ft".
+   - On "The higher clock ticked faster" (33.1–34.9), give each clock a b04-size rate bar or tick train: upper 3 lit, lower 2.
+3. **Replace the hollow neon-outline human (0–2.4, 15–20, 62–71.3 s and the cover).**
+   - Make it a solid dark figure lit like a person on a stage: a hard key from above-left, a Horizon rim on one edge and an Ultraviolet rim on the other, a floor contact shadow, light haze, and a slight breathing or weight shift. Give the stairs figure the same treatment.
+   - Keep the clocks, the HEAD/FEET tags and the hair gag.
+   - On the hook, move "AHEAD" off the connector line and raise the composition so empty floor doesn't fill the bottom half.
+4. **Satellite and phone (44.5–50 s).**
+   - **Satellite:** swap the noisy body texture for crinkled gold/black foil (metallic, roughness ≈ 0.35, normal map). Use near-black solar cells with a fine grid and a specular glint that travels with the camera, and a hard sun key from one side. Remove the literal clock face from the body; use a small inset or tick ring instead.
+   - **Phone:** a solid black-glass handset with rounded corners and a bezel, held in a dark hand. Its screen shows the same dark map and pin as 55 s, on Abyss. No wireframe rectangle, no orange haze over a pink plane.
+5. **Captions, hedge and empty frames.**
+   - At 17.4–18.5, move the caption band to the top, or frame the feet clock above y ≈ 1250.
+   - Make "speeds exaggerated" ≥ 40 px everywhere (`overlay.js` l.22 is 30 px). Keep it up for all of b04 (11.4–14.6) and clear of the connector and FEET label (19.0).
+   - Start the 79-year filament on "Over a whole" so 35.0–36.8 isn't empty.
+   - Optional (§4): a comparison for 90 ns, sourced and added to `claims.md` as OK first.
+6. **Sound, paperwork and shipping.**
+   - Raise the hits, swells and the TRUE stamp 4–6 dB above the bed, with the bed ducking under the VO. Target LRA ≥ 4 at −14 LUFS (now 1.9 LU).
+   - Consider a less stock voice than Kokoro `am_michael`. I can't hear it; this is about the owner's "not AI-generic" brief.
+   - Delete the stale `script.json` `screen` entries: b02 "head +0.000 000 000 001 s" and b09 "90 billionths of a second".
+   - Retitle `claims.md`, which is still titled "Reality Rulebook".
+   - Copy the approved render over `out/ep01.mp4`, which is still the round-1 file.
