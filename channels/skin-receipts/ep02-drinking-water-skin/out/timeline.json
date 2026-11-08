@@ -1,1 +1,604 @@
-{"duration": 71.059, "fps": 30, "speed": 0.95, "gap": 0.45, "sample_rate": 24000, "beats": [{"id": "b01", "start": 0.2, "end": 3.405, "next": 3.855, "sents": [{"s": 0.2, "e": 1.524, "c0": 0, "c1": 24}, {"s": 1.764, "e": 3.405, "c0": 25, "c1": 52}], "captions": [{"text": "Drinking water for skin?", "start": 0.2, "key": 0, "end": 1.764}, {"text": "Forty-nine women tested it.", "start": 1.764, "key": 0, "end": 3.405}], "vo": "Drinking water for skin? Forty-nine women tested it.", "screen": ["49 women tested it"]}, {"id": "b02", "start": 3.855, "end": 8.0, "next": 8.45, "sents": [{"s": 3.855, "e": 6.555, "c0": 0, "c1": 47}, {"s": 6.695, "e": 8.0, "c0": 48, "c1": 72}], "captions": [{"text": "The claim: drink more water,", "start": 3.855, "key": 1, "end": 5.521}, {"text": "hydrate your skin.", "start": 5.521, "key": 0, "end": 6.695}, {"text": "Let's check the receipt.", "start": 6.695, "key": 3, "end": 8.0}], "vo": "The claim: drink more water, hydrate your skin. Let's check the receipt.", "screen": ["CLAIM: more water \u2192 hydrated skin"]}, {"id": "b03", "start": 8.45, "end": 15.869, "next": 16.319, "sents": [{"s": 8.45, "e": 9.207, "c0": 0, "c1": 9}, {"s": 9.347, "e": 12.036, "c0": 10, "c1": 56}, {"s": 12.176, "e": 15.869, "c0": 57, "c1": 122}], "captions": [{"text": "Line one.", "start": 8.45, "key": 0, "end": 9.347}, {"text": "Healthy women,", "start": 9.347, "key": 0, "end": 10.224}, {"text": "aged twenty-two to thirty-four.", "start": 10.224, "key": 3, "end": 12.176}, {"text": "They added two liters a day,", "start": 12.176, "key": 3, "end": 13.824}, {"text": "about eight glasses, for four weeks.", "start": 13.824, "key": 2, "end": 15.869}], "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added two liters a day, about eight glasses, for four weeks.", "screen": ["LINE 1 \u00b7 49 healthy women", "+2 L a day \u00b7 4 weeks"]}, {"id": "b04", "start": 16.319, "end": 20.249, "next": 20.699, "sents": [{"s": 16.319, "e": 17.997, "c0": 0, "c1": 29}, {"s": 18.137, "e": 20.249, "c0": 30, "c1": 62}], "captions": [{"text": "Everyone got the extra water.", "start": 16.319, "key": 0, "end": 18.137}, {"text": "Nobody was left as a comparison.", "start": 18.137, "key": 5, "end": 20.249}], "vo": "Everyone got the extra water. Nobody was left as a comparison.", "screen": ["no comparison group"]}, {"id": "b05", "start": 20.699, "end": 25.061, "next": 25.511, "sents": [{"s": 20.699, "e": 21.896, "c0": 0, "c1": 17}, {"s": 22.036, "e": 25.061, "c0": 18, "c1": 71}], "captions": [{"text": "Food counted too.", "start": 20.699, "key": 1, "end": 22.036}, {"text": "Over half their water came from food,", "start": 22.036, "key": 3, "end": 24.205}, {"text": "soup and juice.", "start": 24.205, "key": 2, "end": 25.061}], "vo": "Food counted too. Over half their water came from food, soup and juice.", "screen": ["over half of their water: food, soup, juice"]}, {"id": "b06", "start": 25.511, "end": 29.564, "next": 30.014, "sents": [{"s": 25.511, "e": 27.584, "c0": 0, "c1": 37}, {"s": 27.724, "e": 29.564, "c0": 38, "c1": 67}], "captions": [{"text": "A probe then measured skin hydration.", "start": 25.511, "key": 5, "end": 27.724}, {"text": "Forehead, forearm, hand, leg.", "start": 27.724, "key": 0, "end": 29.564}], "vo": "A probe then measured skin hydration. Forehead, forearm, hand, leg.", "screen": ["skin hydration probe", "face \u00b7 arm \u00b7 hand \u00b7 leg"]}, {"id": "b07", "start": 30.014, "end": 35.464, "next": 35.914, "sents": [{"s": 30.014, "e": 35.464, "c0": 0, "c1": 98}], "captions": [{"text": "In the thirty-eight who", "start": 30.014, "key": 2, "end": 31.349}, {"text": "took in less water overall,", "start": 31.349, "key": 4, "end": 32.906}, {"text": "the forehead reading", "start": 32.906, "key": 1, "end": 34.074}, {"text": "rose about forty percent.", "start": 34.074, "key": 3, "end": 35.464}], "vo": "In the thirty-eight who took in less water overall, the forehead reading rose about forty percent.", "screen": ["38 lighter drinkers", "forehead hydration reading: +40%"]}, {"id": "b08", "start": 35.914, "end": 39.328, "next": 39.778, "sents": [{"s": 35.914, "e": 39.328, "c0": 0, "c1": 63}], "captions": [{"text": "In the eleven who already drank a lot,", "start": 35.914, "key": 4, "end": 38.027}, {"text": "the change wasn't clear.", "start": 38.027, "key": 1, "end": 39.328}], "vo": "In the eleven who already drank a lot, the change wasn't clear.", "screen": ["11 heavy drinkers", "change not clear"]}, {"id": "b09", "start": 39.778, "end": 43.373, "next": 43.823, "sents": [{"s": 39.778, "e": 43.373, "c0": 0, "c1": 61}], "captions": [{"text": "Skin's barrier, how fast water escapes,", "start": 39.778, "key": 1, "end": 42.135}, {"text": "didn't really change.", "start": 42.135, "key": 0, "end": 43.373}], "vo": "Skin's barrier, how fast water escapes, didn't really change.", "screen": ["water loss through skin: no relevant change"]}, {"id": "b10", "start": 43.823, "end": 46.375, "next": 46.825, "sents": [{"s": 43.823, "e": 44.856, "c0": 0, "c1": 18}, {"s": 44.996, "e": 46.375, "c0": 19, "c1": 44}], "captions": [{"text": "Sounds like a win.", "start": 43.823, "key": 0, "end": 44.996}, {"text": "But it's one small study.", "start": 44.996, "key": 3, "end": 46.375}], "vo": "Sounds like a win. But it's one small study.", "screen": ["one small study"]}, {"id": "b11", "start": 46.825, "end": 51.047, "next": 51.497, "sents": [{"s": 46.825, "e": 51.048, "c0": 0, "c1": 63}], "captions": [{"text": "A 2018 review of five studies like", "start": 46.825, "key": 5, "end": 49.171}, {"text": "it called the evidence weak.", "start": 49.171, "key": 3, "end": 51.047}], "vo": "A 2018 review of five studies like it called the evidence weak.", "screen": ["2018 review \u00b7 5 studies", "evidence: weak"]}, {"id": "b12", "start": 51.497, "end": 54.334, "next": 54.784, "sents": [{"s": 51.497, "e": 54.333, "c0": 0, "c1": 65}], "captions": [{"text": "And it's unclear whether you'd", "start": 51.497, "key": 2, "end": 52.85}, {"text": "notice the difference in a mirror.", "start": 52.85, "key": 2, "end": 54.334}], "vo": "And it's unclear whether you'd notice the difference in a mirror.", "screen": ["noticeable? unclear"]}, {"id": "b13", "start": 54.784, "end": 56.407, "next": 57.657, "sents": [{"s": 54.784, "e": 56.407, "c0": 0, "c1": 23}], "captions": [{"text": "Receipt total: unknown.", "start": 54.784, "key": 0, "end": 56.407}], "vo": "Receipt total: unknown.", "screen": ["RECEIPT TOTAL", "UNKNOWN"]}, {"id": "b14", "start": 57.657, "end": 63.442, "next": 63.892, "sents": [{"s": 57.657, "e": 61.704, "c0": 0, "c1": 70}, {"s": 61.844, "e": 62.481, "c0": 71, "c1": 78}, {"s": 62.721, "e": 63.442, "c0": 79, "c1": 87}], "captions": [{"text": "Water might nudge skin hydration readings,", "start": 57.657, "key": 4, "end": 60.143}, {"text": "mostly if you drink little.", "start": 60.143, "key": 0, "end": 61.844}, {"text": "Proven?", "start": 61.844, "key": 0, "end": 62.721}, {"text": "Not yet.", "start": 62.721, "key": 0, "end": 63.442}], "vo": "Water might nudge skin hydration readings, mostly if you drink little. Proven? Not yet.", "screen": ["might help \u00b7 mostly if you drink little", "proven? not yet"]}, {"id": "b15", "start": 63.892, "end": 67.559, "next": 69.359, "sents": [{"s": 63.892, "e": 67.559, "c0": 0, "c1": 56}], "captions": [{"text": "If your skin stays dry,", "start": 63.892, "key": 3, "end": 65.464}, {"text": "a dermatologist can check yours.", "start": 65.464, "key": 1, "end": 67.559}], "vo": "If your skin stays dry, a dermatologist can check yours.", "screen": ["Education, not medical advice."]}]}
+{
+ "duration": 70.31,
+ "fps": 30,
+ "speed": 0.97,
+ "gap": 0.45,
+ "sample_rate": 24000,
+ "beats": [
+  {
+   "id": "b01",
+   "start": 0.2,
+   "end": 3.326,
+   "next": 3.776,
+   "sents": [
+    {
+     "s": 0.2,
+     "e": 1.494,
+     "c0": 0,
+     "c1": 24
+    },
+    {
+     "s": 1.734,
+     "e": 3.326,
+     "c0": 25,
+     "c1": 52
+    }
+   ],
+   "captions": [
+    {
+     "text": "Drinking water for skin?",
+     "start": 0.2,
+     "key": 1,
+     "end": 1.734
+    },
+    {
+     "text": "Forty-nine women tested it.",
+     "start": 1.734,
+     "key": 0,
+     "end": 3.326
+    }
+   ],
+   "vo": "Drinking water for skin? Forty-nine women tested it.",
+   "screen": [
+    "49 women tested it"
+   ]
+  },
+  {
+   "id": "b02",
+   "start": 3.776,
+   "end": 7.819,
+   "next": 8.269,
+   "sents": [
+    {
+     "s": 3.776,
+     "e": 6.422,
+     "c0": 0,
+     "c1": 47
+    },
+    {
+     "s": 6.562,
+     "e": 7.818,
+     "c0": 48,
+     "c1": 72
+    }
+   ],
+   "captions": [
+    {
+     "text": "The claim: drink more water,",
+     "start": 3.776,
+     "key": 1,
+     "end": 5.409
+    },
+    {
+     "text": "hydrate your skin.",
+     "start": 5.409,
+     "key": 0,
+     "end": 6.562
+    },
+    {
+     "text": "Let's check the receipt.",
+     "start": 6.562,
+     "key": 3,
+     "end": 7.819
+    }
+   ],
+   "vo": "The claim: drink more water, hydrate your skin. Let's check the receipt.",
+   "screen": [
+    "CLAIM: more water → hydrated skin"
+   ]
+  },
+  {
+   "id": "b03",
+   "start": 8.269,
+   "end": 15.602,
+   "next": 16.052,
+   "sents": [
+    {
+     "s": 8.269,
+     "e": 9.026,
+     "c0": 0,
+     "c1": 9
+    },
+    {
+     "s": 9.166,
+     "e": 11.847,
+     "c0": 10,
+     "c1": 56
+    },
+    {
+     "s": 11.987,
+     "e": 15.602,
+     "c0": 57,
+     "c1": 122
+    }
+   ],
+   "captions": [
+    {
+     "text": "Line one.",
+     "start": 8.269,
+     "key": 0,
+     "end": 9.166
+    },
+    {
+     "text": "Healthy women,",
+     "start": 9.166,
+     "key": 0,
+     "end": 10.04
+    },
+    {
+     "text": "aged twenty-two to thirty-four.",
+     "start": 10.04,
+     "key": 3,
+     "end": 11.987
+    },
+    {
+     "text": "They added two liters a day,",
+     "start": 11.987,
+     "key": 3,
+     "end": 13.6
+    },
+    {
+     "text": "about eight glasses, for four weeks.",
+     "start": 13.6,
+     "key": 2,
+     "end": 15.602
+    }
+   ],
+   "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added two liters a day, about eight glasses, for four weeks.",
+   "screen": [
+    "LINE 1 · 49 healthy women",
+    "+2 L a day · 4 weeks"
+   ]
+  },
+  {
+   "id": "b04",
+   "start": 16.052,
+   "end": 19.927,
+   "next": 20.377,
+   "sents": [
+    {
+     "s": 16.052,
+     "e": 17.73,
+     "c0": 0,
+     "c1": 29
+    },
+    {
+     "s": 17.87,
+     "e": 19.927,
+     "c0": 30,
+     "c1": 62
+    }
+   ],
+   "captions": [
+    {
+     "text": "Everyone got the extra water.",
+     "start": 16.052,
+     "key": 0,
+     "end": 17.87
+    },
+    {
+     "text": "Nobody was left as a comparison.",
+     "start": 17.87,
+     "key": 5,
+     "end": 19.927
+    }
+   ],
+   "vo": "Everyone got the extra water. Nobody was left as a comparison.",
+   "screen": [
+    "no comparison group"
+   ]
+  },
+  {
+   "id": "b05",
+   "start": 20.377,
+   "end": 24.726,
+   "next": 25.176,
+   "sents": [
+    {
+     "s": 20.377,
+     "e": 21.562,
+     "c0": 0,
+     "c1": 17
+    },
+    {
+     "s": 21.702,
+     "e": 24.727,
+     "c0": 18,
+     "c1": 71
+    }
+   ],
+   "captions": [
+    {
+     "text": "Food counted too.",
+     "start": 20.377,
+     "key": 0,
+     "end": 21.702
+    },
+    {
+     "text": "Over half their water came from food,",
+     "start": 21.702,
+     "key": 6,
+     "end": 23.871
+    },
+    {
+     "text": "soup and juice.",
+     "start": 23.871,
+     "key": 2,
+     "end": 24.726
+    }
+   ],
+   "vo": "Food counted too. Over half their water came from food, soup and juice.",
+   "screen": [
+    "over half of their water: food, soup, juice"
+   ]
+  },
+  {
+   "id": "b06",
+   "start": 25.176,
+   "end": 29.134,
+   "next": 29.584,
+   "sents": [
+    {
+     "s": 25.176,
+     "e": 27.225,
+     "c0": 0,
+     "c1": 37
+    },
+    {
+     "s": 27.365,
+     "e": 29.134,
+     "c0": 38,
+     "c1": 67
+    }
+   ],
+   "captions": [
+    {
+     "text": "A probe then measured skin hydration.",
+     "start": 25.176,
+     "key": 1,
+     "end": 27.365
+    },
+    {
+     "text": "Forehead, forearm, hand, leg.",
+     "start": 27.365,
+     "key": 0,
+     "end": 29.134
+    }
+   ],
+   "vo": "A probe then measured skin hydration. Forehead, forearm, hand, leg.",
+   "screen": [
+    "skin hydration probe",
+    "face · arm · hand · leg"
+   ]
+  },
+  {
+   "id": "b07",
+   "start": 29.584,
+   "end": 34.935,
+   "next": 35.385,
+   "sents": [
+    {
+     "s": 29.584,
+     "e": 34.934,
+     "c0": 0,
+     "c1": 98
+    }
+   ],
+   "captions": [
+    {
+     "text": "In the thirty-eight who",
+     "start": 29.584,
+     "key": 2,
+     "end": 30.894
+    },
+    {
+     "text": "took in less water overall,",
+     "start": 30.894,
+     "key": 4,
+     "end": 32.423
+    },
+    {
+     "text": "the forehead reading",
+     "start": 32.423,
+     "key": 1,
+     "end": 33.569
+    },
+    {
+     "text": "rose about forty percent.",
+     "start": 33.569,
+     "key": 2,
+     "end": 34.935
+    }
+   ],
+   "vo": "In the thirty-eight who took in less water overall, the forehead reading rose about forty percent.",
+   "screen": [
+    "38 lighter drinkers",
+    "forehead hydration reading: +40%"
+   ]
+  },
+  {
+   "id": "b08",
+   "start": 35.385,
+   "end": 38.79,
+   "next": 39.24,
+   "sents": [
+    {
+     "s": 35.385,
+     "e": 38.79,
+     "c0": 0,
+     "c1": 63
+    }
+   ],
+   "captions": [
+    {
+     "text": "In the eleven who already drank a lot,",
+     "start": 35.385,
+     "key": 2,
+     "end": 37.493
+    },
+    {
+     "text": "the change wasn't clear.",
+     "start": 37.493,
+     "key": 1,
+     "end": 38.79
+    }
+   ],
+   "vo": "In the eleven who already drank a lot, the change wasn't clear.",
+   "screen": [
+    "11 heavy drinkers",
+    "change not clear"
+   ]
+  },
+  {
+   "id": "b09",
+   "start": 39.24,
+   "end": 42.761,
+   "next": 43.211,
+   "sents": [
+    {
+     "s": 39.24,
+     "e": 42.761,
+     "c0": 0,
+     "c1": 61
+    }
+   ],
+   "captions": [
+    {
+     "text": "Skin's barrier, how fast water escapes,",
+     "start": 39.24,
+     "key": 1,
+     "end": 41.549
+    },
+    {
+     "text": "didn't really change.",
+     "start": 41.549,
+     "key": 0,
+     "end": 42.761
+    }
+   ],
+   "vo": "Skin's barrier, how fast water escapes, didn't really change.",
+   "screen": [
+    "water loss through skin: no relevant change"
+   ]
+  },
+  {
+   "id": "b10",
+   "start": 43.211,
+   "end": 45.746,
+   "next": 46.196,
+   "sents": [
+    {
+     "s": 43.211,
+     "e": 44.244,
+     "c0": 0,
+     "c1": 18
+    },
+    {
+     "s": 44.384,
+     "e": 45.747,
+     "c0": 19,
+     "c1": 44
+    }
+   ],
+   "captions": [
+    {
+     "text": "Sounds like a win.",
+     "start": 43.211,
+     "key": 0,
+     "end": 44.384
+    },
+    {
+     "text": "But it's one small study.",
+     "start": 44.384,
+     "key": 3,
+     "end": 45.746
+    }
+   ],
+   "vo": "Sounds like a win. But it's one small study.",
+   "screen": [
+    "one small study"
+   ]
+  },
+  {
+   "id": "b11",
+   "start": 46.196,
+   "end": 50.394,
+   "next": 50.844,
+   "sents": [
+    {
+     "s": 46.196,
+     "e": 50.394,
+     "c0": 0,
+     "c1": 63
+    }
+   ],
+   "captions": [
+    {
+     "text": "A 2018 review of five studies like",
+     "start": 46.196,
+     "key": 5,
+     "end": 48.528
+    },
+    {
+     "text": "it called the evidence weak.",
+     "start": 48.528,
+     "key": 4,
+     "end": 50.394
+    }
+   ],
+   "vo": "A 2018 review of five studies like it called the evidence weak.",
+   "screen": [
+    "2018 review · 5 studies",
+    "evidence: weak"
+   ]
+  },
+  {
+   "id": "b12",
+   "start": 50.844,
+   "end": 53.675,
+   "next": 54.125,
+   "sents": [
+    {
+     "s": 50.844,
+     "e": 53.675,
+     "c0": 0,
+     "c1": 65
+    }
+   ],
+   "captions": [
+    {
+     "text": "And it's unclear whether you'd",
+     "start": 50.844,
+     "key": 2,
+     "end": 52.194
+    },
+    {
+     "text": "notice the difference in a mirror.",
+     "start": 52.194,
+     "key": 5,
+     "end": 53.675
+    }
+   ],
+   "vo": "And it's unclear whether you'd notice the difference in a mirror.",
+   "screen": [
+    "noticeable? unclear"
+   ]
+  },
+  {
+   "id": "b13",
+   "start": 54.125,
+   "end": 55.748,
+   "next": 56.998,
+   "sents": [
+    {
+     "s": 54.125,
+     "e": 55.748,
+     "c0": 0,
+     "c1": 23
+    }
+   ],
+   "captions": [
+    {
+     "text": "Receipt total: unknown.",
+     "start": 54.125,
+     "key": 2,
+     "end": 55.748
+    }
+   ],
+   "vo": "Receipt total: unknown.",
+   "screen": [
+    "RECEIPT TOTAL",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "id": "b14",
+   "start": 56.998,
+   "end": 62.744,
+   "next": 63.194,
+   "sents": [
+    {
+     "s": 56.998,
+     "e": 61.032,
+     "c0": 0,
+     "c1": 70
+    },
+    {
+     "s": 61.172,
+     "e": 61.809,
+     "c0": 71,
+     "c1": 78
+    },
+    {
+     "s": 62.049,
+     "e": 62.744,
+     "c0": 79,
+     "c1": 87
+    }
+   ],
+   "captions": [
+    {
+     "text": "Water might nudge skin hydration readings,",
+     "start": 56.998,
+     "key": 4,
+     "end": 59.476
+    },
+    {
+     "text": "mostly if you drink little.",
+     "start": 59.476,
+     "key": 0,
+     "end": 61.172
+    },
+    {
+     "text": "Proven?",
+     "start": 61.172,
+     "key": 0,
+     "end": 62.049
+    },
+    {
+     "text": "Not yet.",
+     "start": 62.049,
+     "key": 0,
+     "end": 62.744
+    }
+   ],
+   "vo": "Water might nudge skin hydration readings, mostly if you drink little. Proven? Not yet.",
+   "screen": [
+    "might help · mostly if you drink little",
+    "proven? not yet"
+   ]
+  },
+  {
+   "id": "b15",
+   "start": 63.194,
+   "end": 66.81,
+   "next": 70.31,
+   "sents": [
+    {
+     "s": 63.194,
+     "e": 66.811,
+     "c0": 0,
+     "c1": 56
+    }
+   ],
+   "captions": [
+    {
+     "text": "If your skin stays dry,",
+     "start": 63.194,
+     "key": 3,
+     "end": 64.744
+    },
+    {
+     "text": "a dermatologist can check yours.",
+     "start": 64.744,
+     "key": 1,
+     "end": 66.81
+    }
+   ],
+   "vo": "If your skin stays dry, a dermatologist can check yours.",
+   "screen": [
+    "Education, not medical advice."
+   ]
+  }
+ ]
+}
