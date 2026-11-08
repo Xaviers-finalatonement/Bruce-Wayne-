@@ -73,7 +73,7 @@ function serve() {
     const todo = chunks.filter(c => !fs.existsSync(c.file));
     console.log(`${chunks.length} chunks, ${chunks.length - todo.length} already done, ${WORKERS} workers`);
     const t0 = Date.now(); let doneFrames = 0;
-    const encodeArgs = ["-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "17", "-maxrate", "10M", "-bufsize", "20M", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
+    const encodeArgs = ["-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "17", "-maxrate", "9M", "-bufsize", "9M", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
       "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"];
     async function worker(pg) {
       for (let c; (c = todo.shift());) {

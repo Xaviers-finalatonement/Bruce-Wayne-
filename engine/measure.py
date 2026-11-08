@@ -7,7 +7,8 @@ def run(cmd): return subprocess.run(cmd, capture_output=True, text=True)
 
 def main(ep):
     out = os.path.join(ep, "out")
-    mp4 = (sorted(glob.glob(os.path.join(out, "wip", "ep*.mp4"))) or sorted(glob.glob(os.path.join(out, "ep*.mp4"))))[0]
+    cands = [f for f in glob.glob(os.path.join(out, "wip", "ep*.mp4")) if re.fullmatch(r"ep\d+\.mp4", os.path.basename(f))] or glob.glob(os.path.join(out, "ep*.mp4"))
+    mp4 = max(cands, key=os.path.getmtime)  # the newest real render, never a side copy like ep01-master.mp4
     tl = json.load(open(os.path.join(out, "timeline.json")))
     pr = json.loads(run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", mp4]).stdout)
     v = next(s for s in pr["streams"] if s["codec_type"] == "video"); a = next(s for s in pr["streams"] if s["codec_type"] == "audio")
