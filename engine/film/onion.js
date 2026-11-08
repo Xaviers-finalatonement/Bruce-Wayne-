@@ -11,7 +11,7 @@ const cv = (w, h = w) => { const c = document.createElement("canvas"); c.width =
 const tx = (c, srgb = true) => { const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; };
 
 // ---------------- onion ----------------
-export const OL = 1.35, OR = 1.0, OH = .92; // half length, radius, depth of the half
+export const OL = 1.35, OR = 1.0, OH = 1.08; // half length, radius, depth of the half
 export const prof = s => Math.pow(Math.max(0, 1 - s * s), .58) * (1 - .22 * Math.max(0, s)); // radius factor along the axis s in [-1,1]
 
 function skinTex() {
@@ -31,9 +31,9 @@ function cutCanvas() {
     let r, g, b;
     if (rho > .945) { const k = clamp((rho - .945) / .055); r = 190 - 40 * k; g = 128 - 30 * k; b = 54 - 14 * k; }
     else {
-      const alt = (li % 2) ? 1 : 0; r = 236 + 6 * alt; g = 238 + 3 * alt; b = 198 + 10 * alt; // translucent cream with a green-white cast
+      const alt = (li % 2) ? 1 : 0; r = 232 - 18 * alt; g = 236 - 10 * alt; b = 196 - 6 * alt; // translucent cream with a green-white cast
       const line = Math.exp(-Math.pow((fr - .03) / .05, 2)), hi_ = Math.exp(-Math.pow((fr - .16) / .07, 2)), edgeL = smooth((fr - .75) / .25) * .25;
-      r = r - 46 * line + 12 * hi_ - 10 * edgeL; g = g - 52 * line + 10 * hi_ - 7 * edgeL; b = b - 92 * line + 10 * hi_ - 20 * edgeL;
+      r = r - 86 * line + 12 * hi_ - 26 * edgeL; g = g - 80 * line + 8 * hi_ - 24 * edgeL; b = b - 150 * line + 6 * hi_ - 48 * edgeL;
       r += fib * 10; g += fib * 9; b += fib * 12;
       if (rho < .1) { const k = 1 - rho / .1; r = r - 14 * k; g = g - 10 * k; b = b - 26 * k; }
     }
@@ -57,7 +57,7 @@ export function mkOnion(cutUp, seed = 1) {
   for (let i = 0; i <= 64; i++) { const s = -1 + 2 * i / 64, r = prof(s); for (let j = 0; j <= NU; j++) { const u = -1 + 2 * j / NU; cp.push(s * OL, .012 * (1 - u * u) * (1 - s * s), u * OR * r); cu.push((s + 1) / 2, 1 - (u + 1) / 2); } }
   for (let i = 0; i < 64; i++) for (let j = 0; j < NU; j++) { const a = i * (NU + 1) + j, b = a + NU + 1; ci.push(a, a + 1, b, b, a + 1, b + 1); }
   const cg = new THREE.BufferGeometry(); cg.setAttribute("position", new THREE.Float32BufferAttribute(cp, 3)); cg.setAttribute("uv", new THREE.Float32BufferAttribute(cu, 2)); cg.setIndex(ci); cg.computeVertexNormals();
-  const cut = new THREE.Mesh(cg, new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 1.2, roughness: .3, clearcoat: .75, clearcoatRoughness: .18, emissive: "#E8E3B8", emissiveMap: ct, emissiveIntensity: .1, side: THREE.DoubleSide, envMapIntensity: 1.1 }));
+  const cut = new THREE.Mesh(cg, new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 1.2, roughness: .3, clearcoat: .75, clearcoatRoughness: .18, emissive: "#E8E3B8", emissiveMap: ct, emissiveIntensity: .03, side: THREE.DoubleSide, envMapIntensity: .8 }));
   inn.add(body, cut);
   // dry neck (papery, striped) at +s, root disc + whiskers at -s
   const neck = new THREE.Mesh(new THREE.ConeGeometry(.1, .34, 10, 1, true), new THREE.MeshStandardMaterial({ map: st, color: "#E0B168", roughness: .6, side: THREE.DoubleSide })); neck.rotation.z = -PI / 2 + .05; neck.position.set(OL + .12, -.02, 0); inn.add(neck);
@@ -85,8 +85,8 @@ export function bladeGeos({ L = 2.6, H = 1.5, t = .07, tE = .004, bev = .2, tip 
 }
 export function mkBlade(o = {}, blunt = false) {
   const { flat, bevel, bs } = bladeGeos(o), g = new THREE.Group();
-  const mf = new THREE.MeshStandardMaterial({ color: "#C9CED4", metalness: 1, roughness: .34, roughnessMap: bs, bumpMap: bs, bumpScale: .3, envMapIntensity: 1.7, side: THREE.DoubleSide });
-  const mb = new THREE.MeshStandardMaterial({ color: blunt ? "#8E949B" : "#F4F6F8", metalness: 1, roughness: blunt ? .42 : .13, envMapIntensity: blunt ? 1.2 : 2.6, side: THREE.DoubleSide });
+  const mf = new THREE.MeshStandardMaterial({ color: "#D6DADF", metalness: .95, roughness: .3, roughnessMap: bs, bumpMap: bs, bumpScale: .15, envMapIntensity: 3.4, side: THREE.DoubleSide });
+  const mb = new THREE.MeshStandardMaterial({ color: blunt ? "#8E949B" : "#F4F6F8", metalness: 1, roughness: blunt ? .42 : .13, envMapIntensity: blunt ? 2.2 : 4.2, side: THREE.DoubleSide });
   const a = new THREE.Mesh(flat, mf), b = new THREE.Mesh(bevel, mb); a.castShadow = b.castShadow = true; g.add(a, b); g.userData = { L: o.L || 2.6, H: o.H || 1.5 }; return g;
 }
 export function mkChef(sharp = true) { // chef's knife: blade along +x (edge down, y), handle toward -x
@@ -98,7 +98,7 @@ export function mkChef(sharp = true) { // chef's knife: blade along +x (edge dow
 }
 // guillotine rig: base plate, two posts behind the onion (x = -2.2), a carriage that holds the blade. carr.position.y = blade edge height.
 export function mkRig({ blunt = false, base = true, L = 2.7 } = {}) {
-  const g = new THREE.Group(), steel = new THREE.MeshStandardMaterial({ color: "#B9BEC4", metalness: 1, roughness: .36, roughnessMap: brushTex(), envMapIntensity: 1.5 }), anod = new THREE.MeshStandardMaterial({ color: "#33373C", metalness: .6, roughness: .45 });
+  const g = new THREE.Group(), steel = new THREE.MeshStandardMaterial({ color: "#C4C9CF", metalness: .95, roughness: .34, roughnessMap: brushTex(), envMapIntensity: 3.2 }), anod = new THREE.MeshStandardMaterial({ color: "#4A4F55", metalness: .6, roughness: .42, envMapIntensity: 2 });
   const add = (m, par = g) => { m.castShadow = m.receiveShadow = true; par.add(m); return m; };
   if (base) { const bp = add(new THREE.Mesh(roundBox(5.4, .14, 4.8, .035, 3), steel)); bp.position.set(-.8, .07, 0); }
   [-1, 1].forEach(s => { const p = add(new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 8.6, 16), steel)); p.position.set(-2.2, 4.4, s * (L / 2 + .3)); const f = add(new THREE.Mesh(new THREE.CylinderGeometry(.2, .22, .1, 20), anod)); f.position.set(-2.2, .17, s * (L / 2 + .3)); });
@@ -116,21 +116,21 @@ export function glintTex() { const c = cv(64), x = c.getContext("2d"), g = x.cre
   x.fillStyle = "rgba(255,248,225,.5)"; x.fillRect(4, 31, 56, 2); x.fillRect(31, 4, 2, 56);
   return tx(c); }
 export function makeSpray(cap, noDepth, camera) {
-  const geo = new THREE.SphereGeometry(1, 7, 5), mat = new THREE.MeshPhysicalMaterial({ color: "#F6EBC6", roughness: .03, metalness: 0, transparent: true, opacity: .66, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 5, ior: 1.34, emissive: "#FFE2A0", emissiveIntensity: .1 });
+  const geo = new THREE.SphereGeometry(1, 7, 5), mat = new THREE.MeshPhysicalMaterial({ color: "#F3F0E2", roughness: .03, metalness: 0, transparent: true, opacity: .42, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 5, ior: 1.34, emissive: "#FFE9B8", emissiveIntensity: .05 });
   const im = new THREE.InstancedMesh(geo, mat, cap); im.frustumCulled = false; im.count = 0;
   const gq = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: glintTex(), color: "#FFF3D2", transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), cap); gq.frustumCulled = false; gq.count = 0; noDepth.push(gq);
   const g = new THREE.Group(); g.add(im, gq); const D = [], M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), Z = new THREE.Matrix4().makeScale(0, 0, 0);
   const sp = { g, D, im, gq, bursts: [] };
   sp.burst = o => { // o: t0 n org(i,r)->[x,y,z] vel(i,r)->[x,y,z] s0 s1 pow dt k g life seed gy
     const r0 = o.seed || 1; for (let i = 0; i < o.n && D.length < cap; i++) { const r = k => hash(r0 * 131.7 + i * 7.13 + k * 3.71), org = o.org(i, r), v = o.vel(i, r);
-      D.push({ t0: o.t0 + (o.dt == null ? .06 : o.dt) * r(5), p: org, v, s: o.s0 + (o.s1 - o.s0) * Math.pow(r(9), o.pow || 2.2), k: o.k || .25, g: o.g == null ? 2.4 : o.g, life: o.life || 2.6, tw: r(11) * 6.28, gl: r(13) > .3 ? 1 : 0, gy: o.gy == null ? -1e9 : o.gy, f: 2.5 + 5 * r(15) }); } };
+      D.push({ t0: o.t0 + (o.dt == null ? .06 : o.dt) * r(5), p: org, v, s: o.s0 + (o.s1 - o.s0) * Math.pow(r(9), o.pow || 2.2), k: o.k || .25, g: o.g == null ? 2.4 : o.g, life: o.life || 2.6, tw: r(11) * 6.28, gl: r(13) > .55 ? 1 : 0, gy: o.gy == null ? -1e9 : o.gy, f: 2.5 + 5 * r(15) }); } };
   sp.pos = (d, tau, out) => { const k = d.k, e = (1 - Math.exp(-k * tau)) / k; return out.set(d.p[0] + d.v[0] * e, d.p[1] + d.v[1] * e - .5 * d.g * tau * tau, d.p[2] + d.v[2] * e); };
   sp.update = t => {
     let end = 0; const cq = camera.quaternion;
     for (let i = 0; i < D.length; i++) { const d = D[i], tau = t - d.t0; if (tau < 0 || tau > d.life) { im.setMatrixAt(i, Z); gq.setMatrixAt(i, Z); continue; }
       sp.pos(d, tau, P); let sc = d.s * smooth(tau / .05) * (1 - smooth((tau - d.life + .3) / .3)); if (P.y < d.gy) { sc *= clamp(1 - (d.gy - P.y) / .12); P.y = Math.max(P.y, d.gy - .06); }
       end = i + 1; S.set(sc, sc, sc); M.compose(P, Q.identity(), S); im.setMatrixAt(i, M);
-      const tw = d.gl ? Math.pow(Math.max(0, Math.sin(tau * d.f + d.tw)), 10) : 0, gs = sc * (2.2 + 11 * tw); S.set(gs, gs, gs); M.compose(P, cq, S); gq.setMatrixAt(i, tw > .02 ? M : Z); }
+      const tw = d.gl ? Math.pow(Math.max(0, Math.sin(tau * d.f + d.tw)), 22) : 0, gs = sc * (1.6 + 6.5 * tw); S.set(gs, gs, gs); M.compose(P, cq, S); gq.setMatrixAt(i, tw > .02 ? M : Z); }
     im.count = gq.count = end; im.instanceMatrix.needsUpdate = gq.instanceMatrix.needsUpdate = true; };
   return sp;
 }

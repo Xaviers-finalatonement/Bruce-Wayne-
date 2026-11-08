@@ -200,6 +200,14 @@ def pt_hiss(c):
     return bandnoise(n, 4000, 12000) * pt_env(n, dur * 0.3, dur * 0.7) * db(-33)
 
 
+def pt_spray(c):  # droplet spray: bright fine hiss with a fast attack and a scatter of tiny ticks
+    dur = c.get("dur", 1.4); n = int(dur * SR); x = bandnoise(n, 5000, 13000) * env_exp(n, dur * 0.35) * db(-27)
+    rng = np.random.default_rng(7)
+    for _ in range(int(dur * 22)):
+        i = int(rng.random() ** 1.6 * n * 0.9); m = min(n - i, int(0.004 * SR)); x[i:i + m] += (rng.random(m) - 0.5) * db(-30) * (1 - np.arange(m) / max(m, 1))
+    return x
+
+
 def pt_clink(c):  # glass / metal ping
     n = int(0.6 * SR); t = np.arange(n) / SR; g = c.get("gain", 1.0)
     return sum(np.sin(2 * np.pi * f * t) * a for f, a in [(1760, 1), (2637, .5), (3951, .25)]) * env_exp(n, 0.12) * db(-33) * g
@@ -334,7 +342,7 @@ def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s),
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
-                       custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
+                       custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, spray=pt_spray, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
     "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.93, custom=dict(rub=sr_rub, wet=sr_wet)),
 }
 
