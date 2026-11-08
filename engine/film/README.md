@@ -9,6 +9,7 @@ An episode only writes `scene.js` (shots + camera paths), `overlay.js` (labels),
 | `post.js` | `createPost({canvas, theme})`: WebGL renderer, MSAA half-float target, DOF (`bokeh`), `bloom`, ACES `OutputPass`, `filmPass` (chroma, halation, vignette, seeded grain) |
 | `camera.js` | `evalPath(keys, t)` / `applyCamera(camera, bokeh, keys, t)`: eased keyframes in real focal lengths (36 mm sensor height), motivated rack focus (`fp`), tiny drift; `shakeAt(shakes, t)` for impact-only shake |
 | `props.js` | `createProps(renderer)`: PMREM studio env, scratch/noise/glow textures, PBR helpers (`mat`, `emis`, `addMat`), `makeClock` (bezel, scratched face, glass, hands), `makeFigure` (extruded rim-lit silhouette), `makeEarth` (procedural + atmosphere), `lightCone`, `dustField`, `glowSprite` |
+| `terry.js` | `loopArchGeo` (closed 2-ply terry loop arch, both feet below the ground plane, baked contact AO), `fibreGeo` (fuzz / vellus fibre), `archPoint` |
 | `type.js` | `createType(canvas, theme)`: Anton/Barlow 2D overlay helpers (`txt`, `tag`, `slam`, `ring`, `tabText`), `hookHeadline`, `stampCard` (case-file verdict stamp), DOM `captions` driven by `timeline.json` + `theme.caption` |
 
 Page contract: `window.__ready`, `window.__seek(t)` (pure function of t), `window.__cues`, `window.__duration`. Preview: `node engine/render.js <ep> --frames 1,2 [--q nobokeh&nobloom]`. Sound palette per channel: `"sound"` key in `script.json` (see `PALETTES` in `engine/sound.py`).

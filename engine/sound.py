@@ -307,7 +307,8 @@ def sr_wet(c):  # soft wet texture: band-limited noise with a few tiny bubbles
 
 def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s), sparse quiet droplets 3-6 s apart
     n = len(sfx); t = np.arange(n) / SR
-    fade = np.minimum(1, t / 2.0) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 1.2)
+    fade = np.minimum(1, np.maximum(0, t - 1.0) / 2.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 2.4)  # round-4: bed drops out under the hook's first second and breathes out at the end card
+    fade *= 0.45 + 0.55 * (0.5 + 0.5 * np.sin(2 * np.pi * t / 17.0 - 1.2)) ** 1.5  # slow swell: wider loudness range
     bar = 4 * 60 / 80.0; seg = 8 * bar
     chords = [[130.8, 261.6, 329.6, 392.0, 493.9], [110.0, 220.0, 329.6, 392.0, 523.3], [87.3, 261.6, 349.2, 440.0, 523.3], [98.0, 246.9, 293.7, 392.0, 587.3]]
     pad = np.zeros(n)

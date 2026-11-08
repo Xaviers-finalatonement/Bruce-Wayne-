@@ -3,6 +3,7 @@
 // paper-craft houses / calendar / bars, stylised skin. Type (thermal receipt, stamps, captions) is the 2D overlay in overlay.js.
 import * as THREE from "three";
 import { createPost } from "../../../engine/film/post.js";
+import { loopArchGeo, fibreGeo, archPoint } from "../../../engine/film/terry.js";
 import { clamp, smooth, eio, eo3, eob, lerp, hash, makeTiming } from "./timing.js";
 import { createOverlay } from "./overlay.js";
 
@@ -29,7 +30,7 @@ const col = h => new THREE.Color(h);
   const top = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 2.2, 2.2) })); top.position.set(0, 5.8, 0); top.rotation.x = Math.PI / 2; es.add(top);
   scene.environment = pm.fromScene(es, .03).texture; scene.environmentIntensity = .5; }
 const key = new THREE.DirectionalLight(0xffe6c8, 2.8); key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.bias = -.0004; key.shadow.normalBias = .0015; key.shadow.radius = 4;
-scene.add(key, key.target, new THREE.HemisphereLight(0xe4eeff, 0xf6efe4, .45));
+const hemi = new THREE.HemisphereLight(0xe4eeff, 0xf6efe4, .45); scene.add(key, key.target, hemi);
 const fill = new THREE.DirectionalLight(0xcfe0ff, .6); fill.position.set(3, 1, 4); scene.add(fill);
 const shadowMat = new THREE.ShadowMaterial({ color: col(C.navy), opacity: .16 });
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), shadowMat); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
@@ -85,7 +86,7 @@ function skinTexes(hex, rep, o = {}) { // pores, jittered relief furrows, tone b
   return [canvasTex(1024, (g, n) => draw(g, n, false), rep), canvasTex(1024, (g, n) => draw(g, n, true), rep, false)];
 }
 const skinU = { uPress: { value: V3(9, 9, 9) }, uDepth: { value: 0 }, uAO: { value: 0 } };
-const skinMat = (hex, rep, o = {}) => { const [m, b] = skinTexes(hex, rep, o); const mt = new THREE.MeshPhysicalMaterial({ map: m, bumpMap: b, bumpScale: 2.0 * (o.relief == null ? 1 : Math.max(.5, o.relief)), roughness: o.rough || .5, sheen: .7, sheenRoughness: .4, sheenColor: col("#ffe9dc"), clearcoat: .22, clearcoatRoughness: .38, emissive: col(hex).multiplyScalar(.035), emissiveMap: m });
+const skinMat = (hex, rep, o = {}) => { const [m, b] = o.tex || skinTexes(hex, rep, o); const mt = new THREE.MeshPhysicalMaterial({ vertexColors: !!o.vc, map: m, bumpMap: b, bumpScale: 2.0 * (o.relief == null ? 1 : Math.max(.5, o.relief)), roughness: o.rough || .5, sheen: .7, sheenRoughness: .4, sheenColor: col("#ffe9dc"), clearcoat: o.cc == null ? .22 : o.cc, clearcoatRoughness: .38, emissive: col(hex).multiplyScalar(.035), emissiveMap: m });
   const sss = col(hex).lerp(col("#c4432f"), .5);
   mt.onBeforeCompile = sh => { Object.assign(sh.uniforms, { uSss: { value: sss }, uPress: skinU.uPress, uDepth: skinU.uDepth, uAO: skinU.uAO });
     sh.vertexShader = "uniform vec3 uPress; uniform float uDepth; varying vec3 vObj;\n" + sh.vertexShader.replace("#include <begin_vertex>", "vObj = position; vec3 dd0 = position - uPress; vec3 transformed = position - normal * uDepth * exp(-dot(dd0, dd0) / 0.0030);");
@@ -115,68 +116,75 @@ const gRail = new THREE.Group(); gA.add(gRail);
   [-.92, .92].forEach(x => { const b = mesh(new THREE.CylinderGeometry(.016, .016, .05, 16), std("#c9ced8", { roughness: .4, metalness: .5 }), gRail); b.rotation.x = Math.PI / 2; b.position.set(x, RAILY, -.02); const p = mesh(new THREE.BoxGeometry(.04, .07, .012), std("#c9ced8", { roughness: .4, metalness: .5 }), gRail); p.position.set(x, RAILY, -.05); });
   [-.2, .2].forEach(x => { const k = mesh(new THREE.SphereGeometry(.02, 20, 14), std("#aeb6c6", { roughness: .45, metalness: .3 }), gRail); k.position.set(x, RAILY + .03, -.05); k.userData.hook = 1;
     const st = mesh(new THREE.CylinderGeometry(.006, .006, .06, 10), std("#aeb6c6", { roughness: .45, metalness: .3 }), gRail); st.rotation.x = Math.PI / 2; st.position.set(x, RAILY + .03, -.02); }); }
-function panelSurf(u, v) { const f = clamp(v / PHT), z = ZF + .018 * Math.sin(u * 11 + 1.3 + f * 2) * Math.pow(f, 1.4) + .006 * Math.sin(u * 5.1 - .7) * f + .024 * Math.sin(Math.PI * Math.pow(f, .8)) * (.5 + .5 * Math.cos(u * 9 + .6)) + .007 * Math.sin(u * 17 + v * 5.5) * smooth(f * 3) * (.4 + f) + .0025 * Math.sin(u * 24 + v * 8) * smooth(f * 4); return V3(u + .012 * f * Math.sin(v * 6 + 1), -v, z); }
+// hanging cloth: flared hem, soft roll at the rail, lateral waviness, scalloped hem edge; the front layer is longer than the back one
+function panelSurf(u, v) { const f = clamp(v / PHT), fl = 1 + .075 * f * f, roll = .0055 * smooth(clamp(1 - v / .045)), z = ZF + roll + .018 * Math.sin(u * 11 + 1.3 + f * 2) * Math.pow(f, 1.4) + .006 * Math.sin(u * 5.1 - .7) * f + .024 * Math.sin(Math.PI * Math.pow(f, .8)) * (.5 + .5 * Math.cos(u * 9 + .6)) + .007 * Math.sin(u * 17 + v * 5.5) * smooth(f * 3) * (.4 + f) + .0025 * Math.sin(u * 24 + v * 8) * smooth(f * 4) + .006 * f * f * Math.sin(u * 7.3 + f * 3); return V3(u * fl + .012 * f * Math.sin(v * 6 + 1) + .008 * f * Math.sin(v * 3.1 + u * 8), -v - .007 * Math.pow(f, 3) * Math.sin(u * 16 + .5), z); }
 function panelFrame(u, v) { const e = .004, p = panelSurf(u, v), du = panelSurf(u + e, v).sub(panelSurf(u - e, v)), dv = panelSurf(u, v + e).sub(panelSurf(u, v - e)); const ex = du.normalize(), n = ex.clone().cross(dv.normalize()).negate().normalize(); /* n points to +z */ if (n.z < 0) n.negate(); const ey = n.clone().cross(ex).normalize(); return { p, ex, ey, n }; }
-function loopGeo(plies, segs, radial, rp, rt, hw, hh) {
-  const pos = [], nor = [], idx = [], cl = [];
-  for (let p = 0; p < plies; p++) { const base = pos.length / 3;
-    for (let s = 0; s <= segs; s++) { const th = Math.PI * s / segs, c = V3(-hw * Math.cos(th), 0, hh * Math.sin(th) - .0004), Tg = V3(hw * Math.sin(th), 0, hh * Math.cos(th)).normalize(), N = V3(0, 1, 0), B = Tg.clone().cross(N);
-      const ph = p * 2 * Math.PI / plies + th * 2.2, C0 = plies > 1 ? c.clone().addScaledVector(N, rp * Math.cos(ph)).addScaledVector(B, rp * Math.sin(ph)) : c;
-      for (let a = 0; a < radial; a++) { const aa = a / radial * 6.2832, d = N.clone().multiplyScalar(Math.cos(aa)).addScaledVector(B, Math.sin(aa)); pos.push(C0.x + rt * d.x, C0.y + rt * d.y, C0.z + rt * d.z); nor.push(d.x, d.y, d.z); const ao = .72 + .28 * Math.min(1, Math.max(0, (C0.z + rt * d.z) / hh)); cl.push(ao, ao * .985, ao * .96); } }
-    for (let s = 0; s < segs; s++) for (let a = 0; a < radial; a++) { const i0 = base + s * radial + a, i1 = base + s * radial + (a + 1) % radial, i2 = i0 + radial, i3 = i1 + radial; idx.push(i0, i2, i1, i1, i2, i3); } }
-  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3)); g.setAttribute("color", new THREE.Float32BufferAttribute(cl, 3)); g.setIndex(idx); return g;
-}
-const geoHi = loopGeo(2, 12, 5, .00026, .00034, .0026, .0036), geoLo = loopGeo(1, 6, 4, 0, .00105, .0027, .0036);
+// terry loops: closed arches of 2-ply yarn, both feet planted in the ground cloth (engine/film/terry.js). hi = macro (touching, ~3x density, fuzz halo), mid = 1-ply stand-in for the pull-back, lo = coarse pile for wide shots
+const geoHi = loopArchGeo({ plies: 2, segs: 16, radial: 5 }), geoMid = loopArchGeo({ plies: 1, segs: 7, radial: 4, rt: .00062, aoMin: .62 }), geoLo = loopArchGeo({ plies: 1, segs: 8, radial: 4, rt: .00105, hw: .0027, hh: .0036, depth: .0004, aoMin: .72 });
+const fibG = fibreGeo(.0013, .00006, .6, 3, 3), FZ = 4, PATCH = { u: .01, v: .2, w: .075, h: .1 };
 function buildTowel(x, o) {
   const g = new THREE.Group(); g.position.set(x, RAILY, 0); gA.add(g);
-  const [tm, tb] = o.weave ? weave([5, 8.5]) : terry([6, 8]); const LS = o.ls; const fab = new THREE.MeshStandardMaterial({ map: tm, bumpMap: tb, bumpScale: o.weave ? 4 : 2.2, roughness: .95, color: 0xffffff });
-  const fm = new THREE.PlaneGeometry(PWD, PHT, 20, 28); { const p = fm.attributes.position; for (let i = 0; i < p.count; i++) { const u = p.getX(i), v = (.5 - p.getY(i) / PHT) * PHT * 1 + 0; const vv = -p.getY(i) + PHT / 2; const q = panelSurf(u, vv); p.setXYZ(i, q.x, q.y, q.z); } fm.computeVertexNormals(); }
+  const [tm, tb] = o.weave ? weave([14, 24]) : terry([6, 8]); const fab = new THREE.MeshStandardMaterial({ map: tm, bumpMap: tb, bumpScale: o.weave ? 1.5 : 2.2, roughness: 1, color: 0xffffff });
+  const fm = new THREE.PlaneGeometry(PWD, PHT, 20, 28); { const p = fm.attributes.position; for (let i = 0; i < p.count; i++) { const u = p.getX(i), vv = -p.getY(i) + PHT / 2; const q = panelSurf(u, vv); p.setXYZ(i, q.x, q.y, q.z); } fm.computeVertexNormals(); }
   { const p = fm.attributes.position, cl = []; for (let i = 0; i < p.count; i++) { const vv = -p.getY(i) + PHT / 2, a = .66 + .34 * smooth(vv / .075); cl.push(a, a, a); } fm.setAttribute('color', new THREE.Float32BufferAttribute(cl, 3)); fab.vertexColors = true; }
   const front = mesh(fm, fab, g); front.userData.fab = fab;
-  const bm = new THREE.PlaneGeometry(PWD, PHT * .94, 4, 4); const white = gg => gg.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(gg.attributes.position.count * 3).fill(.8), 3)); white(bm); const back = mesh(bm, fab, g); back.rotation.y = Math.PI; back.position.set(0, -PHT * .47, -ZF);
-  const foldG = new THREE.CylinderGeometry(ZF * 1.15, ZF * 1.15, PWD, 28, 1, true); white(foldG); const fold = mesh(foldG, fab, g); fold.rotation.z = Math.PI / 2; fold.material.side = THREE.DoubleSide;
+  const BH = PHT * .86, bm = new THREE.PlaneGeometry(PWD * 1.02, BH, 6, 8); { const p = bm.attributes.position; for (let i = 0; i < p.count; i++) { const f = clamp((.5 - p.getY(i) / BH)); p.setX(i, p.getX(i) * (1 + .06 * f * f)); p.setZ(i, .006 * Math.sin(p.getX(i) * 13 + f * 4) * f); } bm.computeVertexNormals(); }
+  const white = gg => gg.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(gg.attributes.position.count * 3).fill(.8), 3)); white(bm); const back = mesh(bm, fab, g); back.rotation.y = Math.PI; back.position.set(0, -BH * .5, -ZF);
+  const foldG = new THREE.CylinderGeometry(ZF * 1.15, ZF * 1.15, PWD, 28, 1, true); white(foldG); const fold = mesh(foldG, fab, g); fold.rotation.z = Math.PI / 2; fold.material.side = THREE.DoubleSide; fold.scale.set(1, 1, 1.1);
   // woven border + slate hem band (no loops down here)
   const bandGeo = (v0, h) => { const gm = new THREE.PlaneGeometry(PWD, h, 24, 1), p = gm.attributes.position; for (let i = 0; i < p.count; i++) { const u = p.getX(i), v = v0 + p.getY(i), q = panelFrame(u, v); p.setXYZ(i, q.p.x + q.n.x * .0014, q.p.y + q.n.y * .0014, q.p.z + q.n.z * .0014); } gm.computeVertexNormals(); return gm; };
   const hem = mesh(bandGeo(PHT - .075, .022), std("#aab4c8", { roughness: .9, side: THREE.DoubleSide }), g, false), hem2 = mesh(bandGeo(PHT - .098, .006), std("#aab4c8", { roughness: .9, side: THREE.DoubleSide }), g, false);
-  // instanced loops in chunks (hi = 3-ply yarn for macro, lo = single tube for wide)
-  const cols = 8, rows = 12, nu = Math.floor((PWD - .014) / LS), nv = Math.floor((PHT - .1) / LS), chunks = [];
-  const cells = Array.from({ length: cols * rows }, () => []);
-  for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) { const u = -PWD / 2 + .007 + (i + .5 + (hash(i * 7.1 + j * 3.3 + x) - .5) * .5) * LS * (PWD - .014) / (nu * LS), v = .016 + (j + .5 + (hash(i * 2.3 + j * 9.7 + x) - .5) * .5) * LS;
-    const cu = Math.min(cols - 1, Math.floor((u + PWD / 2) / PWD * cols)), cv = Math.min(rows - 1, Math.floor(v / (PHT - .06) * rows)); cells[cv * cols + cu].push([u, v, i, j]); }
-  const mHi = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .9, vertexColors: true, sheen: 1, sheenRoughness: .55, sheenColor: col("#ffffff") }), mLo = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .9, vertexColors: true });
-  const M = new THREE.Matrix4(), cc = new THREE.Color();
-  cells.forEach((cl, ci) => { if (!cl.length) return; const mk = (geo, mat) => { const im = new THREE.InstancedMesh(geo, mat, cl.length); im.castShadow = false; im.receiveShadow = true; g.add(im); return im; };
-    const hi = o.hi ? mk(geoHi, mHi) : null, lo = mk(geoLo, mLo); const sumP = V3();
-    cl.forEach(([u, v, i, j], k) => { const q = panelFrame(u, v), th = o.weave ? (hash(i * 3.7 + j * 1.9 + x * 5) - .5) * .55 + (hash(j * 1.7 + x) - .5) * .5 : (hash(i * 3.7 + j * 1.9 + x * 5) - .5) * 2.4 + (hash(i + j * 7.7) < .3 ? 1.57 : 0), c = Math.cos(th), s = Math.sin(th);
-      const ex = q.ex.clone().multiplyScalar(c).addScaledVector(q.ey, s), ey0 = q.n.clone().cross(ex), lean = o.weave ? (hash(i * 6.7 + j * 2.9 + x) - .5) * .8 : (hash(i * 6.7 + j * 2.9 + x) - .35) * 1.5, up = q.n.clone().multiplyScalar(Math.cos(lean)).addScaledVector(ey0, Math.sin(lean)), ey = up.clone().cross(ex).normalize(), sw = (.95 + hash(i * 5.3 + j * 8.1) * .4) * (o.big || 1), sh = (.75 + hash(i * 1.1 + j * 6.3) * .45) * (o.big || 1);
-      M.makeBasis(ex.multiplyScalar(sw), ey, up.multiplyScalar(sh)); M.setPosition(q.p); sumP.add(q.p);
-      cc.setScalar((.93 + hash(i * 9.1 + j * 4.7) * .07) * (.7 + .3 * smooth(v / .07))).multiply(col(hash(i + j) < .5 ? "#fffdf8" : "#f7f8fa")); if (hi) { hi.setMatrixAt(k, M); hi.setColorAt(k, cc); } lo.setMatrixAt(k, M); lo.setColorAt(k, cc); });
-    [hi, lo].forEach(m => { if (m) { m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; m.computeBoundingSphere(); } });
-    chunks.push({ hi, lo, c: sumP.divideScalar(cl.length) }); });
-  return { g, fab, mHi, mLo, chunks, front, hem, hem2 };
+  const cols = 8, rows = 12, mkCells = () => Array.from({ length: cols * rows }, () => []);
+  const place = (ls, cells) => { const nu = Math.floor((PWD - .014) / ls), nv = Math.floor((PHT - .1) / ls), du = (PWD - .014) / nu;
+    for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) { const u = -PWD / 2 + .007 + (i + .5 + (hash(i * 7.1 + j * 3.3 + x) - .5) * .6) * du, v = .016 + (j + .5 + (hash(i * 2.3 + j * 9.7 + x) - .5) * .6) * ls;
+      const cu = Math.min(cols - 1, Math.floor((u + PWD / 2) / PWD * cols)), cv = Math.min(rows - 1, Math.floor(v / (PHT - .06) * rows)); cells[cv * cols + cu].push([u, v, i, j]); } };
+  const loL = mkCells(); place(o.ls, loL); const hiL = o.fine ? mkCells() : null; if (hiL) place(o.fine, hiL);
+  const mHi = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .92, vertexColors: true, sheen: .8, sheenRoughness: .6, sheenColor: col("#ffffff") }), mLo = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .92, vertexColors: true }), mFib = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .9 }), mMid = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .92, vertexColors: true });
+  const M = new THREE.Matrix4(), cc = new THREE.Color(), tq = new THREE.Quaternion(), rq = new THREE.Quaternion(), Y = V3(0, 1, 0), P0 = V3(), D0 = V3();
+  function fill(cl, geo, mat, fine, bin) { // one InstancedMesh per cell; bin collects per-instance base colour + (u,v) for the film tint
+    const n = cl.length, im = new THREE.InstancedMesh(geo, mat, n), base = new Float32Array(n * 3), uv = new Float32Array(n * 2); im.castShadow = false; im.receiveShadow = true; g.add(im);
+    const fz = fine ? new THREE.InstancedMesh(fibG, mFib, n * FZ) : null; if (fz) { fz.receiveShadow = true; fz.castShadow = false; g.add(fz); }
+    const sumP = V3();
+    cl.forEach(([u, v, i, j], k) => { const q = panelFrame(u, v), th = hash(i * 3.7 + j * 1.9 + x * 5) * Math.PI, c = Math.cos(th), s = Math.sin(th);
+      const ex0 = q.ex.clone().multiplyScalar(c).addScaledVector(q.ey, s), ey0 = q.n.clone().cross(ex0), l1 = (hash(i * 6.7 + j * 2.9 + x) - .5) * (fine ? .95 : .8), l2 = (hash(i * 8.3 + j * 1.3 + x) - .5) * .5;
+      const up = q.n.clone().multiplyScalar(Math.cos(l1)).addScaledVector(ey0, Math.sin(l1)).addScaledVector(ex0, Math.sin(l2)).normalize(), ey = up.clone().cross(ex0).normalize(), ex = ey.clone().cross(up).normalize();
+      const sw = (fine ? .85 + hash(i * 5.3 + j * 8.1) * .4 : .95 + hash(i * 5.3 + j * 8.1) * .4) * (o.big || 1), sh = (fine ? .62 + hash(i * 1.1 + j * 6.3) * .75 : .75 + hash(i * 1.1 + j * 6.3) * .45) * (o.big || 1);
+      M.makeBasis(ex.clone().multiplyScalar(sw), ey, up.clone().multiplyScalar(sh)); M.setPosition(q.p); sumP.add(q.p); im.setMatrixAt(k, M);
+      cc.setScalar((.93 + hash(i * 9.1 + j * 4.7) * .07) * (.7 + .3 * smooth(v / .07))).multiply(col(hash(i + j) < .5 ? "#fffdf8" : "#f7f8fa")); im.setColorAt(k, cc); base[k * 3] = cc.r; base[k * 3 + 1] = cc.g; base[k * 3 + 2] = cc.b; uv[k * 2] = u; uv[k * 2 + 1] = v;
+      if (fz) for (let f = 0; f < FZ; f++) { const id = k * FZ + f, ap = archPoint(.1 + .8 * hash(id * 1.7 + x)), a = hash(id * 2.9) * 6.283;
+        D0.copy(ap.nrm).multiplyScalar(Math.cos(a)).addScaledVector(V3(0, 1, 0), Math.sin(a) * .8).addScaledVector(ap.tg, (hash(id * 4.1) - .5) * .9).normalize(); P0.copy(ap.p).addScaledVector(D0, .0004 + hash(id * 5.3) * .0003).applyMatrix4(M); D0.transformDirection(M);
+        tq.setFromUnitVectors(Y, D0); rq.setFromAxisAngle(Y, hash(id * 7.7) * 6.3); tq.multiply(rq); const L = .55 + hash(id * 9.3) * .95; const m2 = new THREE.Matrix4().compose(P0, tq, V3(1, L, 1)); fz.setMatrixAt(id, m2); fz.setColorAt(id, cc.setScalar(.8 + hash(id * 3.3) * .2)); } });
+    [im, fz].forEach(m => { if (m) { m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; m.computeBoundingSphere(); } });
+    let mid = null; if (fine) { mid = new THREE.InstancedMesh(geoMid, mMid, n); mid.instanceMatrix = im.instanceMatrix; mid.instanceColor = im.instanceColor; mid.receiveShadow = true; mid.visible = false; g.add(mid); mid.computeBoundingSphere(); }
+    bin.push({ im, base, uv, n }); return { im, fz, mid, c: sumP.divideScalar(Math.max(1, n)) };
+  }
+  const chunks = [], recs = [];
+  loL.forEach((cl, ci) => { if (!cl.length) return; const lo = fill(cl, geoLo, mLo, false, recs), ch = { lo: lo.im, c: lo.c }; if (hiL && hiL[ci].length) { const h = fill(hiL[ci], geoHi, mHi, true, recs); ch.hi = h.im; ch.fz = h.fz; ch.mid = h.mid; } chunks.push(ch); });
+  return { g, fab, mHi, mLo, mFib, mMid, chunks, recs, front, hem, hem2, lastG: -1 };
 }
-const towelA = buildTowel(-.2, { hi: false, ls: .0075, big: 1.35 }), towelB = buildTowel(.2, { hi: true, ls: .0043, weave: true });
-const towelX0 = buildTowel(-.6, { hi: false, ls: .0075, big: 1.35 }), towelX3 = buildTowel(.6, { hi: false, ls: .0075, big: 1.35 });
+const towelA = buildTowel(-.2, { ls: .0075, big: 1.35 }), towelB = buildTowel(.2, { ls: .0036, fine: .0025, weave: true });
+const towelX0 = buildTowel(-.6, { ls: .0075, big: 1.35 }), towelX3 = buildTowel(.6, { ls: .0075, big: 1.35 });
 const DULL = col("#6f7276"), BRIGHT = col("#ffffff"), tmpC = new THREE.Color();
-function dullT(tw, d) { tmpC.copy(BRIGHT).lerp(DULL, d); [tw.fab, tw.mHi, tw.mLo].forEach(m => m.color.copy(tmpC)); }
+function dullT(tw, d) { const c = (k, m) => m.color.copy(BRIGHT).lerp(DULL, d * k); c(1, tw.fab); c(.8, tw.mLo); c(.5, tw.mHi); c(.5, tw.mFib); c(.6, tw.mMid); } // macro pile stays a dingy cream, the wide towel reads grey
 function setDull(d) { dullT(towelB, d); }
-function lodTowel(tw, camPos, near) { tw.chunks.forEach(ch => { const wp = ch.c.clone().applyMatrix4(tw.g.matrixWorld), hiOn = !!ch.hi && camPos.distanceTo(wp) < near; if (ch.hi) { ch.hi.visible = hiOn; ch.hi.castShadow = hiOn; } ch.lo.visible = !hiOn; }); }
+function lodTowel(tw, camPos) { tw.chunks.forEach(ch => { const d = camPos.distanceTo(ch.c.clone().applyMatrix4(tw.g.matrixWorld)); const hi = !!ch.hi && d < .24, mid = !!ch.hi && !hi && d < .62; if (ch.hi) { ch.hi.visible = hi; ch.hi.castShadow = hi; ch.fz.visible = hi; ch.mid.visible = mid; } ch.lo.visible = !(hi || mid); }); }
 
 // -- biofilm patch on towel B (film sheet + bacteria + settlers), local to towelB.g
-const PATCH = { u: .01, v: .2, w: .075, h: .1 }, NN = 128, nf = noiseField(NN, 3.7);
+const NN = 128, nf = noiseField(NN, 3.7);
 const nAt = (a, b) => nf[(Math.min(NN - 1, Math.max(0, Math.round(b * (NN - 1))))) * NN + Math.min(NN - 1, Math.max(0, Math.round(a * (NN - 1))))];
 const filmTex = canvasTex(NN, (g, n) => { const id = g.createImageData(n, n); for (let i = 0; i < n * n; i++) { const v = nf[i] * 255; id.data.set([v, v, v, 255], i * 4); } g.putImageData(id, 0, 0); }, null, false);
 filmTex.wrapS = filmTex.wrapT = THREE.ClampToEdgeWrapping;
 const filmU = { uGrow: { value: 0 } };
+const stain = (a, b) => { const r = Math.hypot((a - .5) * 2, (b - .5) * 2); return smooth((1.0 - (r + (nAt(a, b) - .5) * .6)) / .55); };
 const filmMat = new THREE.MeshPhysicalMaterial({ color: col("#4f9a98"), roughness: .25, clearcoat: .8, clearcoatRoughness: .25, transparent: true, depthWrite: false, side: THREE.DoubleSide, alphaMap: filmTex, bumpMap: filmTex, bumpScale: 3, emissive: col("#0b7270"), emissiveIntensity: .06 });
-filmMat.onBeforeCompile = sh => { sh.uniforms.uGrow = filmU.uGrow; sh.fragmentShader = "uniform float uGrow;\n" + sh.fragmentShader.replace("#include <alphamap_fragment>", "float nn = texture2D(alphaMap, vAlphaMapUv).g; float th = 1.0 - uGrow * 1.18; diffuseColor.a *= smoothstep(th, th + .1, nn) * .8;"); };
+filmMat.onBeforeCompile = sh => { sh.uniforms.uGrow = filmU.uGrow; sh.fragmentShader = "uniform float uGrow;\n" + sh.fragmentShader.replace("#include <alphamap_fragment>", "float nn = texture2D(alphaMap, vAlphaMapUv).g; float th = 1.0 - uGrow * 1.18; float rr = length((vAlphaMapUv - .5) * 2.0); float msk = smoothstep(0.0, .55, 1.0 - (rr + (nn - .5) * .6)); diffuseColor.a *= smoothstep(th, th + .1, nn) * .7 * msk;"); };
 const filmGeo = new THREE.PlaneGeometry(PATCH.w, PATCH.h, 80, 106);
 { const p = filmGeo.attributes.position, uv = filmGeo.attributes.uv; for (let i = 0; i < p.count; i++) { const a = uv.getX(i), b = 1 - uv.getY(i), u = PATCH.u + (a - .5) * PATCH.w, v = PATCH.v + (b - .5) * PATCH.h, q = panelFrame(u, v), h = .0006 + .0007 * nAt(a, b) + .0002 * Math.sin(a * 70); p.setXYZ(i, q.p.x + q.n.x * h, q.p.y + q.n.y * h, q.p.z + q.n.z * h); } filmGeo.computeVertexNormals(); }
 const film = new THREE.Mesh(filmGeo, filmMat); film.renderOrder = 3; film.visible = false; towelB.g.add(film);
-const NB = 3200, bGeo = new THREE.CapsuleGeometry(.00022, .0007, 3, 7), bMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .55 });
+const NB = 3200, bGeo = new THREE.CapsuleGeometry(.00032, .0010, 3, 7), bMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .55 });
 const bact = new THREE.InstancedMesh(bGeo, bMat, NB); bact.castShadow = true; bact.visible = false; towelB.g.add(bact);
 const BCOL = ["#0b7270", "#2f7f7c", "#5a6275", "#6d7a92", "#3c8f8b", "#475066"].map(col), bd = [];
-for (let i = 0; i < NB; i++) { let a, b, tries = 0; do { a = hash(i * 3.1 + tries * 17.3); b = hash(i * 5.7 + 1.3 + tries * 11.9); tries++; } while (nAt(a, b) < .32 && tries < 8);
+for (let i = 0; i < NB; i++) { let a, b, tries = 0; do { a = hash(i * 3.1 + tries * 17.3); b = hash(i * 5.7 + 1.3 + tries * 11.9); tries++; } while ((nAt(a, b) < .32 || stain(a, b) < .35) && tries < 12);
   const u = PATCH.u + (a - .5) * PATCH.w, v = PATCH.v + (b - .5) * PATCH.h, q = panelFrame(u, v), h = .0003 + hash(i * 7.3) * .0006, ang = hash(i * 9.9) * 6.3, tilt = (hash(i * 2.7) - .5) * .5;
   const ex = q.ex.clone().multiplyScalar(Math.cos(ang)).addScaledVector(q.ey, Math.sin(ang)); // capsule axis (Y) along ex
   const m = new THREE.Matrix4().makeBasis(ex.clone().cross(q.n), ex, q.n); const qu = new THREE.Quaternion().setFromRotationMatrix(m).multiply(new THREE.Quaternion().setFromAxisAngle(V3(1, 0, 0), tilt));
@@ -189,7 +197,10 @@ for (let i = 0; i < NSET; i++) { const u = PATCH.u + (hash(i * 1.9) - .5) * .024
 function updSettle(lt) { let any = false; for (let i = 0; i < NSET; i++) { const d = sd[i], u = clamp((lt - d.delay) / .7), e = eo3(u), k = smooth(u * 4); if (k > 0) any = true;
   const q = d.q; _p.copy(q.p).addScaledVector(q.n, d.h + (1 - e) * .014).addScaledVector(q.ex, d.dx * (1 - e)).addScaledVector(q.ey, d.dy * (1 - e));
   const ex = q.ex.clone().multiplyScalar(Math.cos(d.ang)).addScaledVector(q.ey, Math.sin(d.ang)), m = new THREE.Matrix4().makeBasis(ex.clone().cross(q.n), ex, q.n), qu = new THREE.Quaternion().setFromRotationMatrix(m);
-  _s.set(k * .7, k * .7 * (i % 3 ? 1 : .3), k * .7); _m.compose(_p, qu, _s); settlers.setMatrixAt(i, _m); } settlers.instanceMatrix.needsUpdate = true; settlers.visible = any; }
+  _s.set(k * 1.1, k * 1.1 * (i % 3 ? 1 : .3), k * 1.1); _m.compose(_p, qu, _s); settlers.setMatrixAt(i, _m); } settlers.instanceMatrix.needsUpdate = true; settlers.visible = any; }
+const STAINC = col("#5f8f8c"), tintC = new THREE.Color();
+function tintTowel(tw, g) { if (Math.abs(tw.lastG - g) < .002) return; tw.lastG = g; const th = 1 - g * 1.18; // film stain tints the pile too: grey-teal, irregular, fading into the cloth
+  tw.recs.forEach(r => { for (let k = 0; k < r.n; k++) { const a = (r.uv[k * 2] - PATCH.u) / PATCH.w + .5, b = (r.uv[k * 2 + 1] - PATCH.v) / PATCH.h + .5; let m = 0; if (g > 0 && a > -.1 && a < 1.1 && b > -.1 && b < 1.1) m = stain(a, b) * smooth((nAt(a, b) - th) / .1); tintC.fromArray(r.base, k * 3); if (m > 0) tintC.lerp(STAINC, m * .7); r.im.setColorAt(k, tintC); } r.im.instanceColor.needsUpdate = true; }); }
 for (let i = 0; i < NSET; i++) settlers.setColorAt(i, [col("#2f9c97"), col("#4aa6a2"), col("#0b7270")][i % 3]);
 // ------------------------------------------------------------ hooks for the "never share" shot (two towels, two hooks)
 const hooks = new THREE.Group(); gA.add(hooks); hooks.visible = false;
@@ -248,25 +259,79 @@ const discZ = [-.28, .28], sliver = V3();
 
 // ------------------------------------------------------------ STAGE F: a light-skin cheek + jaw (curved), a folded hemmed towel pressing into it (skin dents, contact shadow)
 const gF = new THREE.Group(); scene.add(gF); const FX = 100; gF.position.x = FX; gF.visible = false;
-const FA = [.19, .27, .17], FC = -.17, FTONE = "#e2b391", FJ = [.17, .15, .17, -.21, -.2];
-const ellG = (a, b, c, cy, cz) => { const g = new THREE.SphereGeometry(1, 160, 120); g.scale(a, b, c); g.translate(0, cy, cz); return g; };
-const cheekMat = skinMat(FTONE, [34, 20], { rough: .46, relief: .45, pore: .8, seed: 21 });
-const cheekSurf = (x, y) => { const e = 1 - (x / FA[0]) ** 2 - (y / FA[1]) ** 2, z = FC + FA[2] * Math.sqrt(Math.max(e, .001)); return { p: V3(x, y, z), n: V3(x / FA[0] ** 2, y / FA[1] ** 2, (z - FC) / FA[2] ** 2).normalize() }; };
-{ const cheek = mesh(ellG(FA[0], FA[1], FA[2], 0, FC), cheekMat, gF), jaw = mesh(ellG(FJ[0], FJ[1], FJ[2], FJ[3], FJ[4]), cheekMat, gF);
-  gF.add(hairs(2600, hairGeo(.0042, .00011, .6), new THREE.MeshStandardMaterial({ color: col("#cdb299"), roughness: .6, transparent: true, opacity: .7 }), i => { const x = (hash(i * 1.3) - .5) * .3, y = (hash(i * 2.9) - .5) * .38, sf = cheekSurf(x, y), a = hash(i * 4.7) * 6.3, d = sf.n.clone().multiplyScalar(.55).add(V3(Math.cos(a) * .4, -.7 + Math.sin(a) * .3, 0)).normalize(); return { p: sf.p, d, s: .6 + hash(i * 6.1) * .9 }; }, 21)); }
+const FTONE = C.skin[0], rad = Math.PI / 180, HA = .17, HB = .2, HZ = .19;
+// three-quarter lower face (head frame: +z forward, +x the subject's left). Ellipsoid + landmarks as 3D gaussians; vertex colours carry lips, nostril, blush and groove occlusion.
+const dirOf = (lon, lat) => { const lo = lon * rad, la = lat * rad; return V3(Math.sin(lo) * Math.cos(la), Math.sin(la), Math.cos(lo) * Math.cos(la)); };
+const baseP = d => { const f = 1 - .26 * smooth((-d.y - .3) / .7); return V3(HA * f * d.x, HB * d.y, HZ * f * d.z); };
+const Fa = (lon, lat) => baseP(dirOf(lon, lat));
+const g3 = (P, c, s) => Math.exp(-P.distanceToSquared(c) / (2 * s * s));
+const sg = (P, a, b, s) => { const ab = b.clone().sub(a), t = clamp(P.clone().sub(a).dot(ab) / ab.lengthSq()); return Math.exp(-P.distanceToSquared(a.clone().addScaledVector(ab, t)) / (2 * s * s)); };
+const FF = { tip: Fa(1, 14), ala: Fa(15, 8), nostril: Fa(10, 3), alar0: Fa(19, 11), alar1: Fa(23, 4), nl0: Fa(27, 6), nl1: Fa(32, -8), nl2: Fa(33, -22), apple: Fa(48, 2),
+  m0: Fa(-22, -10), m1: Fa(21, -10.4), corner: Fa(23, -10.5), ul0: Fa(-19, -5), ul1: Fa(19, -5), ll0: Fa(-16, -16), ll1: Fa(16, -16), sul0: Fa(-14, -24), sul1: Fa(14, -24), chin: Fa(0, -44), mr0: Fa(31, -26), mr1: Fa(26, -44),
+  lobe: Fa(100, -16), conch: Fa(100, -2), cheekB: Fa(50, -2) };
+function faceField(P) {
+  const nos = g3(P, FF.nostril, .0075), lip = Math.min(1, sg(P, FF.ul0, FF.ul1, .0085) + sg(P, FF.ll0, FF.ll1, .011)), mouth = sg(P, FF.m0, FF.m1, .0035), cd = g3(P, FF.corner, .005);
+  const gro = Math.min(1, mouth + cd + sg(P, FF.nl0, FF.nl1, .0065) + sg(P, FF.nl1, FF.nl2, .0065) + sg(P, FF.sul0, FF.sul1, .009) + .8 * sg(P, FF.alar0, FF.alar1, .006) + sg(P, FF.mr0, FF.mr1, .007));
+  const ring = Math.exp(-(((P.distanceTo(FF.conch) - .035) / .008) ** 2));
+  let d = .045 * g3(P, FF.tip, .032) + .02 * g3(P, FF.ala, .018) - .013 * g3(P, FF.nostril, .009) - .0025 * sg(P, FF.alar0, FF.alar1, .006)
+    - .003 * (sg(P, FF.nl0, FF.nl1, .0065) + sg(P, FF.nl1, FF.nl2, .0065)) + .012 * g3(P, FF.apple, .05)
+    - .0042 * mouth - .0035 * cd + .007 * sg(P, FF.ul0, FF.ul1, .01) + .01 * sg(P, FF.ll0, FF.ll1, .012) - .004 * sg(P, FF.sul0, FF.sul1, .009)
+    + .014 * g3(P, FF.chin, .035) - .0022 * sg(P, FF.mr0, FF.mr1, .007) + .026 * g3(P, FF.lobe, .02) + .014 * ring - .006 * g3(P, FF.conch, .02);
+  return { d, lip, nos, gro, blush: g3(P, FF.cheekB, .07) };
+}
+const headPt = (dir) => { const P0 = baseP(dir), n0 = V3(P0.x / (HA * HA), P0.y / (HB * HB), P0.z / (HZ * HZ)).normalize(), f = faceField(P0); return { p: P0.addScaledVector(n0, f.d), n: n0, f }; };
+function faceTexes(hex, rep, seed = 5) { // fine pores + soft furrows; tile is about 5 cm
+  const draw = (g, n, isBump) => { g.fillStyle = isBump ? "#8a8a8a" : hex; g.fillRect(0, 0, n, n);
+    if (!isBump) for (let i = 0; i < 60; i++) { const x = hash(i * 1.3 + seed) * n, y = hash(i * 2.1 + 7 + seed) * n, r = 60 + hash(i * 4.7 + seed) * 180, k = hash(i * 9.1 + seed);
+      wrapBlob(g, x, y, r, (X, Y) => { const gr = g.createRadialGradient(X, Y, 0, X, Y, r); gr.addColorStop(0, k < .4 ? "rgba(200,110,100,.045)" : k < .7 ? "rgba(150,90,70,.035)" : "rgba(255,235,220,.05)"); gr.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gr; g.beginPath(); g.arc(X, Y, r, 0, 6.3); g.fill(); }); }
+    g.lineCap = "round"; for (let k = 0; k < 420; k++) { const x = hash(k * 1.7 + seed) * n, y = hash(k * 3.1 + 2 + seed) * n, a = (k % 3) * 1.05 + (hash(k * 5.3) - .5) * .5, l = 30 + hash(k * 7.7) * 70; g.strokeStyle = isBump ? "rgba(60,60,60,.3)" : "rgba(120,70,55,.06)"; g.lineWidth = isBump ? 2.4 : 1.6; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+    for (let i = 0; i < 1500; i++) { const x = hash(i * 1.9 + seed) * n, y = hash(i * 3.3 + 1 + seed) * n, r = 5 + hash(i * 5 + seed) * 8;
+      wrapBlob(g, x, y, r, (X, Y) => { const gr = g.createRadialGradient(X, Y, 0, X, Y, r); if (isBump) { gr.addColorStop(0, "rgba(20,20,20,.95)"); gr.addColorStop(1, "rgba(20,20,20,0)"); } else { gr.addColorStop(0, "rgba(110,55,45,.30)"); gr.addColorStop(1, "rgba(110,55,45,0)"); } g.fillStyle = gr; g.beginPath(); g.arc(X, Y, r, 0, 6.3); g.fill(); }); } };
+  return [canvasTex(1024, (g, n) => draw(g, n, false), rep), canvasTex(1024, (g, n) => draw(g, n, true), rep, false)];
+}
+const head = new THREE.Group(); gF.add(head); head.rotation.set(0, 50 * rad, -.06); head.scale.x = -1; // mirrored: landmarks sit right of the towel, clear of the receipt strip
+{ const sg0 = new THREE.SphereGeometry(1, 220, 160), pp = sg0.attributes.position, cl = new Float32Array(pp.count * 3), d = V3();
+  for (let i = 0; i < pp.count; i++) { d.set(pp.getX(i), pp.getY(i), pp.getZ(i)).normalize(); const h = headPt(d), f = h.f; pp.setXYZ(i, h.p.x, h.p.y, h.p.z);
+    const mo = sg(h.p, FF.m0, FF.m1, .0032), ao = 1 - .3 * Math.min(1, f.gro) - .45 * f.nos - .45 * mo, bl = f.blush * .06, r = (1 - bl * .3) * (1 - .14 * f.lip) * (1 - .62 * f.nos) * ao, gg = (1 - bl * 1.4) * (1 - .42 * f.lip) * (1 - .66 * f.nos) * ao, b = (1 - bl * 1.3) * (1 - .36 * f.lip) * (1 - .68 * f.nos) * ao; cl[i * 3] = r; cl[i * 3 + 1] = gg; cl[i * 3 + 2] = b; }
+  sg0.setAttribute("color", new THREE.BufferAttribute(cl, 3)); sg0.computeVertexNormals();
+  const faceMat = skinMat(FTONE, null, { tex: faceTexes(FTONE, [21, 15]), vc: 1, rough: .5, relief: .75, cc: .1 });
+  mesh(sg0, faceMat, head);
+  const neck = new THREE.CylinderGeometry(.078, .09, .34, 56, 14, true), nc = new Float32Array(neck.attributes.position.count * 3), np = neck.attributes.position; for (let i = 0; i < np.count; i++) { const k = .5 + .5 * smooth((np.getY(i) + .17) / .34 + .05); nc[i * 3] = k; nc[i * 3 + 1] = k * .97; nc[i * 3 + 2] = k * .96; } neck.setAttribute("color", new THREE.BufferAttribute(nc, 3));
+  const nm = mesh(neck, skinMat(FTONE, null, { tex: faceTexes(FTONE, [9, 5], 9), vc: 1, rough: .55, relief: .6, cc: .08 }), head); nm.position.set(0, -.33, -.06);
+  const hm = new THREE.MeshStandardMaterial({ color: col("#d9c4ae"), roughness: .5, transparent: true, opacity: .62 }), hg = hairGeo(.0034, .00009, .6);
+  const im = hairs(11000, hg, hm, i => { const lon = 6 + hash(i * 1.3) * 100, lat = -52 + hash(i * 2.9) * 74, h = headPt(dirOf(lon, lat)); const a = hash(i * 4.7) * 6.3, dn = h.n.clone().multiplyScalar(.5).add(V3(Math.cos(a) * .4, -.75 + Math.sin(a) * .3, Math.sin(a) * .3)).normalize(); const sk = h.f.lip > .25 || h.f.nos > .3 ? 0 : 1; return { p: sk ? h.p : V3(0, -50, 0), d: dn, s: .6 + hash(i * 6.1) * .9 }; }, 21);
+  im.castShadow = false; head.add(im); }
+head.updateMatrix(); { const pw = headPt(dirOf(60, -10)).p.multiply(V3(-1, 1, 1)).applyQuaternion(head.quaternion); head.position.set(-pw.x, -pw.y - .01, -pw.z); head.updateMatrix(); head.updateMatrixWorld(true); }
+// folded terry towel: soft rounded fold edge, puffy cloth, drape; loop pile (item-1 geometry at lower density) on the outer face, woven hem stripe near one end
 const patTw = new THREE.Group(); gF.add(patTw); patTw.visible = false;
-{ const [m, b] = terry([1.5, 1.2], [248, 246, 241]), top = new THREE.MeshStandardMaterial({ map: m, bumpMap: b, bumpScale: 3, roughness: .95 });
-  const sideTex = canvasTex(512, (g, n) => { g.fillStyle = "#f3f1ea"; g.fillRect(0, 0, n, n); for (let y = 0; y < n; y += 6) { g.fillStyle = `rgba(120,118,112,${.1 + .14 * hash(y * .7)})`; g.fillRect(0, y + hash(y) * 2, n, 1.6); } // fold plies + woven weft
-    g.fillStyle = "#aab4c8"; g.fillRect(0, n * .62, n, n * .13); g.fillStyle = "rgba(255,255,255,.55)"; for (let x = 6; x < n; x += 16) g.fillRect(x, n * .64, 8, 2.2); g.fillRect(0, n * .72, n, 2); // slate hem band + stitch line
-    for (let k = 0; k < 900; k++) { g.fillStyle = `rgba(255,255,255,${.1 + .2 * hash(k)})`; g.fillRect(hash(k * 3.1) * n, hash(k * 5.3) * n, 3 + hash(k) * 9, 1); } }, [1, 1]);
-  const side = new THREE.MeshStandardMaterial({ map: sideTex, roughness: .95, bumpMap: sideTex, bumpScale: 1.6 });
-  const tw = mesh(roundedBox(.105, .03, .07, .009, 8), [side, side, top, top, side, side], patTw); tw.position.set(0, 0, 0); }
+const TW = .125, TD = .088, TT = .03, TR = .0095;
+{ const shape = v => { const hx = TW / 2 - TR, hy = TT / 2 - TR, hz = TD / 2 - TR, c = V3(clamp(v.x, -hx, hx), clamp(v.y, -hy, hy), clamp(v.z, -hz, hz)), d = v.clone().sub(c); if (d.lengthSq() > 0) d.normalize().multiplyScalar(TR);
+    let x = c.x + d.x, y = c.y + d.y, z = c.z + d.z; const nx = x / (TW / 2), nz = z / (TD / 2); y *= 1.08 - .16 * (nx * .5 + .5); const ny = y / (TT / 2);
+    y += .0016 * ny * (Math.sin(x * 57 + z * 33 + 1) + .7 * Math.sin(x * 31 - z * 71 + 2)); y -= .0065 * (nx * nx + nz * nz); z *= 1 + .07 * nx; x += .0016 * Math.sin(z * 45 + 1) * Math.abs(ny) + .004 * nz * nz * (nx + 1); return V3(x, y, z); };
+  const g = new THREE.BoxGeometry(TW, TT, TD, 56, 14, 40), p = g.attributes.position, v = V3(); for (let i = 0; i < p.count; i++) { v.set(p.getX(i), p.getY(i), p.getZ(i)); const q = shape(v); p.setXYZ(i, q.x, q.y, q.z); } g.computeVertexNormals();
+  const topTex = (isBump) => canvasTex(1024, (cx, n) => { cx.fillStyle = isBump ? "#303030" : "#f4f2ec"; cx.fillRect(0, 0, n, n);
+    for (let i = 0; i < 1600; i++) { const x = hash(i * 1.3) * n, y = hash(i * 2.9 + 5) * n, r = 9 + hash(i * 5.1) * 14, gr = cx.createRadialGradient(x - r * .2, y - r * .25, r * .1, x, y, r); if (isBump) { gr.addColorStop(0, "rgba(255,255,255,.8)"); gr.addColorStop(1, "rgba(255,255,255,0)"); } else { gr.addColorStop(0, "rgba(255,255,252,.9)"); gr.addColorStop(.6, "rgba(238,236,230,.7)"); gr.addColorStop(1, "rgba(215,212,205,0)"); } cx.fillStyle = gr; cx.beginPath(); cx.arc(x, y, r, 0, 6.3); cx.fill(); }
+    cx.fillStyle = isBump ? "#4a4a4a" : "#aab4c8"; cx.fillRect(n * .835, 0, n * .09, n); cx.fillStyle = isBump ? "#777" : "rgba(255,255,255,.7)"; cx.fillRect(n * .85, 0, n * .006, n); cx.fillRect(n * .9, 0, n * .006, n);
+    cx.fillStyle = isBump ? "rgba(200,200,200,.5)" : "rgba(80,90,110,.16)"; for (let x = n * .835; x < n * .925; x += 4) cx.fillRect(x, 0, 1.4, n); }, [1, 1], !isBump);
+  const sideTex = canvasTex(512, (cx, n) => { cx.fillStyle = "#f3f1ea"; cx.fillRect(0, 0, n, n); for (let y = 0; y < n; y += 6) { cx.fillStyle = `rgba(120,118,112,${.1 + .14 * hash(y * .7)})`; cx.fillRect(0, y + hash(y) * 2, n, 1.6); }
+    cx.fillStyle = "#aab4c8"; cx.fillRect(0, n * .62, n, n * .13); cx.fillStyle = "rgba(255,255,255,.55)"; for (let x = 6; x < n; x += 16) cx.fillRect(x, n * .64, 8, 2.2); cx.fillRect(0, n * .72, n, 2);
+    for (let k = 0; k < 900; k++) { cx.fillStyle = `rgba(255,255,255,${.1 + .2 * hash(k)})`; cx.fillRect(hash(k * 3.1) * n, hash(k * 5.3) * n, 3 + hash(k) * 9, 1); } }, [1, 1]);
+  const side = new THREE.MeshStandardMaterial({ map: sideTex, roughness: .95, bumpMap: sideTex, bumpScale: 1.6 }), top = new THREE.MeshStandardMaterial({ map: topTex(false), bumpMap: topTex(true), bumpScale: .3, roughness: .95 }), under = new THREE.MeshStandardMaterial({ color: 0xf1efe8, roughness: .95 });
+  mesh(g, [side, side, top, under, side, side], patTw);
+  // loops on the outer face
+  const topY = (x, z) => shape(V3(x, TT / 2, z)).y, ls = .0026, xs = [], hx = TW / 2 - .011, hz = TD / 2 - .011; const items = [];
+  for (let j = 0; (-hz + j * ls) < hz; j++) for (let i = 0; (-hx + .002 + i * ls) < TW / 2 - .036; i++) items.push([-hx + .002 + (i + (hash(i * 3.1 + j * 7.7) - .5) * .5) * ls, -hz + (j + (hash(i * 5.3 + j * 2.1) - .5) * .5) * ls, i, j]);
+  const im = new THREE.InstancedMesh(geoHi, new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .92, vertexColors: true, sheen: .8, sheenRoughness: .6 }), items.length), M = new THREE.Matrix4(), e = .0015, cc = new THREE.Color();
+  items.forEach(([x, z, i, j], k) => { const y = topY(x, z), n = V3(-(topY(x + e, z) - topY(x - e, z)) / (2 * e), 1, -(topY(x, z + e) - topY(x, z - e)) / (2 * e)).normalize(), th = hash(i * 1.9 + j * 4.3) * 3.14, ex0 = V3(Math.cos(th), 0, Math.sin(th)).addScaledVector(n, -n.x * Math.cos(th) - n.z * Math.sin(th)).normalize(), ey0 = n.clone().cross(ex0), l1 = (hash(i * 6.7 + j * 2.9) - .5) * .9;
+    const up = n.clone().multiplyScalar(Math.cos(l1)).addScaledVector(ey0, Math.sin(l1)).normalize(), ey = up.clone().cross(ex0).normalize(), ex = ey.clone().cross(up).normalize(), s = 1.5 + hash(i * 8.1 + j * 3.3) * .6, sh = s * (.7 + hash(i * 1.1 + j * 6.3) * .6);
+    M.makeBasis(ex.multiplyScalar(s), ey.multiplyScalar(s), up.multiplyScalar(sh)); M.setPosition(x, y - .0004, z); im.setMatrixAt(k, M); im.setColorAt(k, cc.setScalar(.92 + hash(i * 9.1 + j * 4.7) * .08)); });
+  im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; im.castShadow = true; im.receiveShadow = true; patTw.add(im); }
 
 // ------------------------------------------------------------ STAGE G: five skin tones, light to deep, matte, convex forms with raking light
 const gG = new THREE.Group(); scene.add(gG); const GX = 120; gG.position.x = GX; gG.visible = false; const GW = .2;
-C.skin.forEach((h, i) => { const geo = new THREE.PlaneGeometry(GW, 1.1, 40, 60), p = geo.attributes.position; for (let k = 0; k < p.count; k++) { const y = p.getY(k), x = p.getX(k); p.setZ(k, -.35 * y * y - 1.8 * x * x - .006 * Math.cos(x * 15 + i) + .004 * Math.sin(y * 11 + i * 2)); } geo.computeVertexNormals();
-  const m = mesh(geo, skinMat(h, [GW / .013, 1.1 / .013], { rough: .5, relief: .85 + .1 * i, pore: .9 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
-  const sh = hairs(260, hairGeo(.005, .00015, .5), new THREE.MeshStandardMaterial({ color: col(i < 2 ? "#a58c78" : "#120a06"), roughness: .6, transparent: true, opacity: i < 2 ? .5 : .9 }), k => { const x = (hash(k * 1.3 + i) - .5) * GW * .94, y = (hash(k * 2.9 + i) - .5) * .36, z = -.35 * y * y - 1.8 * x * x, n = V3(3.6 * x, .7 * y, 1).normalize(), a = hash(k * 4.7) * .6; return { p: V3(x + i * GW, y, z), d: n.clone().multiplyScalar(.5).add(V3(Math.sin(a), -.7, 0)).normalize(), s: .6 + hash(k * 6.1) * .9 }; }, 40 + i); gG.add(sh); });
+C.skin.forEach((h, i) => { const geo = new THREE.PlaneGeometry(GW, 1.1, 40, 60), p = geo.attributes.position, cv = []; for (let k = 0; k < p.count; k++) { const y = p.getY(k), x = p.getX(k); p.setZ(k, -.35 * y * y - 6 * x * x - .006 * Math.cos(x * 15 + i) + .004 * Math.sin(y * 11 + i * 2)); const ex = smooth((Math.abs(x) / (GW / 2) - .45) / .55), ey = smooth((Math.abs(y) - .3) / .25), vv = 1 - .55 * ex - .3 * ey; cv.push(vv, vv * .97, vv * .95); } geo.setAttribute("color", new THREE.Float32BufferAttribute(cv, 3)); geo.computeVertexNormals(); // curved panel + edge falloff
+  const m = mesh(geo, skinMat(h, [GW / .013, 1.1 / .013], { vc: 1, rough: .5, relief: .85 + .1 * i, pore: .9 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
+  const sh = hairs(260, hairGeo(.005, .00015, .5), new THREE.MeshStandardMaterial({ color: col(i < 2 ? "#a58c78" : "#120a06"), roughness: .6, transparent: true, opacity: i < 2 ? .5 : .9 }), k => { const x = (hash(k * 1.3 + i) - .5) * GW * .94, y = (hash(k * 2.9 + i) - .5) * .36, z = -.35 * y * y - 6 * x * x, n = V3(12 * x, .7 * y, 1).normalize(), a = hash(k * 4.7) * .6; return { p: V3(x + i * GW, y, z), d: n.clone().multiplyScalar(.5).add(V3(Math.sin(a), -.7, 0)).normalize(), s: .6 + hash(k * 6.1) * .9 }; }, 40 + i); gG.add(sh); });
 
 // ------------------------------------------------------------ cameras
 const FOV = f => 2 * Math.atan(18 / f) * 180 / Math.PI;
@@ -294,30 +359,31 @@ const tDisp = () => W("b14", "Disposable towels") - .1, tDerm = () => W("b14", "
 const cut8 = () => W("b08", "Mostly not") - .12, cut10 = () => W("b10", "The study never") - .15, cut12 = () => W("b12", "pat your skin") - .12;
 const B4X = [-.6, -.2, .2, .6], B4T = () => { const w0 = W("b04", "Every two months"); return [S("b04") + .35, w0 + .2, w0 + .9, w0 + 1.6]; };
 const slideCam = t => { const t0 = tDerm(), t1 = END("b15") + .3, P = (t1 - t0) / 5, MV = .34, tt = clamp(t - t0, 0, t1 - t0), i = Math.min(4, Math.floor(tt / P)), lt = tt - (i * P + P - MV), x = (i + (i < 4 ? eio(lt / MV) : 0)) * GW; return K1([GX + x, .02, .5], [GX + x, 0, 0], 50, [0, 0], 1.2); };
-const MACRO = { p: [.205, .55, .15], l: [.215, .545, .02], f: 100 };
+// macro key on the pile of towel B at panel coords (u,v): oblique (about 40 deg off the cloth normal), light raking from the left, camera slides across the pile
+const macKey = (t, u, v, dist, f, o, ap, dir) => { const q = panelSurf(u, v), T = V3(.2 + q.x, RAILY + q.y, q.z + .004), d = V3(...(dir || [.8, -.42, 1])).normalize().multiplyScalar(dist); return { t, p: [T.x + d.x, T.y + d.y, T.z + d.z], l: [T.x, T.y, T.z], f, fp: [T.x, T.y, T.z + .003], o: o || [0, 0], ap: ap || 2 }; };
 function camFor(id, t, stg) {
   const s0 = S(id), e0 = E(id);
   switch (id) {
-    case "b01": { const s = U(t, 0, T.hookEnd), q = smooth(U(t, .8, 2.2)), x = lerp(.186, .228, s), y = lerp(.563, .551, s); return K1([x, y, lerp(.175, .105, q)], [x + .012, y - .006, .04], lerp(92, 112, q), [0, -150], 2.2, [x + .012, y - .006, .046]); }
+    case "b01": { const s = U(t, 0, T.hookEnd + .3), q = smooth(U(t, .9, 2.3)); return [macKey(0, lerp(-.014, .03, s), .2 - .01 * s, lerp(.13, .105, q), lerp(92, 108, q), [0, -130], 2.2)]; }
     case "b02": { const u = U(t, s0, e0), q = eio(U(t, 4.6, e0)), p0 = [lerp(.02, .12, u), lerp(.47, .45, u), lerp(1.95, 1.75, u)], l0 = [lerp(.1, .17, u), .42, 0]; return K1(L3(p0, [.29, .4, 1.15], q), L3(l0, [.3, .33, .06], q), 50, L3([190, 170], [60, 170], q), 1.4, L3([.2, .36, .03], [.3, .3, .07], q)); }
-    case "b03": { const tp = W("b03", "One study"), tt = W("b03", "twenty-six"), u = eio(U(t, tp - .3, tt + .9)), x0 = HX - (HC - 1) / 2 * HPX, p0 = [x0 + .01, 1.0, .46], l0 = [x0 + .01, .94, 0]; return K1(L3(p0, [HX, .62, 3.1], u), L3(l0, [HX, .62, 0], u), 50, [lerp(0, 170, u), lerp(0, -70, u)], 1.2); }
-    case "b04": { const ts = B4T(); let x = B4X[0]; for (let i = 1; i < 4; i++) if (t > ts[i - 1]) x = lerp(B4X[i - 1], B4X[i], eio((t - ts[i - 1]) / (ts[i] - ts[i - 1] + .0001))); return K1([x, .52, 2.3], [x, .47, 0], 50, [215, 50], 1, [x, .47, .03]); }
-    case "b05": { const a = S("b05"), m0 = W("b05", "Under a microscope") - .3, k = [{ t: a, p: [0, .46, 3.0], l: [0, .46, 0], f: 50, fp: [0, .46, .02], o: [235, 90] }, { t: a + 1.7, p: [0, .46, 3.0], l: [0, .46, 0], f: 50, fp: [0, .46, .02], o: [235, 90] },
-      { t: m0, p: [.21, .52, .45], l: [.21, .52, 0], f: 70, fp: [.21, .52, .04], o: [60, 40] }, { t: e0, p: [.215, .545, .13], l: [.215, .545, .02], f: 100, fp: [.215, .545, .045], o: [60, 30] }]; return k; }
+    case "b03": { const tp = W("b03", "One study"), tt = W("b03", "twenty-six"), u = eio(U(t, tp - .3, tt + .9)), x0 = HX - (HC - 1) / 2 * HPX, p0 = [x0 + .01, 1.0, .46], l0 = [x0 + .01, .94, 0]; const sl = lerp(-.12, .12, eio(U(t, 11.6, 13.6))) * u, P = L3(p0, [HX, .62, 3.1], u), Lk = L3(l0, [HX, .62, 0], u); P[0] += sl; Lk[0] += sl; return K1(P, Lk, 50, [lerp(0, 170, u), lerp(0, -70, u)], 1.2); }
+    case "b04": { const ts = B4T(); let x = B4X[0]; for (let i = 1; i < 4; i++) if (t > ts[i - 1]) x = lerp(B4X[i - 1], B4X[i], eio((t - ts[i - 1]) / (ts[i] - ts[i - 1] + .0001))); const dx = lerp(-.05, .05, U(t, 13.6, 17.9)); return K1([x + dx, .52, 2.3], [x + dx, .47, 0], 50, [215, 50], 1, [x + dx, .47, .03]); }
+    case "b05": { const a = S("b05"), m0 = W("b05", "Under a microscope") - .3, k = [{ t: a, p: [0, .46, 3.0], l: [0, .46, 0], f: 50, fp: [0, .46, .02], o: [235, 90] }, { t: a + 1.7, p: [.1, .46, 3.0], l: [.1, .46, 0], f: 50, fp: [.1, .46, .02], o: [235, 90] },
+      macKey(m0, -.012, .18, .34, 70, [60, 40], 1.6), macKey(e0, .022, .205, .115, 100, [60, 30], 2)]; return k; }
     case "b06": case "b07": { const u = U(t, S("b06"), E("b07")); return K1([lerp(.17, .23, u), lerp(.52, .47, u), lerp(1.3, 1.0, u)], [.2, .42, 0], 50, [160, 30], 1.5, [.2, .4, .03]); }
-    case "b08": { if (stg === "E1") { const u = eio(U(t, s0, cut8())), x = lerp(-.1, .1, u); return K1([E1X + x, .12, .2], [E1X + x + .02, .03, .02], 85, [130, 0], 1.9, [E1X + x, .02, .045]); }
+    case "b08": { if (stg === "E1") { const u = eio(U(t, s0, cut8())), x = lerp(-.14, .16, .3 * U(t, s0, cut8()) + .7 * u); return K1([E1X + x, .12, .2], [E1X + x + .02, .03, .02], 85, [130, 0], 1.9, [E1X + x, .02, .045]); }
       const a = W("b08", "Staph"), b = W("b08", "was typically"), c = cut8(); return [
         { t: c, p: [E2X, 1.1, -.03], l: [E2X, 0, -.28], f: 50, fp: [E2X, .02, -.28], o: [110, 0] }, { t: a - .3, p: [E2X, 1.1, -.03], l: [E2X, 0, -.28], f: 50, fp: [E2X, .02, -.28], o: [110, 0] },
         { t: a + .9, p: [E2X, 1.1, .53], l: [E2X, 0, .28], f: 50, fp: [E2X, .02, .28], o: [110, 0] }, { t: b - .1, p: [E2X, 1.1, .53], l: [E2X, 0, .28], f: 50, fp: [E2X, .02, .28], o: [110, 0] },
         { t: E("b08"), p: [E2X + .08, .6, .4], l: [E2X + .09, .02, .21], f: 62, fp: [E2X + .09, .02, .22], o: [110, -40] }]; }
-    case "b09": return [{ t: s0, p: [.198, .552, .14], l: [.205, .55, .02], f: 100, fp: [.205, .55, .045], o: [30, 0], ap: 1.4 }, { t: e0, p: [.213, .549, .122], l: [.212, .55, .02], f: 100, fp: [.212, .55, .045], o: [30, 0], ap: 1.4 }];
-    case "b10": { const c = cut10(); if (t < c) { const u = U(t, s0, c); return K1([FX - .24 + .05 * u, .05, .74 - .06 * u], [FX + .04, -.03, 0], 62, [0, 10], 1.9, [FX + .04, 0, 0]); } const u = U(t, c, e0); return K1([FX + .4 - .04 * u, .1, .5], [FX + .02, -.03, -.01], 60, [0, 10], 1.9, [FX + .03, 0, 0]); }
-    case "b11": { const u = U(t, s0, e0); return K1([DX, lerp(.3, .27, u), lerp(2.15, 1.85, u)], [DX, .07, 0], 50, [60, 90], 1.1); }
-    case "b12": { if (stg === "A") { const u = U(t, s0, cut12()); return K1([lerp(.0, .03, u), .52, lerp(2.7, 2.45, u)], [0, .47, 0], 50, [40, 130], 1.2, [0, .47, .03]); } const u = U(t, cut12(), e0); return K1([FX - .36 + .04 * u, .1, .55], [FX + .04, -.03, -.01], 60, [0, 10], 1.9, [FX + .03, 0, 0]); }
-    case "b13": { const u = U(t, s0, S("b14")); return K1(L3(MACRO.p, [.212, .548, .14], u), MACRO.l, 100, [60, -100], 1.0, [.215, .545, .045]); }
-    case "b14": { if (stg === "D") { const u = U(t, tDisp(), tDerm()); return K1([DX, lerp(.24, .2, u), lerp(2.3, 2.05, u)], [DX, .1, 0], 50, [0, 40], 1.1); }
+    case "b09": return [macKey(s0, -.006, .19, .12, 100, [30, 0], 1.8), macKey(e0, .022, .207, .105, 100, [30, 0], 1.8)];
+    case "b10": { const c = cut10(); if (t < c) { const u = U(t, s0, c); return K1([FX + .2 - .05 * u, .03, .74 - .06 * u], [FX + .1, .0, 0], 62, [0, 10], 1.4, [FX + .075, -.01, 0]); } const u = U(t, c, e0); return K1([FX - .22 + .04 * u, .07, .62], [FX - .05, -.03, 0], 60, [0, 10], 1.5, [FX - .05, -.01, 0]); }
+    case "b11": { const u = U(t, s0, e0); return K1([DX + lerp(-.04, .03, u), lerp(.32, .25, u), lerp(2.45, 1.55, u)], [DX, .07, 0], 50, [60, 90], 1.1); }
+    case "b12": { if (stg === "A") { const u = U(t, s0, cut12()); return K1([lerp(.0, .03, u), .52, lerp(2.7, 2.45, u)], [0, .47, 0], 50, [40, 130], 1.2, [0, .47, .03]); } const u = U(t, cut12(), e0); return K1([FX + .22 - .06 * u, .0, .66 - .04 * u], [FX + .1 - .02 * u, .0, 0], 62, [0, 10], 1.4, [FX + .075, -.01, 0]); }
+    case "b13": { const u = U(t, s0, S("b14")); return [macKey(0, lerp(-.004, .024, u), .205, lerp(.12, .105, u), 100, [60, -100], 1.2)]; }
+    case "b14": { if (stg === "D") { const u = U(t, tDisp(), tDerm()); return K1([DX, lerp(.24, .2, u), lerp(2.4, 1.8, u)], [DX, .1, 0], 50, [0, 40], 1.1); }
       if (stg === "G") return slideCam(t);
-      const u = eio(U(t, S("b14"), tDisp())); return K1(L3([.212, .548, .14], [0, .5, 3.4], u), L3(MACRO.l, [0, .5, 0], u), lerp(100, 50, u), [lerp(60, 150, u), lerp(-100, 150, u)], 1.0, L3([.215, .545, .045], [0, .5, .02], u)); }
+      const u = eio(U(t, S("b14"), tDisp())), k0 = macKey(0, .024, .205, .105, 100, [60, -100], 1.2); return K1(L3(k0.p, [0, .5, 3.4], u), L3(k0.l, [0, .5, 0], u), lerp(100, 50, u), [lerp(60, 150, u), lerp(-100, 150, u)], 1.2, L3(k0.fp, [0, .5, .02], u)); }
     case "b15": return slideCam(t);
   }
 }
@@ -325,7 +391,7 @@ function camFor(id, t, stg) {
 // ------------------------------------------------------------ the frame
 const STAGES = { A: gA, H: gH, D: gD, E1: gE1, E2: gE2, F: gF, G: gG };
 const BG = { A: C.receipt, H: "#cdd4dc", D: "#dfe3e8", E1: "#2b1b14", E2: "#0c142e", F: "#cfc3b8", G: "#cfc3b8" };
-const KEYI = { A: 3.3, H: 2.6, D: 2.8, E1: 2.4, E2: 1.3, F: 2.4, G: 2.4 };
+const KEYI = { A: 3.3, H: 2.6, D: 2.8, E1: 2.4, E2: 1.3, F: 2.8, G: 2.4 };
 function show(name) { for (const k in STAGES) STAGES[k].visible = k === name; wall.visible = name === "A"; ground.visible = name === "A"; scene.background.set(BG[name]); }
 const prog = (a, b, t) => smooth((t - a) / (b - a));
 function stage(t) {
@@ -333,22 +399,23 @@ function stage(t) {
   let stg = "A"; if (id === "b03") stg = "H"; else if (id === "b08") stg = t < cut8() ? "E1" : "E2"; else if (id === "b10") stg = "F"; else if (id === "b11") stg = "D"; else if (id === "b12") stg = t < cut12() ? "A" : "F"; else if (id === "b14") stg = t < tDisp() ? "A" : t < tDerm() ? "D" : "G"; else if (id === "b15") stg = "G";
   show(stg); const keys = camFor(id, t, stg), cam = applyCam(keys, keys.length > 1 ? t : 0);
   const focus = V3(...cam.fp), macro = camera.position.distanceTo(focus) < .5, ext = macro ? .1 : (stg === "A" || stg === "D" ? 1.1 : stg === "H" || stg === "E2" ? 1.6 : .4);
-  key.position.copy(focus).add((stg === "E1" || stg === "F" || stg === "G" ? V3(-1.5, .3, .55).multiplyScalar(.7) : V3(-1.6, .6, .9).multiplyScalar(macro ? .7 : 1.4))); key.target.position.copy(focus); key.target.updateMatrixWorld(); key.intensity = KEYI[stg];
+  key.position.copy(focus).add((stg === "E1" || stg === "F" || stg === "G" ? V3(-1.5, .3, .55).multiplyScalar(.7) : macro ? V3(-1.2, .3, .42).multiplyScalar(.42) : V3(-1.6, .6, .9).multiplyScalar(1.4))); key.target.position.copy(focus); key.target.updateMatrixWorld(); const mac = macro && stg === "A"; key.intensity = KEYI[stg] * (mac ? 1.15 : 1); key.shadow.normalBias = mac ? .0003 : .0015; key.shadow.bias = mac ? -.0002 : -.0004; scene.environmentIntensity = mac ? .3 : .5; hemi.intensity = mac ? .3 : .45;
   Object.assign(key.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, near: .1, far: 8 }); key.shadow.camera.updateProjectionMatrix();
   if (stg === "A") {
     const dull = id === "b05" ? prog(W("b05", "looked dull") - .45, W("b05", "looked dull") + .45, t) : (id === "b06" || id === "b07" || id === "b09" || id === "b13" || id === "b14") ? 1 : 0;
     setDull(dull); const sh = id === "b12";
     gRail.visible = !sh; hooks.visible = sh; towelA.g.position.x = sh ? -.3 : -.2; towelX3.g.position.x = sh ? .3 : .6;
     towelB.g.rotation.x = 0; [towelA, towelX0, towelX3].forEach(w => { dullT(w, 0); w.g.rotation.x = 0; });
+    { const sa = smooth((camera.position.distanceTo(V3(.2, .5, .05)) - .35) / .5) * .014; [towelB, towelA, towelX0, towelX3].forEach((w, i) => { w.g.rotation.z = sa * Math.sin(t * .8 + i * 1.9); }); }
     towelA.g.visible = true; towelX0.g.visible = id === "b04"; towelX3.g.visible = id === "b04" || sh; towelB.g.visible = !sh;
     if (id === "b04") { const ts = B4T(), dv = [0, .35, .7, 1], tws = [towelX0, towelA, towelB, towelX3]; A.ticks = [];
       tws.forEach((w, i) => { const lt = t - ts[i]; dullT(w, i === 0 ? 0 : dv[i] * smooth(lt / .7)); w.g.rotation.x = lt < 0 ? 0 : -.2 * Math.sin(clamp(lt / 1.0) * Math.PI); const q = px(V3(B4X[i], RAILY + .07, .03)); A.ticks.push({ x: q.x, y: q.y - 14, t: ts[i] }); }); }
     if (id === "b02") { const tL = W("b02", "Let's check"), a = smooth(U(t, tL - .15, tL + 1.0)), ang = -.42 * a - .035 * Math.sin(t * 2.2) * a; towelB.g.rotation.x = ang; }
     towelB.g.updateMatrixWorld(true); [towelA, towelX0, towelX3].forEach(w => w.g.updateMatrixWorld(true));
-    lodTowel(towelB, camera.position, .75); [towelA, towelX0, towelX3].forEach(w => lodTowel(w, camera.position, 0));
+    lodTowel(towelB, camera.position); [towelA, towelX0, towelX3].forEach(w => lodTowel(w, camera.position));
     const wf = W("b01", "film"); let g = 0, macroOn = false;
     if (id === "b01") { g = .95 * prog(wf - .35, wf + .7, t); macroOn = true; } else if (id === "b05") { g = .62 * prog(W("b05", "Under a microscope") - .2, W("b05", "biofilm") + .4, t); macroOn = t > W("b05", "Under a microscope") - .6; } else if (id === "b13" || id === "b14") { g = .85; macroOn = true; }
-    filmU.uGrow.value = g; film.visible = macroOn && g > .005; if (macroOn) updBact(g); else bact.visible = false;
+    filmU.uGrow.value = g; film.visible = macroOn && g > .005; tintTowel(towelB, film.visible ? g : 0); if (macroOn) updBact(g); else bact.visible = false;
     if (id === "b13" || id === "b14") updSettle(5); else if (id === "b09") { macroOn = true; updSettle(t - (W("b09", "settle") - 2.4)); } else settlers.visible = false;
     if (id === "b05") { const wide = 1 - prog(S("b05") + 1.6, S("b05") + 2.4, t); A.cmpA = wide; const a = px(V3(-.2, RAILY + .1, 0)), b = px(V3(.2, RAILY + .1, 0)); A.cmp = [a.x, b.x, a.y - 4]; }
   }
@@ -357,12 +424,13 @@ function stage(t) {
     A.h0 = W("b03", "twenty-six") - .05; }
   if (stg === "D") { const q = px(V3(DX, .2, 0)); A.nt = { x: Math.min(q.x + 60, 640), y: Math.max(q.y - 170, 330) }; }
   if (stg === "E2") { const a = px(V3(E2X, .02, discZ[0] + .3)), b = px(V3(E2X, .02, discZ[1] + .3)); A.discs = [{ x: a.x, y: a.y }, { x: b.x, y: b.y }]; A.sliver = px(sliver); A.discT = cut8(); }
-  if (stg === "F") { const T0 = id === "b10" ? S("b10") : cut12(), r = .85, cyc = Math.floor(t * r), ph = (t * r) % 1, pat = Math.pow(Math.sin(ph * Math.PI), 2.2), enter = smooth(U(t, T0, T0 + .9)), cx = .02 + .025 * Math.sin(cyc * 2.3), cy = -.035 + .03 * Math.cos(cyc * 1.7), sf = cheekSurf(cx, cy), n = sf.n;
+  if (stg === "F") { const T0 = id === "b10" ? S("b10") : cut12(), r = .85, cyc = Math.floor(t * r), ph = (t * r) % 1, pat = Math.pow(Math.sin(ph * Math.PI), 2.2), enter = smooth(U(t, T0, T0 + .9));
+    const hp = headPt(dirOf(60 + 5 * Math.sin(cyc * 2.3), -10 + 4 * Math.cos(cyc * 1.7))), n = hp.n.clone().transformDirection(head.matrix), pg = hp.p.clone().applyMatrix4(head.matrix);
     const qn = new THREE.Quaternion().setFromUnitVectors(V3(0, 1, 0), n), qt = new THREE.Quaternion().setFromAxisAngle(n, .35 + .25 * Math.sin(cyc * 1.3 + 1)); qt.multiply(qn);
     const tex = V3(1, 0, 0).applyQuaternion(qt), drift = (1 - enter) * .35 + (1 - pat) * .05 * Math.sin(cyc * 1.1);
-    patTw.visible = true; patTw.quaternion.copy(qt); patTw.position.copy(sf.p).addScaledVector(n, .015 - .0032 * pat + (1 - pat) * .07 + (1 - enter) * .08).addScaledVector(tex, drift); patTw.updateMatrixWorld(true);
-    skinU.uPress.value.copy(sf.p); skinU.uDepth.value = .0042 * Math.pow(pat, 1.5); skinU.uAO.value = .42 * Math.pow(pat, 1.2);
-    const q = px(V3(FX, 0, 0)), qx = px(V3(FX + .1, 0, 0)), qy = px(V3(FX, .12, 0)); A.cheek = { x: q.x, y: q.y, rx: Math.abs(qx.x - q.x), ry: Math.abs(qy.y - q.y) }; }
+    patTw.visible = true; patTw.quaternion.copy(qt); patTw.scale.set(1 + .06 * pat, 1 - .14 * pat, 1 + .06 * pat); patTw.position.copy(pg).addScaledVector(n, .0152 * (1 - .14 * pat) - .0036 * pat + (1 - pat) * .07 + (1 - enter) * .08).addScaledVector(tex, drift); patTw.updateMatrixWorld(true);
+    skinU.uPress.value.copy(hp.p); skinU.uDepth.value = .0042 * Math.pow(pat, 1.5); skinU.uAO.value = .4 * Math.pow(pat, 1.2);
+    const wp = pg.clone().add(gF.position), q = px(wp), qx = px(wp.clone().add(V3(.1, 0, 0))), qy = px(wp.clone().add(V3(0, .12, 0))); A.cheek = { x: q.x, y: q.y, rx: Math.abs(qx.x - q.x), ry: Math.abs(qy.y - q.y) }; }
   else { skinU.uDepth.value = 0; skinU.uAO.value = 0; }
   A.stg = stg; return A;
 }
@@ -370,9 +438,9 @@ function stage(t) {
 window.__seek = function (t) {
   if (COVER) { // cover: towel macro with the film, headline plate below, receipt total + UNKNOWN stamp top-left
     show("A"); setDull(1); towelB.g.rotation.x = 0; gRail.visible = true; hooks.visible = false; towelB.g.visible = true; towelB.g.updateMatrixWorld(true); towelA.g.updateMatrixWorld(true);
-    filmU.uGrow.value = .85; film.visible = true; updBact(.85); updSettle(5);
-    applyCam([{ t: 0, p: [.205, .55, .15], l: [.215, .545, .02], f: 100, fp: [.215, .545, .045], o: [60, -100] }], 0); lodTowel(towelB, camera.position, .75); lodTowel(towelA, camera.position, 0);
-    key.position.set(-.1, .62, .25); key.target.position.set(.21, .55, .03); key.target.updateMatrixWorld(); key.intensity = 2.8;
+    filmU.uGrow.value = .85; film.visible = true; tintTowel(towelB, .85); updBact(.85); updSettle(5);
+    applyCam([macKey(0, .012, .2, .11, 100, [60, -100], 2.2)], 0); lodTowel(towelB, camera.position); lodTowel(towelA, camera.position);
+    key.position.set(-.45, .5, .2); key.target.position.set(.21, .55, .04); key.target.updateMatrixWorld(); key.intensity = 3.8; key.shadow.normalBias = .0003; key.shadow.bias = -.0002; scene.environmentIntensity = .3; hemi.intensity = .3;
     Object.assign(key.shadow.camera, { left: -.1, right: .1, top: .1, bottom: -.1, near: .05, far: 2 }); key.shadow.camera.updateProjectionMatrix();
     filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
   }

@@ -116,7 +116,7 @@ export function createOverlay(T, TH, cv) {
   // ------------------------------------------------------------ hook + labels
   function plate(x, y, w, h, a) { ctx.save(); ctx.globalAlpha = a; ctx.shadowColor = "rgba(27,36,64,.14)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 8; ctx.fillStyle = "rgba(251,250,246,.90)"; rrect(x, y, w, h, 34); ctx.fill(); ctx.restore(); }
   function hook(t) {
-    if (t > T.hookEnd + .4) return; const fade = 1 - smooth((t - T.hookEnd) / .3), k = eo3(t / .22), size = 124;
+    if (t > T.hookEnd + .4) return; const fade = 1 - smooth((t - T.hookEnd) / .3), k = 1, size = 124;
     const L = [[["Your towel", NAVY]], [["grows a ", NAVY], ["film", TEAL], ["?", NAVY]]], wmax = Math.max(...L.map(ln => ln.reduce((a, p) => a + mw(p[0], size, 700, ALB, -3), 0)));
     ctx.save(); ctx.globalAlpha = fade; plate(40, 170, Math.min(900, wmax + 80), 345, 1);
     L.forEach((ln, i) => { const y = 340 + i * 140; ctx.save(); ctx.translate(0, (1 - k) * 14); mix(ln, 0, y, size, { left: 78, ls: -3, a: .55 + .45 * k }); ctx.restore(); });
