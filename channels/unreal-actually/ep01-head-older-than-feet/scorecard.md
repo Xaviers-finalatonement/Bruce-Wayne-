@@ -191,3 +191,55 @@ All other scores are ≥ 3, and (a) and (g) are at the minimum of 4.
    - Delete the stale `script.json` `screen` entries: b02 "head +0.000 000 000 001 s" and b09 "90 billionths of a second".
    - Retitle `claims.md`, which is still titled "Reality Rulebook".
    - Copy the approved render over `out/ep01.mp4`, which is still the round-1 file.
+
+---
+
+## Round 3 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode).
+**Reviewed:** `out/wip/ep01.mp4` (73.10 s, 1080×1920, 30 fps, 2193 frames, 86.7 MB, 9.49 Mb/s), `out/ep01.srt`, `out/timeline.json`, `script.json`, `claims.md`, `out/render-report.md`, `out/cover.png`, `overlay.js`, `scene.js`, `engine/sound.py`.
+**Method:** I pulled stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s and two contact sheets with one frame every 1.5 s from 3.0 to 72.0 s, each with its exact timestamp burned in. I also took closer frames at 18.0, 25.5, 30.5, 31.8, 33.8, 45.0, 47.5, 69.0 and 70.9 s, a verdict strip from 56.4 to 57.7 s, and the cover.
+**Audio caveat:** I cannot hear the film. I judged sound only from the render report and `engine/sound.py`.
+
+### Scores
+
+| | Criterion | R1 | R2 | R3 | Evidence |
+|---|---|---|---|---|---|
+| a | Hook in first 2 s | 4 | 4 | **4** | **What works:** the VO starts at 0.2 s and the title is up by 0.5 s. The figure is now solid and rim-lit. "AHEAD" sits to the right of the connector, not on it (1.0). The 40 px hedge is visible from 0.0 s. Empty floor is down to about the bottom 25 %. **What keeps it off 5:** the two clocks still differ only by hand position and glow colour, so the picture doesn't show "older" at a glance. |
+| b | One thread | 4 | 4 | **4** | The script is unchanged and the thread is still clean. GPS (44.5–56 s) is still a side trip, tied back through the phone and the map. |
+| c | Picture moves with the sentence | 3 | 4 | **5** | **All three R2 misses are fixed:** <br>• The atomic clocks land on "two super-precise atomic clocks" (26.7–27.5). <br>• "The higher clock ticked faster" gets b04-size rate bars, upper 3 lit and lower 2 (33.8). <br>• The 79-year filament is already up when "Over a whole" starts (34.5). <br>**Also landing on its word:** a real handset on "your phone" (45.0); the FAST inset on "clocks run fast" (47.5); the TRUE stamp at 57.45 on "True." (cue 57.44); "+" per step on the stairs; the hair on "By a hair" (70.9). |
+| d | Motivated camera | 4 | 4 | **4** | **Better:** the lab now pushes in, so the clocks are about 320 px wide (31.8). **Still cropped:** the b05 travel cuts the figure at the left edge (15–18). In the hair payoff the figure is half out of frame (70.9). |
+| e | Voice carries meaning, screen carries figures | 3 | 4 | **4** | The figures are on screen and the voice says what they mean. **Still repeated:** SET SLOW / BEFORE LAUNCH sits over a caption with the same words (51.0–53.7). The 90 ns figure still has no comparison (§4, optional). |
+| f | Rhythm | 3 | 4 | **4** | **Fixed:** the 35–36.8 hole is gone. The lab now has an event every ~1.5 s from 27 to 34 s. **Still slow:** 21.0–26.5 is a sparse bench with small events and the top ~40 % of the frame empty. The rack unit (49.5–53.7) is still one frame with a knob turning. The mix is still flat (LRA 1.9 LU). |
+| g | Ending | 4 | 4 | **4** | **Works:** it rings back to the opening frame, and the hair gag lands (70.9). **What keeps it off 5:** the verdict card plays twice (57.4–61 and 71.3–73.1). "By a hair." gets about 0.87 s before the cut. The ending captions now cross the feet clock (67.5–69.0, "is older than your feet." runs over the FEET clock face). |
+| h | Production value | 3 | 3 | **4** | **Every asset flagged in R2 is rebuilt, on palette:** <br>• **Earth:** night side, Horizon city clusters, thin rim, no blue and no clouds (7.5–10.5). <br>• **Lab:** optical breadboard with a hole grid, steel posts and a laser. The neon bars and sine wave are gone (25.5, 30.5). <br>• **Figure:** solid, with a hard key, two-colour rims and a contact shadow, on the hook, b05, stairs, ending and cover. <br>• **Satellite:** crinkled gold-foil body, dark gridded cells with a travelling glint, and no clock face on the body (47.5). <br>• **Phone:** a black-glass handset in a hand, with the same dark map and pin as 54 s (45.0). <br>Nothing now reads as a placeholder. **4, not 5. It reads as polished stylised CG, not filmed:** <br>• The figure is a ball-jointed artist's mannequin. <br>• The clock housings are grey boxes with wall-clock faces. <br>• The satellite is two stacked blocks with a glowing saucer dish. <br>• The hand has capsule fingers. <br>• "REAL" is still muddy brown (43.5). <br>• Sets are sparse: the upper halves at 21–26.5 and 45.0 are empty, and 42.0 is a lone streak. |
+
+### Round-2 fix list: status
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| 1 | Night-side Earth | **Done** | 7.5–10.5 and the 46.5 limb: dark sphere, Horizon city clusters, thin rim. |
+| 2 | Optical-clock bench, readable proof | **Done** | **Done:** breadboard, posts and laser; clocks about 320 px; the clocks land on their line (26.7–27.5); an arrowed dimension line between the clock heights with "33 cm ≈ 1 ft" (31.8); rate bars 3 vs 2 (33.8). **Leftovers:** no visible haze scatter on the laser; the top ~40 % of the frame is empty from 21 to 34 s; the label is about 40 px. |
+| 3 | Replace the neon-outline human | **Done** | A solid rim-lit figure with a contact shadow in every figure scene and on the cover. AHEAD is off the connector (1.0) and the composition is raised. **Leftover:** the figure is cropped at the left edge (15–18, 70.9). Breathing can't be judged from stills. |
+| 4 | Satellite and phone | **Mostly done** | **Done:** foil body, dark cells, glint, and a FAST inset instead of a clock face (47.5); a handset in a hand with the map and pin (45.0). **Leftovers:** the dish is still a glowing disc on a stick; the hand is made of capsule shapes. |
+| 5 | Captions, hedge, empty frames | **Mostly done** | **Done:** the feet clock is clear of the caption at 18.0; the hedge is 40 px everywhere (`overlay.js` l.22 and l.41) and up for all of b04; the filament starts on "Over a whole" (34.5). **New:** the ending captions cross the feet clock (67.5–69.0). The optional 90 ns comparison is not added. |
+| 6 | Sound, paperwork, shipping | **Partly** | **Done:** the stale `script.json` screen strings are gone (b02, b09); `claims.md` is retitled; the render report matches this render (86.7 MB). **Not done:** LRA is still 1.9 LU against a target of ≥ 4. The voice is still Kokoro `am_michael`. `out/ep01.mp4` is still the round-1 file (94.8 MB, 73.41 s, 7 Nov). |
+
+### Factual and ethical items
+
+- **F1 — CLOSED** (unchanged).
+- **F2 — CLOSED.** "speeds exaggerated" is 40 px and readable on the hook, all of b04, b05 and the ending.
+- **F3 — process note for Bruce (unchanged).** `claims.md` is still certified by Claude, not by a person (§5). Bruce should spot-check C3–C5 and C7, or accept an AI check.
+- **F4 — new, not blocking.** The lab rate bars (33.1–34.9) show the upper clock at 3 vs 2 for an effect of about 4 × 10⁻¹⁷, with no "speeds exaggerated" tag. That is the same kind of exaggeration as b04, but it sits on the real NIST clocks. The bars carry no figure and the spoken claim (C4) is OK, so this item is not open. I asked for these bars in R2, so the missing tag is partly my miss. Add the tag before upload.
+- **On-screen and spoken audit:** <br>• AHEAD / HEAD / FEET / FASTER / SLOWER / SLOW / FAST → C1/C2 <br>• 2010 · NIST → C3 <br>• 33 cm ≈ 1 ft → C4 <br>• 79 YEARS and ≈ 0.000 000 09 s → C5 <br>• REAL → C5 <br>• GPS and the FAST inset → C6 <br>• SET SLOW BEFORE LAUNCH and the FAST/SLOW knob → C7 <br>• pin drift and "wrong" → C8 <br>• CASE FILE 001 / TRUE / the rule → C2 <br>• "+" per step → C4 <br>All are OK rows. **Nothing factual is open.**
+
+### Verdict: **PASS**
+
+No score is below 3. (a) = 4, (g) = 4 and (h) = 4. Nothing factual or ethical is open.
+
+### Before upload (non-blocking; does not reopen the gate)
+
+1. Copy `out/wip/ep01.mp4` over `out/ep01.mp4`, which is still the round-1 file, and regenerate `out/contact-sheet.jpg` from it.
+2. Add the 40 px "speeds exaggerated" tag during the lab rate bars (33.1–34.9) (F4).
+3. Keep the ending captions off the feet clock (67.5–69.0). Move the band up beside the connector, or frame the clocks higher.
+4. Next episode, not this one: get LRA ≥ 4 (hits and the TRUE stamp 4–6 dB over the bed) and audition a less stock voice than `am_michael`.

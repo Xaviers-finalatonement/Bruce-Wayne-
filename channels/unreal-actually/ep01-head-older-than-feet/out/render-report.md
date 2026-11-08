@@ -10,3 +10,9 @@
   - none
 
 Contact sheet: `contact-sheet.jpg` (a frame every 2.5 s).
+
+## Final (shipped) file
+
+- `out/ep01.mp4`: 84.9 MB, 73.1 s, same audio as above (−14.3 LUFS, TP −1.4 dBTP).
+- Burned-in "speeds exaggerated" tag at 33.1–34.9 s (reviewer round-3 note F4).
+- Gate: PASSED round 3 (see scorecard.md).
