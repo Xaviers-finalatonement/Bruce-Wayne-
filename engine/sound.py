@@ -288,28 +288,52 @@ def sr_sweep(dur):  # towel / cloth swish
 def sr_pop(): return sr_tick(False) * 1.2
 
 
-def sr_bed(sfx, dur):
+def sr_rub(c):  # cloth rubbing on cloth: low-mid band noise with a slow stroke envelope
+    dur = c.get("dur", 1.0); n = int(dur * SR); t = np.arange(n) / SR
+    x = bandnoise(n, 300, 3200) * (0.5 + 0.5 * np.sin(2 * np.pi * 3.2 * t + 0.6)) ** 1.5
+    return x * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.2 * db(-27)
+
+
+def sr_wet(c):  # soft wet texture: band-limited noise with a few tiny bubbles
+    dur = c.get("dur", 1.2); n = int(dur * SR); t = np.arange(n) / SR
+    x = bandnoise(n, 250, 1500) * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 2 * 0.6
+    r = np.random.default_rng(5)
+    for tt in r.uniform(0.1, dur - 0.1, 6):
+        i = int(tt * SR); m = min(n - i, int(.05 * SR)); tm = np.arange(m) / SR
+        x[i:i + m] += np.sin(2 * np.pi * (r.uniform(500, 900) + 1800 * tm) * tm) * env_exp(m, 0.012) * 0.5
+    return x * db(-29)
+
+
+def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s), sparse quiet droplets 3-6 s apart
     n = len(sfx); t = np.arange(n) / SR
     fade = np.minimum(1, t / 2.0) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 1.2)
+    bar = 4 * 60 / 80.0; seg = 8 * bar
+    chords = [[130.8, 261.6, 329.6, 392.0, 493.9], [110.0, 220.0, 329.6, 392.0, 523.3], [87.3, 261.6, 349.2, 440.0, 523.3], [98.0, 246.9, 293.7, 392.0, 587.3]]
     pad = np.zeros(n)
-    for f, a in [(130.8, .7), (261.6, 1.0), (329.6, .8), (392.0, .7), (493.9, .45), (587.3, .3)]:
-        for det in (-.5, .5):
-            pad += a * np.sin(2 * np.pi * (f + det) * t + det) * (0.65 + 0.35 * np.sin(2 * np.pi * t / (9.0 + f / 70)))
+    for ci, ch in enumerate(chords * int(dur / (seg * 4) + 2)):
+        a0 = ci * seg - 1.5; a1 = (ci + 1) * seg + 1.5
+        if a0 > dur + 1: break
+        w = np.interp(t, [a0, a0 + 3, a1 - 3, a1], [0, 1, 1, 0], left=0, right=0)
+        if not w.any(): continue
+        for f in ch:
+            for det in (-.5, .5):
+                pad += w * np.sin(2 * np.pi * (f + det) * t + det) * (0.65 + 0.35 * np.sin(2 * np.pi * t / (9.0 + f / 70))) * (0.7 if f < 150 else 0.5)
     pad = lowpass(pad, 1700)
     sfx += pad * fade * db(-35)
-    r = np.random.default_rng(11)
-    for tt in np.arange(1.2, dur, 1.7):  # faint water droplets
-        tt += r.uniform(-.4, .4); i = int(tt * SR); m = min(n - i, int(.25 * SR))
-        if m > 0 and i > 0:
+    r = np.random.default_rng(11); tt = 2.5
+    while tt < dur:  # faint water droplets, random 3-6 s apart
+        i = int(tt * SR); m = min(n - i, int(.25 * SR))
+        if m > 0:
             f = r.uniform(1100, 2100); tm = np.arange(m) / SR
-            sfx[i:i + m] += np.sin(2 * np.pi * (f + 900 * tm) * tm) * env_exp(m, 0.03) * db(-42)
+            sfx[i:i + m] += np.sin(2 * np.pi * (f + 900 * tm) * tm) * env_exp(m, 0.03) * db(-48)
+        tt += r.uniform(3, 6)
 
 
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
                        custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
-    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.6),
+    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.6, custom=dict(rub=sr_rub, wet=sr_wet)),
 }
 
 

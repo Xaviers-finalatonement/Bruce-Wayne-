@@ -20,7 +20,7 @@ export function makeTiming(tl) {
     ["b05", W("b05", "Under a microscope"), ["biofilm seen"], "line"],
     ["b06", W("b06", "Live bacteria"), ["live bacteria: highest at month 6"], "line"],
     ["b08", S("b08") + .05, ["LINE 2 · from your skin?"], "head"],
-    ["b08", W("b08", "Staph"), ["Staph: typically < 1 %"], "line"],
+    ["b08", W("b08", "Staph"), ["Staph: typically <\u00a01\u00a0%"], "line"],
     ["b09", S("b09") + .3, ["towel-loving bacteria?"], "line"],
     ["b10", S("b10") + .05, ["LINE 3 · harm to skin?"], "head"],
     ["b10", W("b10", "The study never"), ["not measured"], "line"],
@@ -38,7 +38,8 @@ export function makeTiming(tl) {
     { id: "unk", text: "UNKNOWN", color: "slate", t: W("b13", "unknown") - .05, at: "total" },
   ];
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
-  cue(0.05, "swell", { dur: 2.2 });
+  cue(0.1, "rub", { dur: 1.1 }); cue(W("b01", "film") - .1, "wet", { dur: 1.3 }); cue(T.hookEnd - .2, "swell", { dur: .9 });
+  cue(W("b02", "Let's check") - .3, "rub", { dur: 1.0 }); cue(W("b10", "Line three") + .4, "rub", { dur: 1.6 }); cue(W("b12", "pat your skin"), "rub", { dur: 1.6 });
   T.items.forEach(it => { const n = it[2].length; cue(it[1], "tick", { t1: it[1] + .08 + n * .1, rate: 16 }); });
   T.stamps.forEach(s => cue(s.t, "hit", { gain: 1 }));
   [S("b02"), S("b03"), S("b04"), S("b05"), S("b06"), S("b08"), S("b09"), S("b10"), S("b11"), S("b12"), S("b13"), S("b14"), S("b15")].forEach(c => cue(c - .05, "sweep", { dur: .5 }));
