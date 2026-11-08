@@ -34,7 +34,7 @@ function serve() {
   page.on("console", m => { if (m.type() === "error") console.error("console:", m.text()); });
   const url = `http://127.0.0.1:${port}/${rel}/index.html` + (flag("cover") ? "?cover=1" : (val("q") ? "?" + val("q") : ""));
   await page.goto(url);
-  await page.waitForFunction("window.__ready === true", null, { timeout: 60000 });
+  await page.waitForFunction("window.__ready === true", null, { timeout: 180000 });
   const dur = await page.evaluate(() => window.__duration || 0);
 
   if (flag("cues")) {
@@ -94,7 +94,7 @@ function serve() {
     for (let w = 1; w < Math.min(WORKERS, todo.length); w++) {
       const b = await chromium.launch({ args: ["--use-angle=swiftshader", "--use-gl=angle", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"] });
       const pg = await (await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 })).newPage();
-      await pg.goto(url); await pg.waitForFunction("window.__ready === true", null, { timeout: 60000 });
+      await pg.goto(url); await pg.waitForFunction("window.__ready === true", null, { timeout: 180000 });
       pages.push(pg); extra.push(b);
     }
     await Promise.all(pages.map(worker));
