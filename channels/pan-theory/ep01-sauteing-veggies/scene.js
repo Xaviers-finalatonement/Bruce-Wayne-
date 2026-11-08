@@ -286,7 +286,7 @@ function animPlates(t) {
   plateL.position.set(-1.55 + .2 * join, 0, 1.1 + .55 * (1 - lvl)); plateR.position.set(1.55 - .2 * join, 0, 1.1 - .55 * (1 - lvl));
   plateL.position.y = 2.2 * (1 - land) * (lt < .5 ? 1 : 0); plateR.position.y = 2.2 * (1 - eob(clamp((lt - .12) / .5))) * (lt < .62 ? 1 : 0);
   const pop = (arr, t0, sz, st) => arr.forEach((tt, i) => { const u = eob(clamp((t - t0 - i * st) / .35)); tt.scale.setScalar(sz * Math.max(.001, u)); tt.position.y = .62 + .05 * Math.sin(t * 2 + i * 1.7); });
-  pop(balTiles.L, S("b12") + .75, .44, .12); pop(balTiles.R, S("b12") + .75, .44, .12); pop(balTiles.A, T.tTrade - .1, .44, .14);
+  pop(balTiles.L, S("b12") + .75, .44, .12); balTiles.R.forEach(tt => tt.scale.setScalar(.001)); // carrot-only plate: no vitamin C tiles (no source puts vitamin C in carrots; reviewer F11) pop(balTiles.A, T.tTrade - .1, .44, .14);
   const dim = smooth(clamp((t - T.tGood - .3) / .6)) * LVL; balTiles.R.forEach(tt => tt.userData.dimTo(dim)); // sautéed side: its C tiles dim to the shared level
   balTiles.A.forEach((tt, i) => tt.userData.glow(.3 * smooth(clamp((t - T.tTrade - .3 - i * .14) / .4)) * (.8 + .2 * Math.sin(t * 5 + i))));
   balGleam.forEach((q, i) => { const g = q.userData.g, u = smooth(clamp((t - T.tTrade - .1 - i * .12) / .5)); q.position.set(plateR.position.x + g[0], .45, plateR.position.z + g[1]); q.material.opacity = .55 * u * (.8 + .2 * Math.sin(t * 2 + i)); q.visible = u > .01; }); // oil glint on the carrot plate
