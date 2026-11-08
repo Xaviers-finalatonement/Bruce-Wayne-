@@ -289,7 +289,7 @@ const bendY = z => -z * z / (2 * RB);
 // ------------------------------------------------------------ STAGE G: five skin tones, light to deep, matte, convex forms with raking light
 const gG = new THREE.Group(); scene.add(gG); const GX = 120; gG.position.x = GX; gG.visible = false; const GW = .2;
 C.skin.forEach((h, i) => { const geo = new THREE.PlaneGeometry(GW, 1.1, 40, 60), p = geo.attributes.position, cv = []; for (let k = 0; k < p.count; k++) { const y = p.getY(k), x = p.getX(k); p.setZ(k, -.35 * y * y - 6 * x * x - .006 * Math.cos(x * 15 + i) + .004 * Math.sin(y * 11 + i * 2)); const ex = smooth((Math.abs(x) / (GW / 2) - .45) / .55), ey = smooth((Math.abs(y) - .3) / .25), vv = 1 - .3 * ex - .22 * ey, mt = .5 + .5 * Math.sin(x * 23 + y * 9 + i * 3.1) * Math.cos(y * 6 - i); cv.push(vv * (1 - .06 * mt), vv * (1 - .3 * ex * .6 - .06 * ey - .04 * mt), vv * (1 - .36 * ex * .6 - .08 * ey - .06 * mt)); } geo.setAttribute("color", new THREE.Float32BufferAttribute(cv, 3)); geo.computeVertexNormals(); // curved panel + edge falloff
-  const m = mesh(geo, skinMat(h, [GW / .013, 1.1 / .013], { vc: 1, rough: .62, cc: .05, sheen: .25, sssK: .45, relief: .45 + .06 * i, pore: 2.2 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
+  const m = mesh(geo, skinMat(col(h).lerp(col("#8a7466"), .14).getStyle(), [GW / .013, 1.1 / .013], { vc: 1, rough: .62, cc: .05, sheen: .25, sssK: .35, relief: .1 + .03 * i, pore: 2.2 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
   const sh = hairs(260, hairGeo(.005, .00015, .5), new THREE.MeshStandardMaterial({ color: col(i < 2 ? "#a58c78" : "#120a06"), roughness: .6, transparent: true, opacity: i < 2 ? .5 : .9 }), k => { const x = (hash(k * 1.3 + i) - .5) * GW * .94, y = (hash(k * 2.9 + i) - .5) * .36, z = -.35 * y * y - 6 * x * x, n = V3(12 * x, .7 * y, 1).normalize(), a = hash(k * 4.7) * .6; return { p: V3(x + i * GW, y, z), d: n.clone().multiplyScalar(.5).add(V3(Math.sin(a), -.7, 0)).normalize(), s: .6 + hash(k * 6.1) * .9 }; }, 40 + i); gG.add(sh); });
 
 // ------------------------------------------------------------ cameras
@@ -350,7 +350,7 @@ function camFor(id, t, stg) {
 // ------------------------------------------------------------ the frame
 const STAGES = { A: gA, H: gH, D: gD, E1: gE1, E2: gE2, F: gF, G: gG };
 const BG = { A: C.receipt, H: "#cdd4dc", D: "#dfe3e8", E1: "#2b1b14", E2: "#0c142e", F: "#a89484", G: "#cfc3b8" };
-const KEYI = { A: 3.3, H: 2.6, D: 2.8, E1: 2.4, E2: 1.3, F: 2.8, G: 2.4 };
+const KEYI = { A: 3.3, H: 2.6, D: 2.8, E1: 2.4, E2: 1.3, F: 2.8, G: 1.9 };
 function show(name) { for (const k in STAGES) STAGES[k].visible = k === name; wall.visible = name === "A"; ground.visible = name === "A"; scene.background.set(BG[name]); }
 const prog = (a, b, t) => smooth((t - a) / (b - a));
 function stage(t) {
