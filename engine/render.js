@@ -59,20 +59,53 @@ function serve() {
     const wipDir = path.join(outDir, "wip"); fs.mkdirSync(wipDir, { recursive: true });
     const outFile = path.join(wipDir, name), partial = path.join(wipDir, "." + name.replace(".mp4", ".partial.mp4"));
     const n = Math.round(tl.duration * FPS);
-    const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
-      ...(fs.existsSync(audio) ? ["-i", audio] : []),
-      "-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "17", "-maxrate", "10M", "-bufsize", "20M", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
-      "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart",
-      ...(fs.existsSync(audio) ? ["-c:a", "copy", "-t", String(n / FPS)] : []), partial], { stdio: ["pipe", "inherit", "inherit"] });
-    const done = new Promise(r => ff.on("close", c => r(c)));
-    const t0 = Date.now();
-    for (let i = 0; i < n; i++) {
-      await page.evaluate(t => window.__seek(t), i / FPS);
-      const buf = await page.screenshot({ type: "jpeg", quality: 98, timeout: 300000 });
-      if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
-      if (i % 150 === 0) console.log(`frame ${i}/${n}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+    // Chunked + resumable: frames are encoded in CHUNK-frame segments under wip/chunks-<ep>/ by WORKERS
+    // parallel browsers; finished segments are kept, so a killed render resumes where it stopped.
+    const CHUNK = parseInt(val("chunk") || "150", 10), WORKERS = parseInt(val("workers") || process.env.RENDER_WORKERS || "2", 10);
+    const chunkDir = path.join(wipDir, "chunks-" + name.replace(".mp4", ""));
+    if (flag("fresh")) fs.rmSync(chunkDir, { recursive: true, force: true });
+    fs.mkdirSync(chunkDir, { recursive: true });
+    const stamp = JSON.stringify({ n, CHUNK, FPS, mtime: ["scene.js", "overlay.js", "theme.js", "index.html"].map(f => { try { return fs.statSync(path.join(epDir, f)).mtimeMs; } catch { return 0; } }) });
+    const stampFile = path.join(chunkDir, "stamp.json");
+    if (fs.existsSync(stampFile) && fs.readFileSync(stampFile, "utf8") !== stamp) { console.log("scene changed since last chunks: starting fresh"); fs.rmSync(chunkDir, { recursive: true, force: true }); fs.mkdirSync(chunkDir, { recursive: true }); }
+    fs.writeFileSync(stampFile, stamp);
+    const chunks = []; for (let s = 0, k = 0; s < n; s += CHUNK, k++) chunks.push({ k, s, e: Math.min(n, s + CHUNK), file: path.join(chunkDir, `c_${String(k).padStart(4, "0")}.mp4`) });
+    const todo = chunks.filter(c => !fs.existsSync(c.file));
+    console.log(`${chunks.length} chunks, ${chunks.length - todo.length} already done, ${WORKERS} workers`);
+    const t0 = Date.now(); let doneFrames = 0;
+    const encodeArgs = ["-c:v", "libx264", "-profile:v", "high", "-level:v", "4.2", "-preset", "slow", "-tune", "film", "-crf", "17", "-maxrate", "10M", "-bufsize", "20M", "-pix_fmt", "yuv420p", "-r", String(FPS), "-g", String(FPS * 2),
+      "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"];
+    async function worker(pg) {
+      for (let c; (c = todo.shift());) {
+        const tmp = c.file + ".tmp.mp4";
+        const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-", ...encodeArgs, tmp], { stdio: ["pipe", "inherit", "inherit"] });
+        const closed = new Promise(r => ff.on("close", r));
+        for (let i = c.s; i < c.e; i++) {
+          await pg.evaluate(t => window.__seek(t), i / FPS);
+          const buf = await pg.screenshot({ type: "jpeg", quality: 98, timeout: 300000 });
+          if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
+        }
+        ff.stdin.end(); if ((await closed) !== 0) throw new Error("ffmpeg failed on chunk " + c.k);
+        fs.renameSync(tmp, c.file); doneFrames += c.e - c.s;
+        console.log(`chunk ${c.k + 1}/${chunks.length} done  (${doneFrames} new frames, ${((Date.now() - t0) / 1000).toFixed(0)}s)`);
+      }
     }
-    ff.stdin.end(); const code = await done; if (code !== 0) throw new Error("ffmpeg failed " + code); fs.renameSync(partial, outFile);
+    const pages = [page]; const extra = [];
+    for (let w = 1; w < Math.min(WORKERS, todo.length); w++) {
+      const b = await chromium.launch({ args: ["--use-angle=swiftshader", "--use-gl=angle", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"] });
+      const pg = await (await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 })).newPage();
+      await pg.goto(url); await pg.waitForFunction("window.__ready === true", null, { timeout: 60000 });
+      pages.push(pg); extra.push(b);
+    }
+    await Promise.all(pages.map(worker));
+    for (const b of extra) await b.close();
+    const list = path.join(chunkDir, "list.txt");
+    fs.writeFileSync(list, chunks.map(c => `file '${path.basename(c.file)}'`).join("\n") + "\n");
+    const mux = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", list,
+      ...(fs.existsSync(audio) ? ["-i", audio, "-map", "0:v", "-map", "1:a", "-c:a", "copy", "-t", String(n / FPS)] : []),
+      "-c:v", "copy", "-movflags", "+faststart", partial], { stdio: ["ignore", "inherit", "inherit"] });
+    const code = await new Promise(r => mux.on("close", r)); if (code !== 0) throw new Error("concat/mux failed " + code);
+    fs.renameSync(partial, outFile);
     console.log(`rendered ${outFile} in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     // SRT from the timeline
     const ts = s => { const ms = Math.round(s * 1000), p = (v, l = 2) => String(v).padStart(l, "0"); return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`; };
