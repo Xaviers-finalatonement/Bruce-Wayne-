@@ -266,3 +266,115 @@ The burned-in timestamps on my sheets ran 1.0 s late (a drawtext artifact; the s
    - **Cues:** remove the duplicate tick at 2.478 s.
    - **C5:** move "Japanese households only" from "hedge used" into Notes, or add "in Japan" on screen.
    - **After a pass:** Bruce spot-checks C4/C5/C6/C8, and the approved render is copied to `out/ep01.mp4`.
+
+## Round 3 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode), same rules and calibration as rounds 1–2.
+**Reviewed:** `out/wip/ep01.mp4` (74.02 s, 1080×1920, 30 fps, 2220 frames, 83.3 MB, stream start 0.000), `out/ep01.srt`, `out/cues.json`, `out/timeline.json`, `script.json`, `claims.md`, `platform.json`, `out/render-report.md`, `out/cover.png`, the round-3 diff of `scene.js`, `overlay.js`, `timing.js` and `engine/sound.py`.
+**Method:**
+- Stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s.
+- Two contact sheets, one frame every 1.5 s (every 45th frame), 0–73.5 s. The timestamps are burned from pts, and the stream starts at 0.000, so they are true times.
+- Full frames at 5.9, 30.6, 43.0, 55.6 and 60.0 s. A 0.2 s strip across 59.2–60.8 s, plus 70.9 s.
+- A 0.5 s strip across the end skin slide (65.5–70.5 s).
+- Full-resolution crops at 1.2 (hook weave), 19.8 ("new / month 2"), 21.0 (microscope macro), 25.5 (bars), 30.6 (forearm) and 43.0 s (cheek and towel), plus the cover.
+
+**Audio caveat:** I cannot hear the film. I judged sound only from the render report (−14.0 LUFS, LRA 2.0 LU, TP −1.5 dBTP), `out/cues.json` and the `sr_*` code.
+
+### Scores
+
+| | Criterion | R1 | R2 | R3 | Evidence |
+|---|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | 4 | **4** | **Unchanged from R2, and still works:** the title "Your towel grows a film?" has "film" in Teal. The push-in runs from 0.5 s. A teal film floods the base weave by 1.5 s, and teal and slate rods are in the frame by 2.0 s. **Still weak:** frame 0 shows the title greyed out mid-fade (0.0), and 0.0–1.0 s is the same pale, nearly static pattern. |
+| b | One thread | 4 | 4 | **4** | **Holds:** claim → Lines 1–3 → disposables → UNKNOWN → a summary that answers both the hook and the claim. **Still loose:** Line 2 (where the bacteria come from) is the loosest link to the claim. |
+| c | Picture moves with the sentence | 3 | 4 | **4** | **Fixed in R3:** teal settlers drift in and lie in the ground weave on "settle" (40.5). The "month 2" towel is visibly greyer than "new" on "looked dull" (19.8). "Disposable towels? Not tested." now plays over the neutral paper-and-cotton pair (63.0–64.5). **Holds:** the counter at 12.0, the calendar at 15–18, the biofilm tag at 22.5, the bars at 25.5, the Staph colony at 33–36, the two hooks at 52.5–54 and UNKNOWN at 58.5. **Misses:** on "pat your skin dry" (55.6) and "Does the film hurt your skin?" (43.5), the "skin" does not read as a face (see h). "Harm to your skin?" (60.5–61.5) plays over towels. |
+| d | Motivated camera | 3 | 3 | **3** | **Works:** the hook push-in, the microscope push (21→22.5), the cheek's second angle, the pull-back in the summary (59.8→60.8) and the lateral skin slide (65.5–69.5). **Unchanged:** the hand is cut, so there are no touch-led moves. The forearm slide is still ≈1.4 s (30.0–31.4). The rail and wall shots are still locked: 3.0–6.0, 7.5–10.5 (a slight push), 15.0–19.8, 48–51, 52.5–54 and 63–64.5. 0.0–1.0 s has almost no motion. |
+| e | Voice carries meaning, screen carries figures | 3 | 4 | **4** | **Fixed in R3:** the chart labels "month 2/4/6" and the "new / month 2" tags are now ≈36 px (19.8, 25.5). **Holds:** the 26-households counter, "6 months / tested every 2 months", "Staph: typically < 1 %" (≈40 px, right edge ≈ x 940), "not tested here" on a pill, and the 36 px disclaimer. **Small:** the dimmed receipt lines are still small Courier on a phone. |
+| f | Rhythm | 3 | 4 | **4** | **Holds:** 74.0 s. The end card is fully in at 70.9 and held 3.1 s. Captions change every 1.5–2.5 s. **Better:** the summary now has five picture changes in 13 s (57 stamp, 60 pull-back, 61 rail, 63 disposables, 65.5 skin slide), against two long reuses in R2. **Not heard:** LRA is 2.0 LU, so the louder stamp hit and the ducking change did not widen the range (R2: 2.1). |
+| g | Ending | 3 | 4 | **4** | **Fixed in R3:** UNKNOWN is now solid ink on a paper-white patch, with the picture dimmed behind it, and it reads clearly (58.5). The receipt fades out before the end card, so nothing collides (70.0–70.9). The disposable summary line has the neutral pair (63–64.5). The end slide shows five tones (65.5–69.5) under "A dermatologist can check your skin." The end card is clean, held 3.1 s, and carries "Education, not medical advice." **Why not 5:** on "The film is real." the pull-back flickers through a moiré squiggle texture (59.8–60.3). It lands on a dark towel with a hard-edged teal **square** that reads as a sticker (60.4–61.5), under "Harm to your skin?". |
+| h | Production value | 2 | 3 | **3** | **Better:** the mannequin hand is gone. The forearm now has a curved silhouette against a soft background, tapered curved hairs and a polygonal skin microrelief (30.6), and it is the best skin shot so far. The bars are printed on a torn-edge thermal strip (25.5). The month-2 towel is greyer (19.8). The stamp and the end card are clean. There is window light with wall shadows on the rails. **Still below the calibration bar** ("real-object detail, depth, grain", where the sister episodes reached 4 once their hero objects read as the real thing). **(1) The signature macro is still not terry.** It is on the hook (0–2), the cover, 21–23, 37–41 and 57–60, ≈13 s plus the cover. The "loops" are free-floating 2-ply ribbons with frayed cut ends at both ends, not arches anchored in the cloth. At phone size they read as a school of white fish (hook tile, 21.0, 39.0). The ground weave reads as a packed basketweave of glossy dowels (1.2 crop), not cotton. This is the same class as Pan Theory R2's "pepper strips read as crab sticks", which held that film at 3. **(2) The cheek reads as an egg.** It is two smooth ellipsoids with fuzz, with no jawline, ear, lip or nostril (43.0, 45.0, 55.6). The pressing "towel" is a rigid rounded box with a bumpy texture, with no fold edge, pile or hem, so it reads as a bar of soap or a sponge. "Pat your skin dry with a clean one" therefore shows a soap bar on an egg. **(3) The towels** hang over the rail with a fold at the top, but the panels are still rigid flat slabs with straight edges and no sway (3–6, 15–19.8, 52.5–54, 61). **(4) The end skin slide** is five flat panels with a regular diamond relief and no curvature (65.5–69.5). The tones are right, but the surfaces read as textured walls. **(5)** A teal square decal (60.4–61.5) and the squiggle texture still flash once (59.8–60.3). |
+
+### Status of the round-2 fix list
+
+1. **Replace the mannequin hand: DONE (fallback).**
+   - The hand is cut everywhere (5.9, 42–47, 55.6). The towel enters and presses the cheek with a faint contact shadow.
+   - The towel's look is the open part, under item 2.
+2. **Skin reads as skin: PARTLY.**
+   - **Done:** the forearm has a curved edge, tapered hairs and microrelief (30.6). The end slide shows five tones, light → tan → mid-brown → dark → deep, each sharp for ≥ 0.5 s (65.5–69.5).
+   - **Not done:** the cheek and jaw are ellipsoids with no facial landmark, so they read as an egg (43.0, 55.6). The folded towel has no fold edge or loops. It no longer reads as a paper roll, but it now reads as a soap bar or sponge.
+3. **Rebuild the weave as terry: MOSTLY NOT DONE.**
+   - **Done:** the "settle" beat (40.5) is on, with the settlers in the ground weave.
+   - **Not done:** the loops are still unanchored ribbons with free frayed ends (1.2, 21.0, 39.0, 57.0). The ground weave is glossy dowels. The density and fuzz have not visibly changed.
+   - **F7:** the capsules still float among the loops at 2.0.
+   - **Squiggle texture:** it flashes again during the pull-back (59.8–60.3).
+4. **Towel weight, paper bars, labels: MOSTLY DONE.**
+   - **Done:** the thermal-receipt bars with the "illustration, not to scale" pill (25.5). The labels are ≈36 px. The month-2 towel is greyer.
+   - **Partly:** the towels fold over the rail but still hang as rigid slabs.
+5. **Stamp and end: DONE.**
+   - The solid stamp with the dim (58.5). No end-card overlap (70.0–70.9). The neutral pair under "Disposable towels?" (63–64.5).
+   - **New nit:** the hard-edged teal square on the dark towel (60.4–61.5).
+6. **Sound and paperwork: PARTLY.**
+   - **Done:** the duplicate tick at 2.478 is gone (`timing.js` de-dupe, one tick in `cues.json`). C5's "Japanese households" is moved to Notes.
+   - **Not done:** LRA is 2.0 LU, not widened. The foley is still synthetic band noise (`sr_rub` and `sr_wet`). The voice is still stock `af_heart`.
+   - **Pending after a pass:** Bruce's spot-check, and the copy to `out/ep01.mp4`.
+
+### Factual and ethical items
+
+| Item | Status | Note |
+|---|---|---|
+| F1 bar magnitudes | closed | Even step on the receipt strip, "illustration, not to scale" (25.5). |
+| F2 cover verdict | closed | The cover shows the headline, the Skin Receipts pill, "RECEIPT TOTAL" with UNKNOWN, and the disclaimer. There is no claim line and no HOLDS UP, and nothing endorses disposable towels. |
+| F3 Staph hedge | closed | The VO, the tag and C5 all say "typically". The C5 nit is fixed. |
+| F4 counter | closed | |
+| F5 disposable framing | closed | The neutral pair at 48–51 and 63–64.5. |
+| F6 skin-tone representation | **mostly closed** (not blocking) | The deep-brown forearm reads as skin. The end slide covers five tones, light to deep, rendered evenly, with no tone singled out. The light cheek is the remaining weakness. It is not disrespectful, but it is not recognisable as a face, so it is tracked under (h). |
+| F7 film placement | partly, minor | The settlers lie in the ground weave (40.5). The hook capsules still drift among the loops (2.0). |
+| F8 paperwork | mostly closed | **Still open:** Bruce's spot-check of C4/C5/C6/C8, and copying the approved render to `out/ep01.mp4` after a pass. |
+
+**On-screen labels and spoken lines** — each maps to an OK row in `claims.md` with a matching hedge:
+- C0–C13.
+- The "illustration" labels: dishes and bars.
+- "towel-loving bacteria?" (C7, kept as a question).
+- "not measured" (C8).
+- The end card's "A film of bacteria does grow on towels in daily use." (C1).
+
+**Clean:** no brands, products, dosing or diagnosis. The disclaimer is on screen throughout and on the end card. `platform.json` is hedged.
+
+**Facts and ethics:** none open.
+
+### Verdict: **FAIL**
+
+**Scores:** all are ≥ 3, and (a) = 4 and (g) = 4 meet the gate. Production value **(h) = 3 is still below the required 4**.
+
+**Facts:** none open.
+
+This is again a single-criterion fail. Round 3 fixed most of the overlay, chart and ending items. It did not rebuild the two assets that carry the film:
+- the terry macro, on the hook and the cover;
+- the cheek-and-towel touch, on the skin beats.
+
+### FIX LIST (round 3 → round 4)
+
+1. **(Gating, h) Rebuild the signature macro as real terry.** It appears at 0–2.0, 21–23, 37–41 and 57–60.3, and on the cover.
+   - **Loops:** each loop is a closed arch, a 2-ply twisted yarn whose two feet both enter the ground cloth. No free or frayed ends.
+   - **Pile:** about 3× the current density, so neighbouring loops touch. They stand upright with varied height, lean and twist, with a soft fibre-fuzz halo on each yarn.
+   - **Ground cloth:** show it only between the loop feet, as fine matte cotton yarns about ⅓ the current dowel thickness, with no specular.
+   - **Look:** a one-side raking key and fine grain.
+   - **Film and microbes:** both sit in the ground cloth between the loop feet, not floating among the loops (F7).
+   - **Pull-back (59.8–61.5):** remove the squiggle frames. Replace the hard-edged teal square with a soft, irregular grey-teal stain that fades into the pile.
+   - **Cover:** re-render it from the new macro.
+2. **(Gating, h) Make the cheek a face and the towel a towel (42–47, 54.3–56.1).**
+   - **Face:** frame a ¾ lower face in the planned light tone. Show the cheek, the jawline, and at least one landmark: the corner of the mouth, the nostril wing or the earlobe. Add vellus hair in the rim light and pore relief under a raking key.
+   - **Towel:** a folded terry towel with a soft, rounded fold edge, loop pile on its faces and a woven hem stripe. It squashes slightly on contact.
+   - **Shape:** no rigid rounded box. The towel must not read as soap or a sponge.
+3. **(h) Give the hanging towels cloth drape (3–20, 52–54, 60.5–61.5).**
+   - **Hang:** the front layer hangs longer than the back. Add a soft curved roll at the rail, slight lateral waviness and a gentle sway, with the hem flaring at the bottom and pile visible along the edges.
+   - **End slide (65.5–69.5):** add a gentle curvature and a soft edge falloff to each skin panel, so they read as skin, not walls.
+4. **(d) Add motivated movement to the locked shots.**
+   - **Hook:** a slow lateral slide across the pile from frame 0 (0–1.0). The title is fully opaque on frame 0, for a better stop-frame.
+   - **Towels and rails:** a lateral dolly along the 26 towels (12–13.5) and along the rail during the calendar (15–19.8).
+   - **Forearm:** carry the forearm slide through the whole Line-2 question (29.7–31.4).
+   - **Disposables:** a slow push on the disposable pair (48–51).
+5. **(Not heard; lower priority) Sound and release paperwork.**
+   - **Dynamics:** LRA is still 2.0 LU. Drop the bed under the hook's first second, and let the stamp hit and the end card breathe, so the range is ≥ 4 LU.
+   - **Foley:** replace the band-noise `sr_rub` and `sr_wet` with recorded cloth and water foley.
+   - **Voice:** reconsider stock `af_heart`.
+   - **After a pass:** Bruce spot-checks C4/C5/C6/C8, and the approved render is copied to `out/ep01.mp4`.
