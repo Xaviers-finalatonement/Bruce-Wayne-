@@ -229,23 +229,36 @@
       "id": "skin-receipts-ep01",
       "channel": "skin-receipts",
       "number": 1,
-      "title": "What's living on your bath towel",
-      "status": "in review",
+      "title": "Your towel grows a film of bacteria. Does it hurt your skin?",
+      "status": "passed gate",
       "youtube": {
-        "title": "TODO",
-        "description": "TODO\n\nEducation, not medical advice.\n\n#Shorts #SkinReceipts"
+        "title": "Your towel grows a film of bacteria. Does it hurt your skin? #Shorts",
+        "description": "A 6-month study of towels in 26 households found a film of bacteria builds up with normal use. That study didn't look at anyone's skin or test disposable towels, so whether it harms skin is unproven: receipt total UNKNOWN. Dermatologists do say don't share towels. Education, not medical advice.\n\n#SkinReceipts #Skincare #SkinScience #Shorts"
       },
       "tiktok": {
-        "title": "TODO",
-        "hashtags": []
+        "title": "Your towel grows a film of bacteria. Harm to skin? We checked the receipt: UNKNOWN",
+        "hashtags": [
+          "#skincare",
+          "#skinscience",
+          "#skinreceipts",
+          "#learnontiktok",
+          "#dermatology"
+        ]
       },
       "instagram": {
-        "caption": "Skin Receipts · Ep 1\n\nTODO\n\nEducation, not medical advice.",
-        "hashtags": []
+        "caption": "Skin Receipts · Ep 1\nYour towel grows a film of bacteria. Does it hurt your skin? One 6-month study found the film, but didn't look at skin. UNKNOWN. Dermatologists say: don't share towels. Education, not medical advice.",
+        "hashtags": [
+          "#skincare",
+          "#skinscience",
+          "#skinreceipts",
+          "#towel",
+          "#dermatology"
+        ]
       },
       "video": "channels/skin-receipts/ep01-bath-towel/out/ep01.mp4",
       "cover": "channels/skin-receipts/ep01-bath-towel/out/cover.png",
-      "srt": "channels/skin-receipts/ep01-bath-towel/out/ep01.srt"
+      "srt": "channels/skin-receipts/ep01-bath-towel/out/ep01.srt",
+      "gate": "PASS (round 5): a4 b4 c4 d4 e4 f4 g4 h4"
     },
     {
       "id": "skin-receipts-ep02",

@@ -488,3 +488,90 @@ The face now adds an uncanny-valley problem.
    - **Foley:** replace the band-noise `sr_rub` and `sr_wet` with recorded cloth and water.
    - **Camera:** add a slow move on the 52.5–54.0 rail.
    - **After a pass:** Bruce spot-checks C4/C5/C6/C8, and the approved render is copied to `out/ep01.mp4`.
+
+## Round 5 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode), same rules and calibration as rounds 1–4.
+**Reviewed:** `out/wip/ep01.mp4` (74.02 s, 1080×1920, 30 fps, 2220 frames, stream start 0.000), `out/ep01.srt` (39 cues), `claims.md`, `platform.json`, `out/render-report.md`, `out/cover.png`, and the round-5 commit `eecea20` (`scene.js`, `overlay.js`, `engine/film/terry.js`, `engine/sound.py`).
+**Method:**
+- Stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s (360 wide).
+- Two contact sheets, one frame every 1.5 s (every 45th frame), 0–73.5 s, with pts burned in.
+- 540-wide frames at 1.0, 22.0, 44.0, 55.9, 60.5 and 66.5 s, and a full-resolution 540×540 centre crop at 1.0 s.
+- 270-wide strips at 4.5 / 16.5 / 19.8 / 53.0 (drape), 42.5 / 45.5 (press), 59.4 / 59.8 / 59.95 / 60.05 / 60.3 / 62.4 (old pull-back), and the cover at 360 wide.
+
+**Audio caveat:** I cannot hear the film. Sound is judged only from the render report (−14.0 LUFS, **LRA 2.0 LU**, TP −1.5 dBTP) and the `engine/sound.py` diff.
+
+### Scores
+
+| | Criterion | R1 | R2 | R3 | R4 | R5 | Evidence |
+|---|---|---|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | 4 | 4 | 4 | **4** | **Holds:** the title is opaque on frame 0 and the macro drifts from 0.0. Teal film by 1.5 s. The pile now reads as looped yarn rather than curls (see h). **Why not 5:** 0.0–1.0 s is still a pale, low-contrast cream field, and the left third is washed out by the window bloom. |
+| b | One thread | 4 | 4 | 4 | 4 | **4** | **Unchanged:** claim → Lines 1–3 → disposables → UNKNOWN → a summary that answers both the hook and the claim. |
+| c | Picture moves with the sentence | 3 | 4 | 4 | 4 | **4** | **Fixed:** the "?" is gone from the pile. Only the dashed overlay ellipse remains (45.5–47.0). "Does the film hurt your skin?" (42.2–43.9) and "pat your skin dry with a clean one" (54.3–56.1) land on a towel on skin (the forearm). **Small miss:** "Harm to your skin?" (60.3–61.5) now plays over the film macro. That beats towels, but there is still no skin on screen. |
+| d | Motivated camera | 3 | 3 | 3 | 4 | **4** | **Better:** the "never share" rail now drifts (52.5 → 54.0). The squiggle pull-back is replaced by a hold-and-cut on the macro (59.4–60.3). **Holds:** the hook drift, grid travel, calendar rail and disposables push. **Why not 5:** the press shots move the camera over a static towel. There is no touch-led motion and no visible squash. |
+| e | Voice carries meaning, screen carries figures | 3 | 4 | 4 | 4 | **4** | **Unchanged:** the counter, "6 months / tested every 2 months", the chart labels, "Staph: typically < 1 %", "not tested here" and the disclaimer. **Small:** the dimmed receipt lines are still small Courier. Over the macro (59.8–61.5), the small UNKNOWN stamp sits half off the receipt, and its off-paper half is illegible. |
+| f | Rhythm | 3 | 4 | 4 | 4 | **4** | **Unchanged:** 74.0 s, and the end card is held ≈3 s. **Not heard:** LRA is **2.0 LU** (target ≥ 4). The un-ducked stamp bus at −5 dB and the 0.93 duck did not widen it on the meter. |
+| g | Ending | 3 | 4 | 4 | 4 | **4** | **Fixed:** there are no squiggle or moiré frames. The macro holds clean through 59.4 / 59.8 / 59.95 / 60.05 / 60.3, then cuts to the neutral disposables pair (62.4). **Holds:** the solid UNKNOWN stamp (58.5), the neutral pair under "Disposable towels? Not tested." (63–64.5), and the clean end card with its disclaimer (70.5–73.5). **Why not 5:** the end-slide skin panels (66–69.5) read as terracotta or tan leather. The pores are a small, regular embossed repeat, and the tiling is visible at 540 px (66.5; the texture repeat is `GW/.013` at `scene.js:292`). |
+| h | Production value | 2 | 3 | 3 | 3 | **4 (low)** | **Both round-4 gating items are addressed at the core:** <br>• **(1) Terry.** The loops are closed 2-ply twisted arches, with both feet below the ground plane (`terry.js` `loopArchGeo`, fatter yarn, deeper feet). In the 1.0 s full-res crop I find no flat cut caps, the loops have stray fibres and contact AO, and the pile is far denser than R4. On the hook, at 22.0, 37.5–40.5, 57–61.5 and on the re-rendered cover, it now reads as stylised loop-pile yarn, not ribbons or shrimp. <br>• **(2) Face.** The uncanny face is gone, which was the fallback the round-4 list offered. The press beats use the deep-brown forearm with pores, hair and raking light, plus a folded towel. Nothing in the film now reads as wax or a mannequin. <br>• **Towel.** It has visible layers at the open edge, a raised blue woven hem band, loop fringe along the edge and pile across the top (44.0, 55.9). It reads as a folded towel. <br>This meets the calibration bar of polished stylised CG with real-object detail, depth and grain, at the level of UA ep02 R3 ("low 4"). **Why only a low 4:** <br>• **The pile is still not touching.** Ground weave shows through in several gaps in the 1.0 crop. On the cover and at 60.5, teal shows between every loop. The loops are smooth, like pasta, rather than fuzzy cotton. The capsules still sit among the loops, not in the ground (F7). <br>• **The folded towel is stiff.** The fold is a smooth rigid cylinder that reads like a cardboard tube (44.0, 55.9). The side faces of the layers are smooth slabs with no pile. There is no visible compression or skin dent: the towel sits on the arm (42.5, 45.5). The forearm hair is dense and dark enough to read as fur at phone size (44.0, 55.9). <br>• **Hanging towels.** There are soft vertical waves and a rolled top (16.5, 19.8). At 270 px the side edges and hems are still straight, with no scalloped hem (4.5, 53.0). <br>• **End-slide panels.** Visible texture tiling, and they read as terracotta or leather (66.5; see g). |
+
+### Status of the round-4 fix list
+
+1. **(Gating) Terry loops as closed arches: MOSTLY DONE.**
+   - **Done:** closed 2-ply arches with buried feet and no flat ends (1.0 crop). Density is much higher. The squiggle moiré frames at 60.0–60.4 are gone (hold-and-cut). The cover is re-rendered from the new macro.
+   - **Not met:** the acceptance clause "no ground visible through the pile". Ground still shows in gaps (1.0 crop), and the loops do not touch on the cover or at 60.5.
+   - **Not done:** the capsules are still among the loops rather than in the ground (F7).
+2. **(Gating) A face that is not uncanny, and a towel that is cloth: DONE via the fallback / PARTLY for the towel.**
+   - **Done:** the face is removed, and the press plays on the forearm (42–47, 54.3–56.1). The "?" is removed from the pile. The towel now has layers, a hem band, edge fringe and continuous top pile.
+   - **Not done:** no visible ~10–15 % compression or skin dent. The fold reads as a rigid tube.
+3. **Make the drape read at phone size: PARTLY.**
+   - **Done:** soft waves and a rolled top (16.5, 19.8).
+   - **Not visible at 270 px:** a flared or scalloped hem, pile on the side edges, or sway (4.5, 53.0).
+   - **End-slide panels: PARTLY.** Pores were added, but they tile visibly, and the panels still read as terracotta (66.5).
+4. **Sound and paperwork: PARTLY.**
+   - **Done:** the bed is ducked ≈ −23 dB under the VO (duck 0.93). Stamp hits are on an un-ducked bus at −5 dB. The 52.5–54.0 rail now moves.
+   - **Not done:** LRA is 2.0 LU (target ≥ 4). The foley `sr_rub` and `sr_wet` are still band noise. The voice is still stock.
+   - **Pending:** Bruce's spot-check and the copy to `out/ep01.mp4` (see the pre-upload notes).
+
+### Factual and ethical items
+
+| Item | Status | Note |
+|---|---|---|
+| F1 bar magnitudes | closed | "illustration, not to scale" (24.0–28.5). |
+| F2 cover verdict | closed | The re-rendered cover shows "What's growing on your towel?", the Skin Receipts pill, "RECEIPT TOTAL" with UNKNOWN, and the disclaimer. There is no claim line, no disposable towel, and nothing reads as an endorsement. |
+| F3 Staph hedge | closed | "typically" in the VO, on the tag (33.0–36.0) and in C5. |
+| F4 counter | closed | |
+| F5 disposable framing | closed | The neutral plain pair at 48–51 and 63–64.5, with "not tested here" on a pill. |
+| F6 skin-tone representation | closed | The light-toned face is gone. Both forearm beats are deep brown (30.0, 42–56). The end slide pans across tones (66–69.5). |
+| F7 film placement | partly, minor (not blocking) | The capsules are still among the loops (60.5, cover). |
+| F8 paperwork | open, pre-upload only | Bruce's spot-check of C4/C5/C6/C8, and the copy to `out/ep01.mp4`. |
+
+**On-screen labels and spoken lines:** the SRT is unchanged (cues 1–39). The only overlay change in R5 removes the "?". Each spoken line and each label maps to an OK row with a matching hedge:
+- C0–C13.
+- The "illustration" labels.
+- "towel-loving bacteria?" (C7, kept as a question).
+- "not measured" (C8).
+- "not tested here" (C9).
+- "new / month 2" (C3).
+
+**Clean:** no brands, products, dosing or diagnosis. The disclaimer is on screen throughout and on the end card. `platform.json` is hedged ("unproven", "UNKNOWN", "Education, not medical advice").
+
+**Facts and ethics:** none open.
+
+### Verdict: **PASS**
+
+**Scores:** nothing is below 3, and (a) = 4, (g) = 4 and **(h) = 4 (low)** meet the gate.
+
+**Facts and ethics:** none open.
+
+Round 5 removed the uncanny face and rebuilt the terry as closed arches. The two hero assets that held (h) at 3 for three rounds now read as real objects in a stylised CG look. The remaining craft defects are below the bar for individual shots only, in line with what the passed sister episodes carried at their pass: the stiff towel fold, the pile gaps, the tiled end panels, the straight hems and the narrow LRA.
+
+### Pre-upload notes (not gating)
+
+1. **Paperwork (required before upload):**
+   - Bruce spot-checks C4, C5, C6 and C8 against S1.
+   - Copy the approved `out/wip/ep01.mp4` to `out/ep01.mp4`.
+2. **Optional polish, if anything is re-rendered:**
+   - **End-slide panels:** raise the skin texture's tile size (the repeat at `scene.js:292`) so the pores stop reading as an embossed pattern, and pull the hue off terracotta (66–69.5).
+   - **Pile:** tighten the foot pitch so neighbouring loops touch and no ground shows in the 1.0 s crop. Sink the capsules into the ground (F7).
+   - **Press:** add a visible squash and arm dent at contact. Put pile on the fold cylinder, and thin the forearm hair.
+3. **Sound (unheard):** LRA is 2.0 LU. A listen-through on a phone speaker is worth doing before upload. Confirm the VO sits clearly above the bed and that the stamp hit lands.
