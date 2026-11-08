@@ -142,3 +142,92 @@ Times below are true video times. The contact-sheet labels ran about 0.7 s early
    - **Bed:** change the chord every 4 bars, add a second pattern, and drop the bed out at 34.5 s ("Now the flip side") and under the end card's first second.
    - **Voice:** consider a less stock voice than `af_bella`. I can't hear it; this is about the owner's "not AI-generic" brief.
    - **Render report:** regenerate it, and copy the approved render to `out/ep01.mp4`.
+
+## Round 2 — 2026-11-08
+
+**Reviewer:** the same independent gate pass as round 1 (did not build the episode).
+**Reviewed:** `out/wip/ep01.mp4` (70.07 s, 1080×1920, 30 fps, 76.9 MB), `out/ep01.srt`, `out/timeline.json`, `out/cues.json`, `script.json`, `claims.md`, `platform.json`, `out/render-report.md`, `out/cover.png`, `overlay.js` (label sizes and positions), `scene.js` (dim logic, follow camera), `engine/sound.py` (`pt_bed`, `pt_sizzleup`).
+**Method:**
+- Stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s.
+- Two contact sheets, one frame every 1.5 s from 2.5 to 70 s, with the true timestamp burned in. The times below are true video times.
+- Exact-seek frames at 10.3, 40.3, 45.15, 46.6, 47.4, 48.4, 50.5 and 51.0 s.
+- 5 fps strips across both drops (9.4–11.4 and 39.4–41.4 s).
+- Detail crops of the hook pan (2.0 s), the raw and cooked peppers (53.5 s), the b13 pan (59.5 s) and the gut lining (22.0 s).
+
+**Audio caveat:** as in round 1, I cannot hear the film. I judged sound from the render report (−14.0 LUFS, LRA 2.5 LU, TP −1.4 dBTP, no black or frozen frames), `out/cues.json` and `engine/sound.py`.
+
+### Scores
+
+| | Criterion | R1 | R2 | Evidence |
+|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | **4** | **Picture now moves:** an oil ribbon pours onto the carrot side at 0.5–1.0 s. The oil film spreads with bubbles by 1.5 s. A red heat glow and steam wisps rise on the pepper side by 2.0 s, so oil and heat are both shown inside 2 s. **Text:** the burned caption is hidden while the title is up (0.5–2.8). **Sound on paper:** a pour at 0.24 s and a sizzle that builds from 1.45 s, with pops at 1.65, 2.05 and 2.4 s. **Still mild:** the line is the same gentle contrast, and "can cost" (the right hedge) softens it a little more. The heat reads as a graphic red vignette with line-drawn wisps, not real heat (see h). |
+| b | One thread | 4 | **4** | **Thread:** oil helps carotenoids → heat can cost vitamin C → "it's a trade" → a signature that pays off both halves. **Side trips:** the A · D · E · K detour is now E · K only. The trio (45.1–50.2) still leaves the pan for 5 s, but it feeds "raw tops the list". |
+| c | Picture moves with the sentence | 3 | **4** | **Lands on its word:** the carrot cells with orange crystals land at 10.4 s, on "plant pigments called carotenoids" (10.37). The pepper's water cells with green C land at 40.2 s, on "dissolves in water". A hard cut to the trio lands on "Microwaving" (45.08). Droplets carry pigment past the villi on "travel along with the oil" (21.5–23.6). The board with peppers, broccoli and tomato lands on "Peppers, broccoli and tomatoes" (35.5). **Weak spots:** "It's a trade" (56.8) sits on two plates that barely move (55–58). The approaches into each drop are close-ups of a large, nearly flat food surface (9.9–10.3 orange, 39.4–40.1 red). |
+| d | Motivated camera | 4 | **4** | **Motivated moves:** overhead by default; push-in on the oil; a drop into the carrot and into the pepper, each ending on cell structure; a real follow camera in b05 (`scene.js` l. 309); pull-back in b06; a slow push in b12; hard cuts through 45–55 s. No shake and no orbit. **Weak spot:** b13 is locked off for 4.9 s (58.3–63.2), with nothing moving in the food (see f). |
+| e | Voice carries meaning, screen carries figures | 3 | **4** | **Fixed:** the stickers that repeated the caption are gone (18, 43, 47, 60 s). The labels that remain add a term or a hedge: carotenoids, → vitamin A, gut lining, no oil / with oil, "absorbed more easily with fat" (32.5, over "Fat helps them in"), water-soluble, raw / cooked. Object labels are now 48–50 px. Every C-tile graphic carries "illustration, not to scale" (42 px Nunito on Countertop). **Left over:** the end card and the caption say the same line at once (63–68). The E and K tiles sit on top of the caption box at 33.5–34.3. |
+| f | Rhythm | 3 | **3** | **Better:** gaps are cut to 0.6–0.7 s, with 0.9 s before "Now the flip side" and "So sautéing". Overall pace is 146 wpm (170 words in 70.07 s). New events now come every ≈ 0.75–2 s in 11–15.5 and 20.5–24 (crystals, the A tile, pops, the follow ride). The dead frames are gone. **Still off:** the speech itself runs at 180 wpm (it was 185; the target was 165–170), so Kokoro speed 0.86 barely changed it. **New sag right before the payoff:** b13 holds one locked pan shot for 4.9 s (58.3–63.2). The last 1.5 s of that (61.7–63.2) has no voice and no new picture. b12 is about 2.8 s of two plates that barely move (54.8–57.6). |
+| g | Ending | 3 | **4** | **Payoff:** "The Pan Theory: carrots want a little oil. Peppers can keep more C raw." (63.2–67.7) now pays off both halves of the hook in plain words. It is repeatable, and it is backed by an OK row (C12). **End card:** clean, with two Butter lines, "Food education, not diet advice." and the handle by ≈ 68 s. **What weakens it:** the "trade" picture is two static plates with no visible exchange (55–58). The run-in to the card sags (b13, see f). "More C" is slightly clipped as spoken. |
+| h | Production value | 2 | **3** | **What improved:** the plexus networks are gone. Both drops land in real cell structure: carrot cells with orange crystals, and water-filled pepper cells. The gut lining is matte villi with a "gut lining" label. There is a grained wood counter, contact shadows, depth of field (8.5, 25 s), an oil film with bubbles and soft steam puffs. **Still not filmed:** the pepper strips are uniform red tubes with a white face. They read as imitation crab sticks (hook 0–9, plates 55–58, cover). The carrot coins are uniform discs with only a faint core ring. The hook's heat is a red radial vignette and line-drawn squiggle wisps, a motion-graphics device (2.0–4.0, cover). The raw pepper, seen straight from above, reads as a tomato or a small pumpkin. The cooked one is a noise-displaced charred blob (52–55). Broccoli is lumpy noise blobs, spinach is flat green discs, and the steam carries "god ray" beams (29–34, 59–63). The villi read as pink fingers or teeth (16–24). Light is even and toy-like. **Overall:** a clean, consistent stylized-3D explainer, a real step up from round 1, but not yet the owner's "premium food cinematography". |
+
+### Round-1 fix list: status
+
+| # | Fix | Status | Notes |
+|---|---|---|---|
+| 1 | Make vitamin C quantities non-numeric and labelled | **Done** (one on-screen caveat) | The trio has 4 tiles per method. All three dim together to one level (`LVL` .65, `scene.js` l. 251). Raw and cooked each keep 6 tiles, and the cooked set dims to the same level. Tags are 42 px. The `claims.md` note has been added. **Caveat (F8):** what plays on screen still briefly suggests an order. |
+| 2 | Remove the vitamin D implication | **Done** | The label reads "vitamins E · K", only E and K tiles appear, and `script.json` b07 is updated. |
+| 3 | Fix the wording and hedges | **Done** | The raw sticker reads "raw = top vitamin C sources" at y 245. The hook says "can cost" in the VO and the title. "also: …" is deleted. C5 has its lead-in. The per-row "checked by" and "date" columns are added. The b04 `visual` is fixed. **Stale:** `script.json` b04 `screen` still lists "better with a little fat", and b09 still lists "cooking can lower it". |
+| 4 | Rebuild the hero food and pan | **Partly** | **Done:** cut faces, oil film, contact shadow, grained counter, DOF, oil ribbon at 0.5 s, heat by 2.0 s, a lobed raw pepper and a blistered cooked one. **Not there:** the food still reads as stylized toy CG (see h). |
+| 5 | Replace the molecule worlds and remove the dead frames | **Mostly done** | **Done:** the plexus is gone. The carrot cells land at 10.4 s and the pepper cells at 40.2 s. The gut lining is labelled at 52 px. b05 has a real follow camera. The cut at 45.08 is hard. Captions stay at full opacity. **Left:** the villi read as fingers or teeth. |
+| 6 | Let the screen carry labels, not the caption | **Done** | The hook caption is hidden. The four repeating stickers are deleted. Labels are 48–50 px. |
+| 7 | Pay off both halves of the hook in the signature | **Done** (picture weak) | **Done:** the new line, C12 marked OK, and the two Butter lines plus the disclaimer. **Weak:** the balance became two plates that barely move, with no visible trade. |
+| 8 | Fix the rhythm and give the sound a hook | **Partly** | **Done:** gaps (0.6–0.9 s), event density, hook pour and sizzle, a bed that changes chord every 4 bars (G–Em–C–D) with a bell counter-line, bed drop-outs at 33.4 s and 63.0 s, and a regenerated render report. **Not done:** speech is still 180 wpm, and the voice is still stock Kokoro `af_bella`. **Not due yet:** `out/ep01.mp4` is correctly not copied, since the render is not approved. |
+
+### Factual and ethical items
+
+- **F1, F2, F3, F4, F5, F6 — CLOSED.** The C-tile graphics are tagged and dimmed equally, nothing is removed and nothing goes to blank. No D sits near vegetables. "raw = top vitamin C sources" carries the source's scope. The hook says "can cost". C5 has its lead-in, and the columns are present.
+- **F7 — process note (unchanged, not counted as open):** rows are still certified by Claude. Bruce should spot-check C3, C4, C8, C10 and the new C12, or accept an AI check.
+- **F8 — fix required (non-blocking on its own): on screen, two moments still suggest an order or a count.**
+  - **The steamer looks dimmed first (≈46.2–47.3 s).** The trio's white steam puffs (opacity .26) wash over the steamer's tiles. At 46.6 the steamer reads pale while the microwave and pan tiles are still bright green, so for about a second it looks as if steaming costs the most. The code dims all three together, but the picture doesn't show that.
+  - **Raw and cooked tiles pop in unevenly (≈50.3–50.9 s).** At 50.5 raw shows about 4 tiles and cooked about 2. The "cooked" label and the "illustration" tag are still near zero opacity at that moment.
+- **F9 — fix required (non-blocking on its own; missed in round 1): the "no oil" panel shows zero absorption (15.5–20.1 s).**
+  - **What's on screen:** in the top panel no pigment ever docks into the lining ("pigments slide by without oil", `scene.js` l. 165).
+  - **What's sourced:** S1 says absorption "is improved" with a small amount of fat, and the VO says "better". The picture says "only with fat".
+- **F10 — fix required (non-blocking on its own): the end-card label "peppers: some raw" (64–70 s).**
+  - **Problem:** this was my round-1 wording, but on its own it reads as an instruction (eat some raw), which drifts toward diet advice. It also drops the C12 hedge.
+  - **Fix:** "peppers: more C raw" matches the spoken line and C12, and stays descriptive.
+- **Spoken lines:** C1–C12 as spoken match their quoted sources and hedges.
+- **Clean areas:** no diet advice, calories, brands or dosing anywhere else. `platform.json` text is hedged, and the end card carries "Food education, not diet advice."
+- **Safe area:** stickers sit at y ≥ 205 and the hook title top at ≈ 165 px, which clears the top 8 % line (154 px). Nothing sits in the bottom 20 % or the right 12 %.
+
+### Verdict: **FAIL**
+
+1. **Scores:** (h) = 3, where the gate needs ≥ 4. All other gate conditions on scores are met: (a) = 4, (g) = 4, nothing below 3.
+2. **Facts:** none of F1–F6 is open any more. F8–F10 are small, but they must be closed before a PASS.
+
+### FIX LIST (round 2 → round 3)
+
+1. **Make the food look filmed, not toy (h; 0–9, 24–34, 52–63 s, cover).** This is the one gating item.
+   - **Pepper strips:** vary width and length, taper and curl the ends, and give the skin satin roughness (≈ 0.4) with a sharp window highlight. Add a slightly translucent pith face, and leave a rib or a few seeds on two or three strips, so they stop reading as crab sticks.
+   - **Carrot coins:** vary diameter and thickness. Make the core ring and radial grain clearly visible, and brown the down-facing faces from 25 s on.
+   - **Hook heat (1.5–4 s, cover):** replace the red radial vignette and line-drawn wisps with refractive heat haze over the pepper half, the soft white steam puffs you already use later, and first blisters on the pepper skin.
+   - **Light:** one warm window key from frame left, with visible falloff across the counter (about 1 stop) and a cooler fill. Add a light, consistent film grain and a soft lens vignette over every shot.
+2. **Rebuild the three weakest objects (52–63 s, 16–24 s).**
+   - **Raw and cooked peppers (52–55 s):** shoot them at a 3/4 angle so the stem, shoulders and lobes read as a bell pepper. Make the cooked one the same pepper slumped and softened, with a few blistered dark patches, not a noise-displaced blob.
+   - **Broccoli and spinach (29–34, 59–63 s):** broccoli as floret clusters of small buds on visible pale stalks. Spinach as wilted, veined leaves, not flat discs. Remove the god-ray beams.
+   - **Villi (16–24 s):** make them finer, denser and irregular, with varied heights, a soft wet sheen and a folded base. They should read as lining, not fingers or teeth.
+3. **Close F8–F10 (facts).**
+   - **Trio steam (F8):** start the steam only after the shared dim has finished (`T.tLower2` + 0.5 s), or keep the puffs off the tiles.
+   - **Raw/cooked pop-in (F8):** pop both sets in on the same per-tile timing. Bring the "illustration, not to scale" tag and the raw / cooked labels to full opacity before the tiles appear.
+   - **No-oil panel (F9):** let one or two pigments dock slowly, so the pair reads "better with fat", not "only with fat". Add a line to the `claims.md` Notes.
+   - **End card (F10):** change "peppers: some raw" to "peppers: more C raw".
+4. **Fix the sag before the payoff (b12–b13, 54.8–63.2 s).**
+   - **Gap:** cut the 1.5 s pre-card gap after b13 to ≤ 0.7 s, and lengthen the end-card hold to keep the runtime ≥ 70 s.
+   - **b13:** add an event about every 2 s: a spatula toss at ≈ 59.3 s and browned carrot faces turning up at ≈ 61 s.
+   - **b12 "trade":** show the exchange. For example, the carrot plate gets an oil glint and its A tile, the pepper plate keeps bright C tiles with a cooked strip dimmed beside it, and the two plates slide level on "It's a trade" (56.8).
+5. **Slow the voice for real (whole film).**
+   - **Speed:** speed 0.86 gave 180 wpm in speech. Try ≈ 0.80 and re-measure, aiming for 165–170. Keep the gaps as they are now, and check the runtime.
+   - **Voice:** for the owner's "not AI-generic" brief, audition a less stock voice than `af_bella`. I can't hear it, so this one is the owner's call.
+6. **Small layout and paperwork items.**
+   - **E and K tiles:** fade them out before "Now the flip side", because they overlap the caption box at 33.5–34.3 s.
+   - **script.json:** update the stale `screen` lists in b04 and b09.
+   - **After approval:** regenerate the render report and copy the approved render to `out/ep01.mp4`.

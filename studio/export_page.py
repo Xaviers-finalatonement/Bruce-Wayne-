@@ -55,7 +55,7 @@ for e in cat["episodes"]:
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", cover, "-vf", "scale=540:960", "-q:v", "4",
                         os.path.join(OUT, thumb)], check=True)
     if os.path.exists(preview):
-        state, chip = "video", "Draft video · in review"
+        state, chip = "video", ("Passed the gate · ready for your OK" if e.get("status") == "passed gate" else "Draft video · in review")
     elif script:
         state, chip = "script", "Script ready · checked"
     else:
