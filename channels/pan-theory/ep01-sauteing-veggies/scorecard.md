@@ -353,3 +353,51 @@ All scores clear the gate. The film fails because F12 is open: a regression intr
 1. **Fix the code.** In `scene.js` l. 289, move `pop(balTiles.A, T.tTrade - .1, .44, .14);` to before the `//` comment, or onto its own line.
 2. **Re-render** chunks 11–12 (55–65 s) and regenerate the render report.
 3. **Check:** A tiles pop on "a trade" (≈58.5–59.5 s) and the glint shows by ≈60 s. Then the `claims.md` b12 note matches as written, and nothing else needs to change.
+
+## Round 5 (targeted) — 2026-11-08
+
+**Reviewer:** the same independent gate pass as rounds 1–4.
+**Scope:** only render chunks 11–12 (55–65 s) were re-rendered (15:51 and 15:59, after the 15:25 `scene.js` edit). The other chunks keep their round-3 timestamps.
+**Reviewed:** `out/wip/ep01.mp4` (re-muxed 15:59), `scene.js` l. 289, the `claims.md` b12 note (unchanged since 14:48), and `out/render-report.md` (16:00).
+**Method:**
+- Exact-seek frames at 56.6, 57.5, 58.5, 59.3, 60.0 and 60.4 s, tiled at 360 px wide with burned-in timestamps.
+- 1:1 crops of the carrot plate at 59.6 and 60.2 s.
+- Frames either side of the chunk joins (54.9 / 55.1 and 64.9 / 65.1 s), plus per-frame mean luma from 54.4 to 55.6 s and from 64.6 to 65.4 s.
+
+### F12: CLOSED
+
+- **Code:** `scene.js` l. 289 now calls `pop(balTiles.A, T.tTrade - .1, .44, .14);` before the `//` comment, so the call runs.
+- **Picture:**
+  - **56.6–58.5 s:** the plates drop in and the pepper plate pops its C tiles. The carrot plate is bare.
+  - **59.3 s (on "It's a trade."):** three A tiles sit on the carrot coins.
+  - **60.0 s:** the A tiles are still there. The cut to b13 comes at ≈60.2.
+  - **Vitamin C:** no C tile appears on the carrot plate in any frame. The pepper plate keeps four bright C tiles throughout.
+- **1:1 crop (59.6 s):** the A tiles read clearly, with "A" legible on pale-gold faces, under the light steam veil.
+- **Ledger:** the `claims.md` b12 note matches the picture as written: the carrot plate gains A tiles, the pepper plate keeps bright C, and the carrot plate has no C. F11 stays closed.
+
+### Regressions: none
+
+- **55.0 s join:** mean luma is flat across the join (134.3–134.6). 54.9 and 55.1 s are the same b11 raw/cooked frame. There is no jump or colour shift.
+- **65.0 s join:** luma falls smoothly (199.3 → 195.3) through the end-card fade, with no step at the join. The "peppers: more C raw" line builds in on time.
+- **b13:** the pan, toss and steam read at 60.4 s as in rounds 3–4.
+- **Render report:** regenerated at 16:00, after the 15:59 mux. It gives 72.07 s (ffprobe agrees), −14.0 LUFS integrated, LRA 2.3 LU, TP −1.5 dBTP, no black frames and no freezes.
+
+### Non-gating notes (polish)
+
+- **Oil glint:** it is drawn, but it still reads only as a soft sheen on the coins, not as a distinct highlight, and the shot cuts away about 0.3 s after it fades in. Raise its opacity, or hold b12 a few frames longer, if the glint should register. It carries no fact, so it does not gate.
+- **"a trade":** the sticker and the caption "It's a trade." still say the same thing at once (59.3–60.0 s). This is round-3 fix item 4.
+- **Dead code:** `balTiles.R` is scaled to zero and then still dimmed (l. 290). It is harmless.
+- **Still open from the round-3 fix list:** the board rebuild, the pan look, the `script.json` b04/b09 `screen` lists, the voice speed, F7 spot-checks, and copying the approved render to `out/ep01.mp4`. None of these gate.
+
+### Final scores
+
+| a | b | c | d | e | f | g | h |
+|---|---|---|---|---|---|---|---|
+| 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+
+The round-4 asterisks on c, f and g are removed. With the A tiles back, the b12 exchange shows both sides of the trade on the word, as in the round-3 evidence.
+
+### Verdict: **PASS**
+
+1. **Scores:** no score is below 3, and (a), (g) and (h) are each 4.
+2. **Facts and ethics:** none are open. F1–F6 and F8–F12 are closed. F7 is a process note, not an open item: Bruce should spot-check the C rows before upload.

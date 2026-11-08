@@ -10,3 +10,8 @@
   - none
 
 Contact sheet: `contact-sheet.jpg` (a frame every 2.5 s).
+
+## Final (shipped) file
+
+- `out/ep01.mp4`: 83.0 MB, 72.07 s, -14.0 LUFS, TP -1.5 dBTP, no black frames.
+- Gate: PASSED round 5 (see scorecard.md).

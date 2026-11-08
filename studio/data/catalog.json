@@ -100,22 +100,35 @@
       "channel": "pan-theory",
       "number": 1,
       "title": "What sautéing does to your veggies",
-      "status": "in review",
+      "status": "passed gate",
       "youtube": {
-        "title": "TODO",
-        "description": "TODO\n\n#Shorts #PanTheory"
+        "title": "What sautéing really does to your veggies #Shorts",
+        "description": "Oil helps your body absorb some nutrients in carrots, spinach and broccoli. Heat can lower the vitamin C in peppers and tomatoes. So sautéing is a trade, not good or bad. Food education, not diet advice.\n\n#PanTheory #CookingScience #FoodScience #Shorts"
       },
       "tiktok": {
-        "title": "TODO",
-        "hashtags": []
+        "title": "Oil helps your carrots. Heat can cost your peppers. Here's the trade",
+        "hashtags": [
+          "#cookingscience",
+          "#foodscience",
+          "#veggies",
+          "#learnontiktok",
+          "#pantheory"
+        ]
       },
       "instagram": {
-        "caption": "Pan Theory · Ep 1\n\nTODO",
-        "hashtags": []
+        "caption": "Pan Theory · Ep 1\nWhat sautéing does to your veggies: a little oil helps some nutrients get in, heat can lower vitamin C. A trade, not a rule. Food education, not diet advice.",
+        "hashtags": [
+          "#cookingscience",
+          "#foodscience",
+          "#veggies",
+          "#pantheory",
+          "#sauté"
+        ]
       },
       "video": "channels/pan-theory/ep01-sauteing-veggies/out/ep01.mp4",
       "cover": "channels/pan-theory/ep01-sauteing-veggies/out/cover.png",
-      "srt": "channels/pan-theory/ep01-sauteing-veggies/out/ep01.srt"
+      "srt": "channels/pan-theory/ep01-sauteing-veggies/out/ep01.srt",
+      "gate": "PASS (round 5): a4 b4 c4 d4 e4 f4 g4 h4"
     },
     {
       "id": "pan-theory-ep02",
