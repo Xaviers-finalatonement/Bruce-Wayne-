@@ -28,13 +28,13 @@
     {
      "text": "Oil helps your carrots.",
      "start": 0.2,
-     "key": 3,
+     "key": 1,
      "end": 1.547
     },
     {
      "text": "Heat costs your peppers.",
      "start": 1.547,
-     "key": 3,
+     "key": 1,
      "end": 2.823
     }
    ],
@@ -154,7 +154,7 @@
     {
      "text": "Here's the catch.",
      "start": 15.7,
-     "key": 0,
+     "key": 2,
      "end": 16.721
     },
     {
@@ -166,7 +166,7 @@
     {
      "text": "better with a little fat.",
      "start": 18.163,
-     "key": 0,
+     "key": 4,
      "end": 19.451
     }
    ],
@@ -198,13 +198,13 @@
     {
      "text": "Think of it like a ride.",
      "start": 20.451,
-     "key": 0,
+     "key": 5,
      "end": 21.757
     },
     {
      "text": "The pigments travel along with the oil.",
      "start": 21.757,
-     "key": 1,
+     "key": 6,
      "end": 23.689
     }
    ],
@@ -228,7 +228,7 @@
     {
      "text": "So a splash of oil isn't just for flavor.",
      "start": 24.889,
-     "key": 2,
+     "key": 4,
      "end": 27.094
     }
    ],
@@ -270,7 +270,7 @@
     {
      "text": "Fat helps them in.",
      "start": 32.411,
-     "key": 1,
+     "key": 0,
      "end": 33.456
     }
    ],
@@ -347,7 +347,7 @@
     {
      "text": "and cooking can lower how much is left.",
      "start": 42.622,
-     "key": 1,
+     "key": 3,
      "end": 45.294
     }
    ],
@@ -374,13 +374,13 @@
     {
      "text": "Microwaving and steaming can lower it too,",
      "start": 46.694,
-     "key": 0,
+     "key": 4,
      "end": 49.342
     },
     {
      "text": "so it's not just the pan.",
      "start": 49.342,
-     "key": 2,
+     "key": 5,
      "end": 50.881
     }
    ],
@@ -406,7 +406,7 @@
     {
      "text": "That's why raw fruit and veg",
      "start": 51.681,
-     "key": 0,
+     "key": 2,
      "end": 53.521
     },
     {
@@ -482,13 +482,13 @@
     {
      "text": "This isn't a diet rule.",
      "start": 59.999,
-     "key": 1,
+     "key": 3,
      "end": 61.423
     },
     {
      "text": "It's just what your pan is doing.",
      "start": 61.423,
-     "key": 6,
+     "key": 4,
      "end": 63.059
     }
    ],
@@ -520,13 +520,13 @@
     {
      "text": "The Pan Theory: carrots like company.",
      "start": 64.559,
-     "key": 3,
+     "key": 5,
      "end": 66.836
     },
     {
      "text": "Tonight, give them a little oil.",
      "start": 66.836,
-     "key": 0,
+     "key": 5,
      "end": 68.524
     }
    ],
