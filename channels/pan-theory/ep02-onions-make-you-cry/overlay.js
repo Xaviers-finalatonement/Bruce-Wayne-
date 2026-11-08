@@ -52,7 +52,7 @@ export function createOverlay(T, TH, cv) {
       sticker([["● ", TOM], ["slow motion · frame " + String(n).padStart(4, "0"), CAST]], 470, 1150, { a, size: 46, f: NUN, fill: rgba(CT, .96), padX: 28 }); }
     { const e = env(t, T.tFps - .15, E("b02") - .05); if (e) card2("5,000 – 20,000", "frames per second", CX, 300, e.a, e.sc, { s1: 76, s2: 48 }); if (e) text("frames per second", CX, 300 + 76 * .55 + 28, { size: 48, f: NUN, color: CAST, a: e.a, sc: e.sc }); }
     // b03: speed counter beside the tracked droplet
-    if (t >= S("b03") && t < E("b03") && A.drop) { const a = smooth((t - T.C3 - .25) / .2) * (1 - smooth((t - E("b03") + .3) / .3)), n = Math.round(40 * eo3((t - T.C3 - .3) / 1.3)), w = 640;
+    if (t >= S("b03") && t < E("b03") && A.drop) { const a = smooth((t - T.C3 - .25) / .2) * (1 - smooth((t - E("b03") + .3) / .3)), n = 40, w = 640; // static value: no counting ramp (a count-up can read as a speed ramp)
       const x = clampX(A.drop.x + 40, w), y = Math.max(240, Math.min(900, A.drop.y - 250)); sticker([["up to ", CAST], [String(n) + " m/s", TOM]], x, y, { a, size: 62, fill: rgba(CT, .97), padX: 36 });
       const e = env(t, T.tMph - .05, E("b03") - .05); if (e) sticker([["≈ 90 mph", CAST]], clampX(x, 520), y + 118, { a: e.a, sc: e.sc, size: 70, fill: rgba(BUT, 1), padX: 40, rot: -.03 }); }
     // b04
