@@ -57,9 +57,7 @@
     }
    ],
    "vo": "Every second you're standing, it pulls a tiny bit further ahead.",
-   "screen": [
-    "head +0.000 000 000 001 s"
-   ]
+   "screen": []
   },
   {
    "id": "b03",
@@ -345,8 +343,7 @@
    "vo": "Over a whole seventy-nine year life, those two steps add up to about ninety billionths of a second.",
    "screen": [
     "79 years",
-    "≈ 0.000 000 09 s",
-    "90 billionths of a second"
+    "≈ 0.000 000 09 s"
    ]
   },
   {
