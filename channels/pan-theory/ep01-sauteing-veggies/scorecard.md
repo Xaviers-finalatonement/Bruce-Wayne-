@@ -306,3 +306,50 @@ Times below are true video times. The contact-sheet labels ran about 0.7 s early
    - **Voice:** try speed ≈ 0.80 to land at 165–170 wpm (it is 174 now). The voice audition is the owner's call.
    - **F7:** Bruce spot-checks the C rows.
    - **Release:** regenerate the render report, then copy the approved render to `out/ep01.mp4`.
+
+## Round 4 (targeted) — 2026-11-08
+
+**Reviewer:** the same independent gate pass as rounds 1–3.
+**Scope:** only b12/b13 (render chunks 11–12, 55–65 s) were re-rendered. The rest of the film is byte-identical to the round-3 render.
+**Reviewed:** `out/wip/ep01.mp4`, the `scene.js` `animPlates` code, commit `9f3e4c0`, the `claims.md` Notes on b12, and `out/render-report.md`.
+**Method:**
+- Exact-seek frames at 56.6, 57.5, 58.5, 59.3, 60.0, 60.4 and 61.5 s.
+- 1:1 crops of the carrot plate at 59.6 and 60.0 s.
+- Frames either side of the chunk joins: 54.9 / 55.1 and 64.9 / 65.1 s.
+
+### F11: CLOSED on the picture
+
+The carrot-only plate carries no C tiles in any frame from 56.6 to 60.0 s. Nothing on it implies vitamin C. The pepper plate keeps its bright C tiles.
+
+### Regression, new item F12 (gating): the A tiles are gone from the carrot plate
+
+- **What's on screen:** at 59.3, 59.6 and 60.0 s the carrot plate is bare browned coins under a milky steam veil. There are no A tiles, and no distinct oil-glint highlight shows at 1:1.
+- **Cause:** a code bug in `scene.js` l. 289. The fix appended a `//` comment in the middle of the line, so the A-tile call that followed it on the same line is now inside the comment and never runs:
+  `balTiles.R.forEach(tt => tt.scale.setScalar(.001)); // carrot-only plate: … (reviewer F11) pop(balTiles.A, T.tTrade - .1, .44, .14);`
+- **Glint:** the `balGleam` code is untouched, so the glint is still drawn. It reads only as the soft sheen, not as a highlight.
+- **Effect:** the "trade" now shows only one side. The pepper side has bright C, but the carrots gain nothing on screen. This undoes the round-3 evidence for c, f and g ("A tiles pop", "the carrot plate gets A tiles and a glint").
+- **Paperwork:** `claims.md` (b12) says "the carrot plate gains A tiles and an oil glint". That no longer matches the picture, so the round-3 fix item ("update the b12 line … to match") is not met.
+
+### Other checks: clean
+
+- **Chunk joins:** 54.9 → 55.1 (b11 raw/cooked) and 64.9 → 65.1 (end card) are continuous. There are no glitches, jumps or colour shifts.
+- **b13:** the toss and steam read the same as in round 3 (60.4, 61.5).
+- **Render report:** regenerated at 15:22, after the 15:22 render. It gives 72.07 s (ffprobe agrees), −14.0 LUFS integrated, LRA 2.3 LU, TP −1.5 dBTP, no black frames and no freezes.
+
+### Scores (carried from round 3; none re-scored below the gate)
+
+| a | b | c | d | e | f | g | h |
+|---|---|---|---|---|---|---|---|
+| 4 | 4 | 4* | 4 | 4 | 4* | 4* | 4 |
+
+\* **Held at 4 only because the carrot half of the payoff is still carried elsewhere:** the A tile on "vitamin A" at 14.5 s, the oil docking at 17–24 s, and the end card. If F12 is not fixed, c and g sit at the 3/4 line.
+
+### Verdict: **FAIL**
+
+All scores clear the gate. The film fails because F12 is open: a regression introduced by the F11 fix, plus a `claims.md` note that no longer describes the picture. Under the round-2 rule, a picture-versus-ledger mismatch must be closed before a PASS.
+
+### FIX LIST (round 4 → round 5)
+
+1. **Fix the code.** In `scene.js` l. 289, move `pop(balTiles.A, T.tTrade - .1, .44, .14);` to before the `//` comment, or onto its own line.
+2. **Re-render** chunks 11–12 (55–65 s) and regenerate the render report.
+3. **Check:** A tiles pop on "a trade" (≈58.5–59.5 s) and the glint shows by ≈60 s. Then the `claims.md` b12 note matches as written, and nothing else needs to change.
