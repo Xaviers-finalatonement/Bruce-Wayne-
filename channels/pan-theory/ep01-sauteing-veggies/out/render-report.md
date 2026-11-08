@@ -1,6 +1,6 @@
 # Render report
 
-- File: `ep01.mp4` (83.0 MB), overall bitrate 9.22 Mb/s (video 8.96 Mb/s)
+- File: `ep01.mp4` (83.1 MB), overall bitrate 9.22 Mb/s (video 8.96 Mb/s)
 - Duration: 72.07 s (target 70-80 s)
 - Resolution: 1080x1920  fps: 30.00  codec: h264 High yuv420p
 - Audio: aac 48000 Hz 2 ch
