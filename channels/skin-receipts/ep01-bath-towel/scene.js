@@ -204,7 +204,7 @@ const KST = [0, .62, 1.24, 1.86], baskets = [];
 // ------------------------------------------------------------ STAGE C: three bars
 const gC = new THREE.Group(); scene.add(gC); const CX = 60; gC.position.x = CX; gC.visible = false;
 const BARX = [-.22, 0, .22], BARH = [.26, .30, .78], bars = [];
-BARX.forEach((x, i) => { const m = mesh(roundedBox(.15, 1, .15, .02, 4), std(i === 2 ? C.teal : "#b6bdcc", { roughness: .6 }), gC); m.position.x = x; bars.push(m); });
+BARX.forEach((x, i) => { const m = mesh(roundedBox(.15, 1, .15, .02, 4), i === 2 ? std(C.teal, { roughness: .6 }) : (() => { const [tm, tb] = terry([3, 6], [196, 203, 216]); return new THREE.MeshStandardMaterial({ map: tm, bumpMap: tb, bumpScale: 2, roughness: .9 }); })(), gC); m.position.x = x; bars.push(m); });
 { const base = mesh(roundedBox(1.3, .02, .6, .006, 2), std("#d5d9e0", { roughness: .9 }), gC); base.position.set(0, -.01, 0); }
 
 // ------------------------------------------------------------ STAGE E1: forearm (deep brown) / E2: two microbe swatches
@@ -271,7 +271,7 @@ const B4X = [-.6, -.2, .2, .6], B4T = () => { const w0 = W("b04", "Every two mon
 function b04Cam(t) { const ts = B4T(); let x = B4X[0]; for (let i = 1; i < 4; i++) if (t > ts[i - 1]) x = lerp(B4X[i - 1], B4X[i], eio((t - ts[i - 1]) / (ts[i] - ts[i - 1] + .0001))); x = Math.min(x, B4X[3]); return [{ t: 0, p: [x, .52, 2.3], l: [x, .47, 0], f: 50, fp: [x, .47, .03], o: [215, 50] }]; }
 function stageCam(id, t, A) {
   const s0 = S(id), lt = t - s0;
-  if (id === "b03") { const tk = W("b03", "One study"), tz = END("b03") - .15, hx = k => (k >> 1) * .17, xs = lerp(.1, hx(25) - .05, eio((t - tk) / (tz - tk))); return [{ t: 0, p: [HX + xs, .62, .95], l: [HX + xs + .05, .03, -.02], f: 45, fp: [HX + xs, .04, 0], o: [140, 40] }]; }
+  if (id === "b03") { const tk = W("b03", "One study") + .05, dt = (END("b03") - .25 - tk) / 26, kf = clamp((t - tk) / dt, 0, 25), xs = .17 * kf / 2 - .02; return [{ t: 0, p: [HX + xs, .5, .95], l: [HX + xs, .05, -.02], f: 45, fp: [HX + xs, .04, 0], o: [180, 40] }]; }
   if (id === "b04") { const w0 = W("b04", "Every two months"), k = KST, x = t < w0 + .1 ? lerp(-.05, k[1] - .12, eio((t - s0) / (w0 + .1 - s0))) : lerp(k[1] - .12, k[3] - .02, eio((t - w0 - .1) / (E("b04") - w0 - .3))); return [{ t: 0, p: [KX + x, .34, .85], l: [KX + x + .02, .03, -.02], f: 45, fp: [KX + x, .05, 0], o: [190, 0] }]; }
   if (id === "b06" || id === "b07") { const z = lerp(2.7, 2.5, eio((t - s0) / 5.5)); return [{ t: 0, p: [CX, .55, z], l: [CX, .27, 0], f: 50, fp: [CX, .3, 0], o: [200, 0] }]; }
   if (id === "b08") { const cut = W("b08", "Mostly not") - .12;
