@@ -80,14 +80,24 @@ cutBurst(sprH, T.C3 + .02, 0, 2.0, 360, 1, 1.5, 4, .04, TOPY);
 const TRK = { t0: T.C3 + .03, p: [.1, TOPY, -.2], v: [.4, 4.6, -3.4], s: .085, k: .5, g: 2.0, life: 7, tw: 1, gl: 1, gy: -1e9, f: 4 }; sprH.D.push(TRK);
 cutBurst(sprH, T.C4 + .02, 0, 2.0, 420, 1, 1.5, 5, .042, TOPY);
 cutBurst(sprH, T.C8 + .02, 0, 2.0, 520, 1.05, 1.6, 6, .042, TOPY); cutBurst(sprH, T.C8 + .3, 0, 1.4, 220, .6, 1.9, 7, .03, TOPY);
+{ // lab context (out of focus): high-speed camera body + lens on a tripod, soft practical lights, more rig uprights
+  const anod = new THREE.MeshStandardMaterial({ color: "#2D3035", metalness: .6, roughness: .4, envMapIntensity: 1.5 }), glass = new THREE.MeshPhysicalMaterial({ color: "#0B1218", metalness: 0, roughness: .03, clearcoat: 1, envMapIntensity: 4 });
+  const hs = new THREE.Group(); hs.position.set(-6.4, 3.2, -3.4); GH.add(hs);
+  const body = new THREE.Mesh(K.roundBox(1.9, 1.15, 1.3, .1, 4), anod), lens = new THREE.Mesh(new THREE.CylinderGeometry(.46, .52, 1.1, 32), anod), lg = new THREE.Mesh(new THREE.CircleGeometry(.4, 32), glass), ring = new THREE.Mesh(new THREE.TorusGeometry(.5, .05, 10, 32), new THREE.MeshStandardMaterial({ color: "#C8CDD3", metalness: 1, roughness: .25 }));
+  lens.rotation.z = -PI / 2; lens.position.x = 1.45; lg.rotation.y = PI / 2; lg.position.x = 2.01; ring.rotation.y = PI / 2; ring.position.x = 2.0; hs.add(body, lens, lg, ring);
+  const led = new THREE.Mesh(new THREE.SphereGeometry(.06, 8, 8), new THREE.MeshBasicMaterial({ color: "#FF5A3A" })); led.position.set(.7, .5, .66); hs.add(led);
+  [[-.7, -3.2], [.7, -3.8]].forEach(([dz, dy]) => { const l = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, 3.3, 8), anod); l.position.set(-6.4 + dz * 1.2, 1.6, -3.4 + dz); l.rotation.z = dz * .12; GH.add(l); });
+  const lamp = new THREE.MeshBasicMaterial({ color: new THREE.Color("#FFE7BE").multiplyScalar(3), toneMapped: false });
+  [[-8.6, 4.6, -6.2, 1.8, 1.2], [-8.6, 2.2, -.8, 1.2, 1.2], [-8.6, 5.4, 2.6, 2.2, 1.0], [-7.5, 1.4, -5.6, .8, .8]].forEach(([x, y, z, w, h]) => { const q = new THREE.Mesh(new THREE.PlaneGeometry(w, h), lamp); q.rotation.y = PI / 2; q.position.set(x, y, z); GH.add(q); });
+  [[-5.2, -5.4], [-5.2, 4.6]].forEach(([x, z]) => { const r = new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 7.5, 12), rigH.g.children[1].material); r.position.set(x, 3.75, z); GH.add(r); }); }
 const trailQ = []; for (let i = 0; i < 16; i++) { const q = quad(softTex, "#FFE9BE", true, 0); noDepth.push(q); GH.add(q); trailQ.push(q); }
 // b05 macro: one large droplet stretches, then bursts into fine satellite drops, which split again
-const PM = [.35, 2.95, .1], sprM = O.makeSpray(1500, noDepth, camera); GH.add(sprM.g);
+const PM = [.35, 2.95, .1], sprM = O.makeSpray(1600, noDepth, camera); GH.add(sprM.g);
 const bigDrop = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), new THREE.MeshPhysicalMaterial({ color: "#F6EBC6", roughness: .02, transparent: true, opacity: .72, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 5.5, ior: 1.34, emissive: "#FFE2A0", emissiveIntensity: .1 })); GH.add(bigDrop);
-sprM.burst({ t0: T.f1, n: 560, seed: 11, s0: .004, s1: .02, pow: 2.8, dt: .05, k: 2.6, g: .25, life: 4.5,
+sprM.streak = .9; sprM.burst({ t0: T.f1, n: 900, seed: 11, s0: .002, s1: .014, pow: 2.4, dt: .05, k: 1.6, g: .25, life: 4.5,
   org: (i, r) => { const a = r(1) * 6.28, b = Math.acos(2 * r(2) - 1), rr = .22 * Math.cbrt(r(3)); return [PM[0] + rr * Math.sin(b) * Math.cos(a) * 1.5, PM[1] + rr * Math.cos(b) * .8, PM[2] + rr * Math.sin(b) * Math.sin(a)]; },
   vel: (i, r) => { const a = r(4) * 6.28, b = Math.acos(2 * r(5) - 1), v = .5 + 2.6 * Math.pow(r(6), 1.2); return [Math.sin(b) * Math.cos(a) * v * 1.3, Math.cos(b) * v * .8, Math.sin(b) * Math.sin(a) * v]; } });
-sprM.burst({ t0: T.f2, n: 700, seed: 12, s0: .004, s1: .016, pow: 1.8, dt: .35, k: 1.8, g: .2, life: 3.6,
+sprM.glAll = 1; sprM.burst({ t0: T.f2, n: 600, seed: 12, s0: .0015, s1: .009, pow: 2.0, dt: .35, k: 1.8, g: .2, life: 3.6,
   org: (i, r) => { const a = r(1) * 6.28, b = Math.acos(2 * r(2) - 1), rr = .15 + .55 * Math.cbrt(r(3)); return [PM[0] + rr * Math.sin(b) * Math.cos(a) * 1.5, PM[1] + rr * Math.cos(b) * .8, PM[2] + rr * Math.sin(b) * Math.sin(a)]; },
   vel: (i, r) => { const a = r(4) * 6.28, b = Math.acos(2 * r(5) - 1), v = .15 + .9 * r(6); return [Math.sin(b) * Math.cos(a) * v, Math.cos(b) * v * .8, Math.sin(b) * Math.sin(a) * v]; } });
 // blade y (edge height) for a cut event: held high, falls, bites .5 into the dome, rises again
@@ -97,10 +107,10 @@ function bladeEdge(t, evs, top) { let y = PARK; for (const c of evs) { const tau
 const slitAt = (t, evs) => { let a = 0; for (const c of evs) { const tau = t - c; if (tau > 0 && tau < 3) a = Math.max(a, smooth(tau / .2) * (1 - smooth((tau - 2.2) / .6))); } return a; };
 
 // ---------- SLAB SET (b09): a cross-section of one onion layer: tough skin over soft flesh, pressed by a blade edge ----------
-const SW = 3.6, SHF = 1.15, SHS = .16;
+const SW = 4.8, SHF = 1.15, SHS = .16;
 const skinSlabMat = new THREE.MeshPhysicalMaterial({ color: "#4A2E16", roughness: .5, clearcoat: .25, bumpMap: new THREE.CanvasTexture((() => { const c = document.createElement("canvas"); c.width = 256; c.height = 32; const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, 256, 32); for (let i = 0; i < 80; i++) { x.strokeStyle = `rgba(${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},.35)`; x.beginPath(); x.moveTo(0, hash(i * 3) * 32); x.lineTo(256, hash(i * 3) * 32 + 2); x.stroke(); } return c; })()), bumpScale: 1.2 });
 const fleshTexC = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, "#F2F0CD"); g.addColorStop(1, "#E3E6B8"); x.fillStyle = g; x.fillRect(0, 0, 512, 256);
-  for (let i = 0; i < 9; i++) { x.fillStyle = `rgba(190,180,120,${.12 + .08 * hash(i)})`; x.fillRect(0, 20 + i * 27 + hash(i) * 6, 512, 2 + hash(i * 3) * 2); x.fillStyle = "rgba(255,255,240,.28)"; x.fillRect(0, 24 + i * 27 + hash(i) * 6, 512, 4); }
+  for (let i = 0; i < 7; i++) { const r = 60 + i * 34; x.strokeStyle = `rgba(120,100,40,${.95 - i * .04})`; x.lineWidth = 5 + (i % 2) * 3; x.beginPath(); x.ellipse(256, 330, r * 1.9, r, 0, PI, 2 * PI); x.stroke(); x.strokeStyle = "rgba(255,255,240,.45)"; x.lineWidth = 6; x.beginPath(); x.ellipse(256, 330, r * 1.9 + 7, r + 7, 0, PI, 2 * PI); x.stroke(); }
   for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(${hash(i * 2) > .5 ? "255,255,235" : "170,160,100"},${.05 + .06 * hash(i)})`; x.fillRect(hash(i * 3) * 512, hash(i * 5) * 256, 3 + 14 * hash(i * 7), 1.2); } const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
 const fleshMat = new THREE.MeshPhysicalMaterial({ map: fleshTexC, roughness: .28, clearcoat: .7, clearcoatRoughness: .2, emissive: "#E8E3B8", emissiveMap: fleshTexC, emissiveIntensity: .1 });
 const skinGeo = new THREE.BoxGeometry(SW, SHS, 1.3, 81, 1, 1), fleshGeo = new THREE.BoxGeometry(SW, SHF, 1.3, 81, 8, 1);
@@ -138,6 +148,7 @@ const slit2 = [0, 1].map(() => { const a = new THREE.Mesh(new THREE.BoxGeometry(
 const place = (o, x, z, ry) => { o.position.x = x; o.position.z = z; o.rotation.y += ry; return o; };
 const onCut = place(O.mkOnion(true, 5), -.75, -2.5, .35), onDome = place(O.mkOnion(false, 6), 1.1, -1.9, -.5); GO.add(onCut, onDome); csh(GO, 1.7, 1.6, -.75, -2.5, .38); csh(GO, 1.7, 1.6, 1.1, -1.9, .38);
 const chef = O.mkChef(true); chef.rotation.set(-PI / 2, -PI / 2 - .15, 0); chef.position.set(-1.9, .1, 1.7); GO.add(cast(chef)); // lying on its side, edge toward the card
+const chefC = new THREE.Group(), chefIn = O.mkChef(true); chefIn.rotation.y = PI; chefC.add(chefIn); chefC.visible = false; GO.add(cast(chefC)); chefC.scale.setScalar(.8);
 const spillG = []; // a few settled droplets near the cut half
 for (let i = 0; i < 14; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 7), sprH.im.material); d.scale.set(.03 + .04 * hash(i), .014 + .01 * hash(i * 3), .03 + .04 * hash(i * 5)); d.position.set(-.1 + (hash(i * 7) - .5) * 2.8, .02, -1.9 + (hash(i * 9) - .5) * 2.2); GO.add(d); }
 // the card (b12 / b13): Butter, "droplets ✓ / tears ?", then a stamp under it
@@ -273,7 +284,7 @@ function stage(t, A) {
     sprO.update(COVER ? .8 : 99); A.proj = projector();
   } else if (z === "slab") {
     setKey(0, KZ.slab); animSlab(t); sprS.update(t); const b = Math.sin(t * .3) * .04;
-    setCam([b, 1.15, KZ.slab + 7.0], [0, 1.3, KZ.slab], 70, [0, 1.2, KZ.slab], .006); A.proj = projector();
+    setCam([b, 1.4, KZ.slab + 8.2], [0, 1.9, KZ.slab], 36, [0, 1.2, KZ.slab], .006); A.proj = projector();
   } else if (z === "split") {
     setKey(0, KZ.split + 0); const edB = bladeEdge(t, [T.D1, T.D2], TOP2), edS = bladeEdge(t, [T.D1, T.D3], TOP2); rigB.carr.position.y = edB; rigSh.carr.position.y = edS;
     sprB.update(t); sprSh.update(t); [[ZB, [T.D1, T.D2]], [ZSH, [T.D1, T.D3]]].forEach(([zz, ev], i) => { const sl = slitAt(t, ev), [a, b] = slit2[i]; a.visible = b.visible = sl > .01; a.scale.set(.5 + 1.6 * sl, 1, 1.9 * sl); b.scale.set(1.2 + 1.6 * sl, 1, 1.9 * sl); a.position.set(0, TOP2, zz); b.position.set(0, TOP2 + .008, zz); });
@@ -289,7 +300,7 @@ window.__seek = function (t) {
   const A = { t };
   if (COVER) { // cover: cut half onion + knife + droplet spray from the cut face
     GK.visible = true; GH.visible = GS.visible = GP.visible = false; GO.visible = true; gC.visible = gE.visible = false; sprO.g.visible = true; cardG.visible = false; key.visible = rim.visible = true;
-    setKey(-.5, KZ.over - 2.2); onCut.position.set(-.3, O.OH, -2.2 + 0); onCut.rotation.y = PI / 2 + .35; chef.scale.setScalar(.72); chef.position.set(-.6, .08, .6); chef.rotation.set(-PI / 2, -.32, 0); onDome.position.set(1.8, 0, -3.5);
+    setKey(-.5, KZ.over - 2.2); onCut.position.set(-.3, O.OH, -2.2 + 0); onCut.rotation.y = PI / 2 + .35; chef.visible = false; chefC.visible = true; chefC.position.set(1.6, 3.2, -2.5); chefC.rotation.z = .55; onDome.position.set(1.8, 0, -3.5);
     sprO.update(.5); setCam([4.6, 3.5, KZ.over + 2.6], [-.2, 2.3, KZ.over - 2.1], 44, [-.3, .8, KZ.over - 2.2], .006);
     bloom.strength = .24; bloom.threshold = 1.0; bokeh.enabled = true; filmPass.uniforms.time.value = .5; filmPass.uniforms.fall.value = .34; scene.background.set("#2B2119"); A.proj = projector(); composer.render(); ov.drawCover(); return;
   }

@@ -71,7 +71,7 @@ export function mkOnion(cutUp, seed = 1) {
 // ---------------- steel blades ----------------
 let _brush;
 function brushTex() { if (_brush) return _brush; const c = cv(256, 256), x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, 256, 256);
-  for (let i = 0; i < 700; i++) { const y = hash(i * 1.3) * 256, v = 120 + 90 * hash(i * 2.9); x.strokeStyle = `rgba(${v},${v},${v},${.12 + .25 * hash(i * 4.1)})`; x.lineWidth = .6 + hash(i * 6.1) * 1.2; x.beginPath(); x.moveTo(0, y); x.lineTo(256, y + (hash(i) - .5) * 3); x.stroke(); }
+  for (let i = 0; i < 1400; i++) { const y = hash(i * 1.3) * 256, v = 60 + 170 * hash(i * 2.9); x.strokeStyle = `rgba(${v},${v},${v},${.2 + .4 * hash(i * 4.1)})`; x.lineWidth = .4 + hash(i * 6.1) * .9; x.beginPath(); x.moveTo(0, y); x.lineTo(256, y + (hash(i) - .5) * 3); x.stroke(); }
   _brush = tx(c, false); _brush.wrapS = _brush.wrapT = THREE.RepeatWrapping; return _brush; }
 // blade lies in x (length) and y (height, edge at the low side), thickness along z. tip>0: chef's-knife point over the last `tip` fraction.
 export function bladeGeos({ L = 2.6, H = 1.5, t = .07, tE = .004, bev = .2, tip = 0, N = 44 } = {}) {
@@ -85,8 +85,8 @@ export function bladeGeos({ L = 2.6, H = 1.5, t = .07, tE = .004, bev = .2, tip 
 }
 export function mkBlade(o = {}, blunt = false) {
   const { flat, bevel, bs } = bladeGeos(o), g = new THREE.Group();
-  const mf = new THREE.MeshStandardMaterial({ color: "#D6DADF", metalness: .95, roughness: .3, roughnessMap: bs, bumpMap: bs, bumpScale: .15, envMapIntensity: 3.4, side: THREE.DoubleSide });
-  const mb = new THREE.MeshStandardMaterial({ color: blunt ? "#8E949B" : "#F4F6F8", metalness: 1, roughness: blunt ? .42 : .13, envMapIntensity: blunt ? 2.2 : 4.2, side: THREE.DoubleSide });
+  const mf = new THREE.MeshPhysicalMaterial({ color: "#D6DADF", metalness: 1, roughness: .38, roughnessMap: bs, bumpMap: bs, bumpScale: .5, anisotropy: .9, anisotropyRotation: 0, envMapIntensity: 3.8, side: THREE.DoubleSide });
+  const mb = new THREE.MeshStandardMaterial({ color: blunt ? "#8E949B" : "#FFFFFF", metalness: 1, roughness: blunt ? .42 : .08, envMapIntensity: blunt ? 2.2 : 5.5, emissive: blunt ? "#000000" : "#FFE9C4", emissiveIntensity: blunt ? 0 : .35, side: THREE.DoubleSide });
   const a = new THREE.Mesh(flat, mf), b = new THREE.Mesh(bevel, mb); a.castShadow = b.castShadow = true; g.add(a, b); g.userData = { L: o.L || 2.6, H: o.H || 1.5 }; return g;
 }
 export function mkChef(sharp = true) { // chef's knife: blade along +x (edge down, y), handle toward -x
@@ -98,7 +98,7 @@ export function mkChef(sharp = true) { // chef's knife: blade along +x (edge dow
 }
 // guillotine rig: base plate, two posts behind the onion (x = -2.2), a carriage that holds the blade. carr.position.y = blade edge height.
 export function mkRig({ blunt = false, base = true, L = 2.7 } = {}) {
-  const g = new THREE.Group(), steel = new THREE.MeshStandardMaterial({ color: "#C4C9CF", metalness: .95, roughness: .34, roughnessMap: brushTex(), envMapIntensity: 3.2 }), anod = new THREE.MeshStandardMaterial({ color: "#4A4F55", metalness: .6, roughness: .42, envMapIntensity: 2 });
+  const g = new THREE.Group(), steel = new THREE.MeshPhysicalMaterial({ color: "#C4C9CF", metalness: 1, roughness: .36, roughnessMap: brushTex(), bumpMap: brushTex(), bumpScale: .4, anisotropy: .9, envMapIntensity: 3.6 }), anod = new THREE.MeshStandardMaterial({ color: "#4A4F55", metalness: .6, roughness: .42, envMapIntensity: 2 });
   const add = (m, par = g) => { m.castShadow = m.receiveShadow = true; par.add(m); return m; };
   if (base) { const bp = add(new THREE.Mesh(roundBox(5.4, .14, 4.8, .035, 3), steel)); bp.position.set(-.8, .07, 0); }
   [-1, 1].forEach(s => { const p = add(new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 8.6, 16), steel)); p.position.set(-2.2, 4.4, s * (L / 2 + .3)); const f = add(new THREE.Mesh(new THREE.CylinderGeometry(.2, .22, .1, 20), anod)); f.position.set(-2.2, .17, s * (L / 2 + .3)); });
@@ -120,16 +120,16 @@ export function makeSpray(cap, noDepth, camera) {
   const im = new THREE.InstancedMesh(geo, mat, cap); im.frustumCulled = false; im.count = 0;
   const gq = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: glintTex(), color: "#FFF3D2", transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), cap); gq.frustumCulled = false; gq.count = 0; noDepth.push(gq);
   const g = new THREE.Group(); g.add(im, gq); const D = [], M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), Z = new THREE.Matrix4().makeScale(0, 0, 0);
-  const sp = { g, D, im, gq, bursts: [] };
+  const sp = { g, D, im, gq, bursts: [], streak: 0 }, Yv = new THREE.Vector3(0, 1, 0), Dv = new THREE.Vector3();
   sp.burst = o => { // o: t0 n org(i,r)->[x,y,z] vel(i,r)->[x,y,z] s0 s1 pow dt k g life seed gy
     const r0 = o.seed || 1; for (let i = 0; i < o.n && D.length < cap; i++) { const r = k => hash(r0 * 131.7 + i * 7.13 + k * 3.71), org = o.org(i, r), v = o.vel(i, r);
-      D.push({ t0: o.t0 + (o.dt == null ? .06 : o.dt) * r(5), p: org, v, s: o.s0 + (o.s1 - o.s0) * Math.pow(r(9), o.pow || 2.2), k: o.k || .25, g: o.g == null ? 2.4 : o.g, life: o.life || 2.6, tw: r(11) * 6.28, gl: r(13) > .55 ? 1 : 0, gy: o.gy == null ? -1e9 : o.gy, f: 2.5 + 5 * r(15) }); } };
+      D.push({ t0: o.t0 + (o.dt == null ? .06 : o.dt) * r(5), p: org, v, s: o.s0 + (o.s1 - o.s0) * Math.pow(r(9), o.pow || 2.2), k: o.k || .25, g: o.g == null ? 2.4 : o.g, life: o.life || 2.6, tw: r(11) * 6.28, gl: r(13) > (sp.glAll ? .1 : .55) ? 1 : 0, gy: o.gy == null ? -1e9 : o.gy, f: 2.5 + 5 * r(15) }); } };
   sp.pos = (d, tau, out) => { const k = d.k, e = (1 - Math.exp(-k * tau)) / k; return out.set(d.p[0] + d.v[0] * e, d.p[1] + d.v[1] * e - .5 * d.g * tau * tau, d.p[2] + d.v[2] * e); };
   sp.update = t => {
     let end = 0; const cq = camera.quaternion;
     for (let i = 0; i < D.length; i++) { const d = D[i], tau = t - d.t0; if (tau < 0 || tau > d.life) { im.setMatrixAt(i, Z); gq.setMatrixAt(i, Z); continue; }
       sp.pos(d, tau, P); let sc = d.s * smooth(tau / .05) * (1 - smooth((tau - d.life + .3) / .3)); if (P.y < d.gy) { sc *= clamp(1 - (d.gy - P.y) / .12); P.y = Math.max(P.y, d.gy - .06); }
-      end = i + 1; S.set(sc, sc, sc); M.compose(P, Q.identity(), S); im.setMatrixAt(i, M);
+      end = i + 1; if (sp.streak) { const ek = Math.exp(-d.k * tau); Dv.set(d.v[0] * ek, d.v[1] * ek - d.g * tau, d.v[2] * ek); const sd = Dv.length(); if (sd > 1e-4) Q.setFromUnitVectors(Yv, Dv.divideScalar(sd)); S.set(sc, sc * (1 + sp.streak * Math.min(sd, 4) * .5), sc); } else { Q.identity(); S.set(sc, sc, sc); } M.compose(P, Q, S); im.setMatrixAt(i, M);
       const tw = d.gl ? Math.pow(Math.max(0, Math.sin(tau * d.f + d.tw)), 22) : 0, gs = sc * (1.6 + 6.5 * tw); S.set(gs, gs, gs); M.compose(P, cq, S); gq.setMatrixAt(i, tw > .02 ? M : Z); }
     im.count = gq.count = end; im.instanceMatrix.needsUpdate = gq.instanceMatrix.needsUpdate = true; };
   return sp;
