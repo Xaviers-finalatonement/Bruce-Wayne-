@@ -268,7 +268,8 @@ def sr_hit(gain=1.0):  # rubber stamp on paper: soft low thud + short paper slap
     n = int(0.4 * SR); t = np.arange(n) / SR
     body = np.sin(2 * np.pi * (95 + 45 * np.exp(-t / 0.03)) * t) * env_exp(n, 0.07)
     slap = bandnoise(n, 700, 4200) * env_exp(n, 0.015)
-    return (body * 0.9 + slap * 0.45) * db(-18) * gain
+    sub = np.sin(2 * np.pi * 52 * t) * env_exp(n, 0.16)
+    return (body * 1.0 + slap * 0.55 + 0.7 * sub) * db(-9) * gain  # round-3: a stronger stamp hit widens the loudness range
 
 
 def sr_swell(dur):  # water / fabric texture: soft band noise breathing in and out
@@ -319,7 +320,7 @@ def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s),
             for det in (-.5, .5):
                 pad += w * np.sin(2 * np.pi * (f + det) * t + det) * (0.65 + 0.35 * np.sin(2 * np.pi * t / (9.0 + f / 70))) * (0.7 if f < 150 else 0.5)
     pad = lowpass(pad, 1700)
-    sfx += pad * fade * db(-35)
+    sfx += pad * fade * db(-31)  # round-3: a little more bed in the gaps; ducks harder under the VO (duck 0.8)
     r = np.random.default_rng(11); tt = 2.5
     while tt < dur:  # faint water droplets, random 3-6 s apart
         i = int(tt * SR); m = min(n - i, int(.25 * SR))
@@ -333,7 +334,7 @@ PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
                        custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
-    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.6, custom=dict(rub=sr_rub, wet=sr_wet)),
+    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.8, custom=dict(rub=sr_rub, wet=sr_wet)),
 }
 
 

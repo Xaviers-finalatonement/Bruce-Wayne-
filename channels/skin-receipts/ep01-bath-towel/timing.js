@@ -40,7 +40,7 @@ export function makeTiming(tl) {
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
   cue(0.1, "rub", { dur: 1.1 }); cue(W("b01", "film") - .1, "wet", { dur: 1.3 }); cue(T.hookEnd - .2, "swell", { dur: .9 });
   cue(W("b02", "Let's check") - .3, "rub", { dur: 1.0 }); cue(W("b10", "Line three") + .4, "rub", { dur: 1.6 }); cue(W("b12", "pat your skin"), "rub", { dur: 1.6 });
-  T.items.forEach(it => { const n = it[2].length; cue(it[1], "tick", { t1: it[1] + .08 + n * .1, rate: 16 }); });
+  const tk = []; T.items.forEach(it => { if (tk.some(x => Math.abs(x - it[1]) < .12)) return; tk.push(it[1]); const n = it[2].length; cue(it[1], "tick", { t1: it[1] + .08 + n * .1, rate: 16 }); }); // no doubled tick when two lines print together
   T.stamps.forEach(s => cue(s.t, "hit", { gain: 1 }));
   [S("b02"), S("b03"), S("b04"), S("b05"), S("b06"), S("b08"), S("b09"), S("b10"), S("b11"), S("b12"), S("b13"), S("b14"), S("b15")].forEach(c => cue(c - .05, "sweep", { dur: .5 }));
   cue(S("b05") + 1.4, "swell", { dur: 3 }); cue(S("b09") + .2, "swell", { dur: 3 }); cue(S("b10") + 1, "swell", { dur: 2 });

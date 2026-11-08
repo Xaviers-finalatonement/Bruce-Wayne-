@@ -46,8 +46,8 @@ export function createOverlay(T, TH, cv) {
     g.strokeStyle = color; g.fillStyle = color; g.lineWidth = s.big ? 9 : 5; g.beginPath(); g.roundRect(m, m, w, h, 10); g.stroke();
     g.lineWidth = s.big ? 3 : 2; g.beginPath(); g.roundRect(m + (s.big ? 14 : 8), m + (s.big ? 14 : 8), w - (s.big ? 28 : 16), h - (s.big ? 28 : 16), 6); g.stroke();
     g.font = `700 ${s.big ? 92 : 50}px ${MONO}`; g.textAlign = "center"; g.textBaseline = "middle"; g.letterSpacing = (s.big ? 6 : 3) + "px"; g.fillText(s.text, m + w / 2 + 2, m + h / 2 + 4);
-    g.globalCompositeOperation = "destination-out"; for (let k = 0; k < 130; k++) { g.globalAlpha = .2 + .35 * hash(k * 3.1 + s.text.length); const r = .8 + 1.8 * hash(k * 7.7); g.beginPath(); g.arc(hash(k * 1.7) * c.width, hash(k * 5.3 + 2) * c.height, r, 0, 6.3); g.fill(); }
-    for (let k = 0; k < 14; k++) { g.globalAlpha = .5; g.fillRect(hash(k * 9.1) * c.width, hash(k * 4.4 + 1) * c.height, 14 + hash(k) * 30, 1.5); }
+    g.globalCompositeOperation = "destination-out"; for (let k = 0; k < (s.big ? 18 : 130); k++) { g.globalAlpha = .2 + .35 * hash(k * 3.1 + s.text.length); const r = .8 + 1.8 * hash(k * 7.7); g.beginPath(); g.arc(hash(k * 1.7) * c.width, hash(k * 5.3 + 2) * c.height, r, 0, 6.3); g.fill(); }
+    for (let k = 0; k < (s.big ? 0 : 14); k++) { g.globalAlpha = .5; g.fillRect(hash(k * 9.1) * c.width, hash(k * 4.4 + 1) * c.height, 14 + hash(k) * 30, 1.5); }
     return c;
   }
   const stampDefs = T.stamps.map(s => Object.assign({}, s, { big: false }));
@@ -132,7 +132,7 @@ export function createOverlay(T, TH, cv) {
     const t0 = S("b06") + .1, t1 = END("b07") + .45; if (t < t0 || t > t1 + .4) return;
     const out = 1 - smooth((t - t1) / .35), inn = eo3((t - t0) / .55), X = 430, Y = 330, WS = 520, HS = 800, base = Y + 560, bw = 112, pitch = 168, x0 = X + WS / 2 - pitch, H = [230, 300, 390];
     ctx.save(); ctx.globalAlpha = out * Math.min(1, inn * 1.4); ctx.translate(0, (1 - inn) * -70);
-    paper(X, Y, WS, HS, true);
+    paper(X, Y, WS, HS, true); ctx.save(); ctx.beginPath(); ctx.rect(X, Y, WS, HS); ctx.clip(); for (let q = 0; q < 700; q++) { ctx.fillStyle = `rgba(120,112,100,${.03 + .05 * hash(q * 1.9)})`; ctx.fillRect(X + hash(q * 3.3) * WS, Y + hash(q * 7.1 + 1) * HS, 1 + hash(q) * 6, 1); } for (let yy = Y + 8; yy < Y + HS; yy += 9) { ctx.fillStyle = "rgba(27,36,64,.022)"; ctx.fillRect(X, yy, WS, 2); } ctx.fillStyle = "rgba(27,36,64,.07)"; ctx.fillRect(X + 30, Y + 78, WS - 60, 2); ctx.restore();
     txt("live bacteria", X + 30, Y + 60, { align: "left", f: MONO, size: 36, color: NAVY });
     const gr = [prog01(t, t0 + .25, t0 + .8), prog01(t, t0 + .5, t0 + 1.05), prog01(t, W("b06", "highest") - .5, W("b06", "highest") + .55)];
     ctx.save(); ctx.strokeStyle = SLATE; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X + 30, base); ctx.lineTo(X + WS - 30, base); ctx.stroke(); ctx.restore();
@@ -140,7 +140,7 @@ export function createOverlay(T, TH, cv) {
       ctx.save(); ctx.beginPath(); ctx.rect(bx, base - hh, bw, hh); ctx.clip(); ctx.fillStyle = colr; ctx.globalAlpha *= i === 2 ? 1 : .82; ctx.fillRect(bx, base - hh, bw, hh);
       ctx.fillStyle = "rgba(255,255,255,.22)"; for (let yy = base - hh; yy < base; yy += 5) ctx.fillRect(bx, yy, bw, 1.6);
       for (let q = 0; q < 70; q++) { ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.fillRect(bx + hash(q * 3.1 + i) * bw, base - hash(q * 5.7 + i * 2) * hh, 2, 2); } ctx.restore();
-      txt(["month 2", "month 4", "month 6"][i], x0 + i * pitch, base + 50, { size: 34, color: i === 2 ? TEAL : SLATE }); });
+      txt(["month 2", "month 4", "month 6"][i], x0 + i * pitch, base + 50, { size: 36, color: i === 2 ? TEAL : SLATE }); });
     // illustration label (Receipt pill, 40 px)
     ctx.save(); ctx.fillStyle = REC; ctx.strokeStyle = SLATE; ctx.lineWidth = 2.5; rrect(X + 55, base + 82, WS - 110, 116, 30); ctx.fill(); ctx.stroke(); ctx.restore();
     txt("illustration,", X + WS / 2, base + 133, { size: 40, color: NAVY }); txt("not to scale", X + WS / 2, base + 180, { size: 40, color: NAVY });
@@ -186,7 +186,10 @@ export function createOverlay(T, TH, cv) {
     const t0 = T.stamps[1].t, a = t - t0, tf = S("b14") + .35; if (a < 0 || t > tf + .5) return; ensureStamps();
     const u = clamp(a / .12), sc = (1 + .5 * (1 - eo3(u))) * 1.14, fade = 1 - smooth((t - tf) / .45), img = stampImg.end;
     ctx.save(); if (a < .12) { ctx.globalAlpha = .22 * (1 - a / .12); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, 1080, 1920); } ctx.restore();
-    ctx.save(); ctx.translate(540, 940); ctx.rotate(-.07); ctx.scale(sc * (1 - .1 * (1 - fade)), sc * (1 - .1 * (1 - fade))); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = clamp(a / .06) * .96 * fade; ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
+    ctx.save(); ctx.globalAlpha = .42 * smooth(a / .15) * fade; ctx.fillStyle = "#141a30"; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); // dim the picture while the stamp lands
+    ctx.save(); ctx.translate(540, 940); ctx.rotate(-.07); const k2 = sc * (1 - .1 * (1 - fade)); ctx.scale(k2, k2); ctx.globalAlpha = clamp(a / .06) * fade;
+    ctx.shadowColor = "rgba(20,26,50,.35)"; ctx.shadowBlur = 30; ctx.shadowOffsetY = 10; ctx.fillStyle = "#FBFAF6"; rrect(-img.width / 2 - 22, -img.height / 2 - 22, img.width + 44, img.height + 44, 20); ctx.fill(); ctx.shadowColor = "transparent";
+    ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha *= 1; ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
     if (a < .6) { ctx.save(); ctx.globalAlpha = (1 - a / .6) * .4; ctx.strokeStyle = SLATE; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(540, 940, 330 + 200 * eo3(a / .6), 100 + 70 * eo3(a / .6), -.07, 0, 6.3); ctx.stroke(); ctx.restore(); }
   }
 
@@ -209,7 +212,7 @@ export function createOverlay(T, TH, cv) {
     if (t < .05) return; const s = "Education, not medical advice.", w = mw(s, 36, 400) + 40; ctx.save(); ctx.fillStyle = "rgba(251,250,246,.84)"; rrect(SX - w / 2, 1466, w, 56, 28); ctx.fill(); ctx.restore();
     txt(s, SX, 1506, { size: 36, w: 400, color: SLATE });
   }
-  function draw(t, A) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); labels(t, A || {}); ctx.save(); ctx.globalAlpha = 1 - smooth((t - (T.tEnd - .1)) / .35); receipt(t); ctx.restore(); hook(t); bigStamp(t); endCard(t); edu(t); }
+  function draw(t, A) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); labels(t, A || {}); { const ra = 1 - smooth((t - (T.tEnd - .55)) / .3); if (ra > .003) { ctx.save(); ctx.globalAlpha = ra; receipt(t); ctx.restore(); } } hook(t); bigStamp(t); endCard(t); edu(t); }
 
   function drawCover() { // UNKNOWN total only: no claim line, no HOLDS UP (never reads as endorsing a product)
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); ensureStamps();
