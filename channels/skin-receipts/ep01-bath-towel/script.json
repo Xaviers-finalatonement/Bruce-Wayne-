@@ -18,7 +18,7 @@
       "screen": [
         "Your towel grows a film?"
       ],
-      "visual": "Clean white frame, receipt-paper texture. A folded cotton towel on a shelf in soft window light; a receipt strip prints a question mark at the frame edge. Slow lateral slide across the towel loops. Reads in under 2 s."
+      "visual": "Filmed-looking macro of cotton terry under a window key light; slow slide, push between the loops from 0.8 s; a pale teal film is revealed in the base weave on 'film'."
     },
     {
       "id": "b02",
@@ -92,14 +92,14 @@
     },
     {
       "id": "b08",
-      "vo": "Line two. Is it your own skin's bacteria? Mostly not. Staph was well under one percent.",
+      "vo": "Line two. Is it your own skin's bacteria? Mostly not. Staph, a common skin bacterium, was typically well under one percent.",
       "claims": [
         "C5",
         "C6"
       ],
       "screen": [
         "LINE 2 · from your skin?",
-        "Staph: under 1%"
+        "Staph: typically < 1 %"
       ],
       "visual": "Receipt line 2 prints. Macro slide across a forearm of deep brown skin, then a split frame: a skin-microbe swatch beside a towel-microbe swatch, clearly different shapes. A tiny Staph sliver on the towel side. Slow lateral slide."
     },
@@ -164,10 +164,11 @@
     },
     {
       "id": "b14",
-      "vo": "The film is real. Harm to your skin? Unproven. Dermatologists say clean, and not shared.",
+      "vo": "The film is real. Harm to your skin? Unproven. Disposable towels? Not tested. Dermatologists say clean, and not shared.",
       "claims": [
         "C3",
         "C8",
+        "C9",
         "C10",
         "C11",
         "C12"
@@ -175,9 +176,10 @@
       "screen": [
         "film: real",
         "harm to skin: unproven",
+        "disposable: not tested",
         "clean · not shared"
       ],
-      "visual": "The strip finishes printing the one-line summary; camera pulls back to show the whole strip under a towel on a shelf. Calm pull-back."
+      "visual": "Calm pull-back from a towel macro to the whole receipt strip; the one-line summary prints."
     },
     {
       "id": "b15",
@@ -192,13 +194,13 @@
     }
   ],
   "end_card": {
-    "text": "Receipt total: UNKNOWN · A film of bacteria does grow on towels in daily use. Harm to your skin? Unproven. Dermatologists say: clean, and not shared. Education, not medical advice.",
+    "text": "Receipt total: UNKNOWN · A film of bacteria does grow on towels in daily use. Harm to your skin? Unproven. Disposable towels? Not tested. Dermatologists say: clean, and not shared. Education, not medical advice.",
     "channel": "Skin Receipts"
   },
   "cover": {
     "headline": "What's growing on your towel",
     "key_word": "towel"
   },
-  "end_hold": 1.8,
+  "end_hold": 4.0,
   "sound": "skin-receipts"
 }
