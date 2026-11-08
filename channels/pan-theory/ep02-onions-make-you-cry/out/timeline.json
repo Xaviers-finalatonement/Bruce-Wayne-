@@ -1,15 +1,15 @@
 {
- "duration": 70.116,
+ "duration": 73.266,
  "fps": 30,
  "speed": 0.83,
- "gap": 0.45,
+ "gap": 0.25,
  "sample_rate": 24000,
  "beats": [
   {
    "id": "b01",
    "start": 0.2,
    "end": 3.095,
-   "next": 3.545,
+   "next": 3.695,
    "sents": [
     {
      "s": 0.2,
@@ -37,13 +37,13 @@
   },
   {
    "id": "b02",
-   "start": 3.545,
-   "end": 7.96,
-   "next": 8.41,
+   "start": 3.695,
+   "end": 8.11,
+   "next": 8.71,
    "sents": [
     {
-     "s": 3.545,
-     "e": 7.96,
+     "s": 3.695,
+     "e": 8.11,
      "c0": 0,
      "c1": 63
     }
@@ -51,15 +51,15 @@
    "captions": [
     {
      "text": "One lab caught it on cameras far",
-     "start": 3.545,
+     "start": 3.695,
      "key": 5,
-     "end": 5.858
+     "end": 6.008
     },
     {
      "text": "faster than your eyes can see.",
-     "start": 5.858,
+     "start": 6.008,
      "key": 0,
-     "end": 7.96
+     "end": 8.11
     }
    ],
    "vo": "One lab caught it on cameras far faster than your eyes can see.",
@@ -69,13 +69,13 @@
   },
   {
    "id": "b03",
-   "start": 8.41,
-   "end": 12.203,
-   "next": 12.653,
+   "start": 8.71,
+   "end": 12.503,
+   "next": 13.203,
    "sents": [
     {
-     "s": 8.41,
-     "e": 12.204,
+     "s": 8.71,
+     "e": 12.504,
      "c0": 0,
      "c1": 55
     }
@@ -83,15 +83,15 @@
    "captions": [
     {
      "text": "Droplets burst out at up to",
-     "start": 8.41,
+     "start": 8.71,
      "key": 0,
-     "end": 10.341
+     "end": 10.641
     },
     {
      "text": "about ninety miles an hour.",
-     "start": 10.341,
+     "start": 10.641,
      "key": 1,
-     "end": 12.203
+     "end": 12.503
     }
    ],
    "vo": "Droplets burst out at up to about ninety miles an hour.",
@@ -102,13 +102,13 @@
   },
   {
    "id": "b04",
-   "start": 12.653,
-   "end": 17.347,
-   "next": 17.797,
+   "start": 13.203,
+   "end": 17.897,
+   "next": 18.497,
    "sents": [
     {
-     "s": 12.653,
-     "e": 17.347,
+     "s": 13.203,
+     "e": 17.897,
      "c0": 0,
      "c1": 69
     }
@@ -116,15 +116,15 @@
    "captions": [
     {
      "text": "That was a lab rig that drops",
-     "start": 12.653,
+     "start": 13.203,
      "key": 6,
-     "end": 14.694
+     "end": 15.244
     },
     {
      "text": "a blade onto half an onion, not a chef.",
-     "start": 14.694,
-     "key": 1,
-     "end": 17.347
+     "start": 15.244,
+     "key": 8,
+     "end": 17.897
     }
    ],
    "vo": "That was a lab rig that drops a blade onto half an onion, not a chef.",
@@ -134,13 +134,13 @@
   },
   {
    "id": "b05",
-   "start": 17.797,
-   "end": 24.07,
-   "next": 24.52,
+   "start": 18.497,
+   "end": 24.77,
+   "next": 25.37,
    "sents": [
     {
-     "s": 17.797,
-     "e": 24.07,
+     "s": 18.497,
+     "e": 24.77,
      "c0": 0,
      "c1": 90
     }
@@ -148,21 +148,21 @@
    "captions": [
     {
      "text": "Within a fiftieth of a second,",
-     "start": 17.797,
+     "start": 18.497,
      "key": 2,
-     "end": 19.958
+     "end": 20.658
     },
     {
      "text": "they split into hundreds,",
-     "start": 19.958,
+     "start": 20.658,
      "key": 3,
-     "end": 21.77
+     "end": 22.47
     },
     {
      "text": "even thousands, of smaller drops.",
-     "start": 21.77,
+     "start": 22.47,
      "key": 1,
-     "end": 24.07
+     "end": 24.77
     }
    ],
    "vo": "Within a fiftieth of a second, they split into hundreds, even thousands, of smaller drops.",
@@ -173,25 +173,25 @@
   },
   {
    "id": "b06",
-   "start": 24.52,
-   "end": 32.606,
-   "next": 33.056,
+   "start": 25.37,
+   "end": 33.456,
+   "next": 34.056,
    "sents": [
     {
-     "s": 24.52,
-     "e": 25.323,
+     "s": 25.37,
+     "e": 26.173,
      "c0": 0,
      "c1": 8
     },
     {
-     "s": 25.563,
-     "e": 27.283,
+     "s": 26.413,
+     "e": 28.133,
      "c0": 9,
      "c1": 39
     },
     {
-     "s": 27.423,
-     "e": 32.606,
+     "s": 28.273,
+     "e": 33.456,
      "c0": 40,
      "c1": 107
     }
@@ -199,27 +199,27 @@
    "captions": [
     {
      "text": "Why cry?",
-     "start": 24.52,
+     "start": 25.37,
      "key": 0,
-     "end": 25.563
+     "end": 26.413
     },
     {
      "text": "Cutting breaks open the cells.",
-     "start": 25.563,
+     "start": 26.413,
      "key": 0,
-     "end": 27.423
+     "end": 28.273
     },
     {
      "text": "A reaction turns the onion's sulfur",
-     "start": 27.423,
+     "start": 28.273,
      "key": 1,
-     "end": 30.208
+     "end": 31.058
     },
     {
      "text": "compounds into an eye irritant.",
-     "start": 30.208,
-     "key": 0,
-     "end": 32.606
+     "start": 31.058,
+     "key": 4,
+     "end": 33.456
     }
    ],
    "vo": "Why cry? Cutting breaks open the cells. A reaction turns the onion's sulfur compounds into an eye irritant.",
@@ -230,19 +230,19 @@
   },
   {
    "id": "b07",
-   "start": 33.056,
-   "end": 37.961,
-   "next": 38.411,
+   "start": 34.056,
+   "end": 38.961,
+   "next": 39.861,
    "sents": [
     {
-     "s": 33.056,
-     "e": 37.117,
+     "s": 34.056,
+     "e": 38.117,
      "c0": 0,
      "c1": 66
     },
     {
-     "s": 37.257,
-     "e": 37.961,
+     "s": 38.257,
+     "e": 38.961,
      "c0": 67,
      "c1": 73
     }
@@ -250,21 +250,21 @@
    "captions": [
     {
      "text": "It switches on nerves in your cornea,",
-     "start": 33.056,
-     "key": 1,
-     "end": 35.394
+     "start": 34.056,
+     "key": 6,
+     "end": 36.394
     },
     {
      "text": "the clear front of your eye.",
-     "start": 35.394,
+     "start": 36.394,
      "key": 1,
-     "end": 37.257
+     "end": 38.257
     },
     {
      "text": "Tears.",
-     "start": 37.257,
+     "start": 38.257,
      "key": 0,
-     "end": 37.961
+     "end": 38.961
     }
    ],
    "vo": "It switches on nerves in your cornea, the clear front of your eye. Tears.",
@@ -275,13 +275,13 @@
   },
   {
    "id": "b08",
-   "start": 38.411,
-   "end": 42.815,
-   "next": 43.265,
+   "start": 39.861,
+   "end": 44.265,
+   "next": 44.865,
    "sents": [
     {
-     "s": 38.411,
-     "e": 42.815,
+     "s": 39.861,
+     "e": 44.265,
      "c0": 0,
      "c1": 68
     }
@@ -289,15 +289,15 @@
    "captions": [
     {
      "text": "One chemist suggested the droplets",
-     "start": 38.411,
+     "start": 39.861,
      "key": 2,
-     "end": 40.678
+     "end": 42.128
     },
     {
      "text": "carry that irritant to your eyes.",
-     "start": 40.678,
+     "start": 42.128,
      "key": 2,
-     "end": 42.815
+     "end": 44.265
     }
    ],
    "vo": "One chemist suggested the droplets carry that irritant to your eyes.",
@@ -307,19 +307,19 @@
   },
   {
    "id": "b09",
-   "start": 43.265,
-   "end": 48.522,
-   "next": 48.972,
+   "start": 44.865,
+   "end": 50.122,
+   "next": 50.822,
    "sents": [
     {
-     "s": 43.265,
-     "e": 47.327,
+     "s": 44.865,
+     "e": 48.927,
      "c0": 0,
      "c1": 64
     },
     {
-     "s": 47.467,
-     "e": 48.522,
+     "s": 49.067,
+     "e": 50.122,
      "c0": 65,
      "c1": 80
     }
@@ -327,21 +327,21 @@
    "captions": [
     {
      "text": "The tough outer skin lets the",
-     "start": 43.265,
+     "start": 44.865,
      "key": 1,
-     "end": 45.169
+     "end": 46.769
     },
     {
      "text": "flesh under it get squeezed first.",
-     "start": 45.169,
+     "start": 46.769,
      "key": 4,
-     "end": 47.467
+     "end": 49.067
     },
     {
      "text": "Then it bursts.",
-     "start": 47.467,
+     "start": 49.067,
      "key": 2,
-     "end": 48.522
+     "end": 50.122
     }
    ],
    "vo": "The tough outer skin lets the flesh under it get squeezed first. Then it bursts.",
@@ -351,19 +351,19 @@
   },
   {
    "id": "b10",
-   "start": 48.972,
-   "end": 52.26,
-   "next": 52.71,
+   "start": 50.822,
+   "end": 54.11,
+   "next": 54.71,
    "sents": [
     {
-     "s": 48.972,
-     "e": 50.775,
+     "s": 50.822,
+     "e": 52.625,
      "c0": 0,
      "c1": 31
     },
     {
-     "s": 50.915,
-     "e": 52.261,
+     "s": 52.765,
+     "e": 54.111,
      "c0": 32,
      "c1": 50
     }
@@ -371,15 +371,15 @@
    "captions": [
     {
      "text": "A blunter knife makes it worse.",
-     "start": 48.972,
+     "start": 50.822,
      "key": 1,
-     "end": 50.915
+     "end": 52.765
     },
     {
      "text": "So do faster cuts.",
-     "start": 50.915,
+     "start": 52.765,
      "key": 2,
-     "end": 52.26
+     "end": 54.11
     }
    ],
    "vo": "A blunter knife makes it worse. So do faster cuts.",
@@ -391,13 +391,13 @@
   },
   {
    "id": "b11",
-   "start": 52.71,
-   "end": 55.756,
-   "next": 56.206,
+   "start": 54.71,
+   "end": 57.756,
+   "next": 58.656,
    "sents": [
     {
-     "s": 52.71,
-     "e": 55.756,
+     "s": 54.71,
+     "e": 57.756,
      "c0": 0,
      "c1": 44
     }
@@ -405,9 +405,9 @@
    "captions": [
     {
      "text": "A sharper blade gave fewer, slower droplets.",
-     "start": 52.71,
-     "key": 6,
-     "end": 55.756
+     "start": 54.71,
+     "key": 4,
+     "end": 57.756
     }
    ],
    "vo": "A sharper blade gave fewer, slower droplets.",
@@ -417,13 +417,13 @@
   },
   {
    "id": "b12",
-   "start": 56.206,
-   "end": 58.996,
-   "next": 59.446,
+   "start": 58.656,
+   "end": 61.446,
+   "next": 62.046,
    "sents": [
     {
-     "s": 56.206,
-     "e": 58.996,
+     "s": 58.656,
+     "e": 61.446,
      "c0": 0,
      "c1": 41
     }
@@ -431,9 +431,9 @@
    "captions": [
     {
      "text": "But the team tracked droplets, not tears.",
-     "start": 56.206,
-     "key": 4,
-     "end": 58.996
+     "start": 58.656,
+     "key": 6,
+     "end": 61.446
     }
    ],
    "vo": "But the team tracked droplets, not tears.",
@@ -444,13 +444,13 @@
   },
   {
    "id": "b13",
-   "start": 59.446,
-   "end": 61.696,
-   "next": 62.946,
+   "start": 62.046,
+   "end": 64.296,
+   "next": 64.896,
    "sents": [
     {
-     "s": 59.446,
-     "e": 61.696,
+     "s": 62.046,
+     "e": 64.296,
      "c0": 0,
      "c1": 37
     }
@@ -458,9 +458,9 @@
    "captions": [
     {
      "text": "And it's one study, still a preprint.",
-     "start": 59.446,
+     "start": 62.046,
      "key": 6,
-     "end": 61.696
+     "end": 64.296
     }
    ],
    "vo": "And it's one study, still a preprint.",
@@ -470,19 +470,19 @@
   },
   {
    "id": "b14",
-   "start": 62.946,
-   "end": 68.316,
-   "next": 70.116,
+   "start": 64.896,
+   "end": 70.266,
+   "next": 73.266,
    "sents": [
     {
-     "s": 62.946,
-     "e": 65.57,
+     "s": 64.896,
+     "e": 67.52,
      "c0": 0,
      "c1": 43
     },
     {
-     "s": 65.71,
-     "e": 68.316,
+     "s": 67.66,
+     "e": 70.266,
      "c0": 44,
      "c1": 82
     }
@@ -490,15 +490,15 @@
    "captions": [
     {
      "text": "The Pan Theory: sharpen your knife tonight.",
-     "start": 62.946,
+     "start": 64.896,
      "key": 3,
-     "end": 65.71
+     "end": 67.66
     },
     {
      "text": "Fewer droplets, and maybe fewer tears.",
-     "start": 65.71,
-     "key": 1,
-     "end": 68.316
+     "start": 67.66,
+     "key": 5,
+     "end": 70.266
     }
    ],
    "vo": "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears.",
