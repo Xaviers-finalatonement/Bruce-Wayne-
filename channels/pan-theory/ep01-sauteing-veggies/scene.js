@@ -136,8 +136,8 @@ const cmpTiles = { raw: [], cooked: [] };
 // ----- the trade: two small plates, raw peppers vs sautéed carrots -----
 const bal = new THREE.Group(); bal.position.set(X_BAL, 0, 0); GK.add(bal);
 const GfxBal = new THREE.Group(); bal.add(GfxBal); noDepth.push(GfxBal);
-const plateL = new THREE.Group(), plateR = new THREE.Group(); plateL.position.set(-1.9, 0, 1.1); plateR.position.set(1.9, 0, 1.1); bal.add(plateL, plateR);
-{ [plateL, plateR].forEach(p => { p.add(K.makePlate(1.5)); const s = K.makeContactShadow(2.0, 2.0, .5); s.position.set(.25, .006, .15); p.add(s); });
+const plateL = new THREE.Group(), plateR = new THREE.Group(); plateL.position.set(-1.55, 0, 1.1); plateR.position.set(1.55, 0, 1.1); bal.add(plateL, plateR);
+{ [plateL, plateR].forEach(p => { p.add(K.makePlate(1.28)); const s = K.makeContactShadow(1.7, 1.7, .5); s.position.set(.25, .006, .15); p.add(s); });
   [[-.5, -.2, .4, 0], [.3, -.45, 1.3, 1], [.4, .35, -.5, 0], [-.35, .45, 2.2, 1], [0, 0, -1.1, 1], [-.1, .1, .1, 0]].forEach((p, i) => mesh(stripGeos[i % 6], stripMatRaw, plateL, p[0], .1 + (p[3] ? .17 : .07) + (i > 3 ? .1 : 0), p[1], p[3] ? PI : 0, p[2], 0));
   [[-.55, -.4, 0, 0], [.5, -.3, 0, 1], [-.1, .55, 0, 0], [.55, .5, 0, 1], [-.5, .4, 0, 1], [-.1, -.1, 1, 0], [.35, .1, 1, 1], [-.35, -.25, 1, 1]].forEach((p, i) => mesh(coinGeos[i % 4], coinMatPlate, plateR, p[0], .075 + CT + .01 + p[2] * .2, p[1], (p[3] ? PI : 0) + (p[2] ? .12 : 0), hash(i * 3) * 6.28, 0)); }
 const balSteam = []; for (let i = 0; i < 8; i++) { const q = quad(puffTex, "#FFF8EC", false, 0); q.rotation.x = -PI / 2; GfxBal.add(q); balSteam.push(q); }
@@ -204,7 +204,7 @@ const camKeys = [
   [S("b03") + .2, -.3, .35, 7.4], [T.diveFrom, -.35, .1, 5.2], [T.dive1, HERO[0], HERO[1], .8],
   [S("b06"), HERO[0], HERO[1], .8], [S("b06") + 1.6, 0, .55, 8.6], [S("b07") - .9, 0, .55, 8.6], [S("b07") + .5, 0, 1.19, 9.8], [E("b07") - .5, 0, 1.19, 9.8],
   [S("b08") + .15, 0, .5, 8.6], [S("b08") + 1.45, X_BOARD, .5, 8.6], [T.diveFrom2, X_BOARD, .5, 8.6], [T.dive2, X_BOARD - .8, -.6, .8],
-  [S("b10"), X_TRIO, 1.2, 15], [E("b10") - .01, X_TRIO + .35, 1.0, 13], [S("b11"), X_CMP, -.2, 11], [E("b11") - .01, X_CMP, -.2, 10.2], [S("b12"), X_BAL, 1.15, 12.5], [E("b12"), X_BAL, 1.0, 10.2],
+  [S("b10"), X_TRIO, 1.2, 15], [E("b10") - .01, X_TRIO + .35, 1.0, 13], [S("b11"), X_CMP, -.2, 11], [E("b11") - .01, X_CMP, -.2, 10.2], [S("b12"), X_BAL, 1.15, 11.4], [E("b12"), X_BAL, 1.1, 9.8],
   [S("b13"), 0, .55, 8.6], [DUR, 0, .55, 8.2]];
 function camAt(t) { let i = 0; for (let k = 0; k < camKeys.length; k++) if (camKeys[k][0] <= t) i = k; const a = camKeys[i], b = camKeys[Math.min(i + 1, camKeys.length - 1)];
   const cutNext = [S("b10"), S("b11"), S("b12"), S("b13")].includes(b[0]); const u = cutNext || b === a ? 0 : eio((t - a[0]) / (b[0] - a[0])); // cuts hold the old key until the cut
@@ -263,7 +263,7 @@ function animCmp(t) {
 }
 function animPlates(t) {
   const lt = t - S("b12"), land = eob(clamp(lt / .5)), join = eob(clamp((t - T.tTrade) / .6));
-  plateL.position.set(-1.9 + .28 * join, 1.5 * (1 - land) * .0 + .0, 1.1); plateR.position.set(1.9 - .28 * join, 0, 1.1);
+  plateL.position.set(-1.55 + .2 * join, 0, 1.1); plateR.position.set(1.55 - .2 * join, 0, 1.1);
   plateL.position.y = 2.2 * (1 - land) * (lt < .5 ? 1 : 0); plateR.position.y = 2.2 * (1 - eob(clamp((lt - .12) / .5))) * (lt < .62 ? 1 : 0);
   balSteam.forEach((q, i) => { const per = 3.0 + hash(i) * 1.4, ph = (t / per + hash(i * 3)) % 1; q.position.set(plateR.position.x + (hash(i * 5) - .5) * 1.2, .5 + ph * 2.6, 1.1 + (hash(i * 7) - .5) * .9 - ph * .3); const s = .8 + ph * 1.7; q.scale.set(s, s, 1); q.rotation.z = i + t * .1; q.material.opacity = .22 * smooth(clamp(lt / .8)) * Math.sin(PI * ph) ** 1.2; q.visible = q.material.opacity > .004; });
 }
@@ -359,10 +359,10 @@ function stage(t, A) {
 window.__seek = function (t) {
   const A = { t };
   if (COVER) { // cover: overhead pan with carrots + peppers + oil gleam
-    const tt = 14; show("K"); trio.visible = bal.visible = cmp.visible = false; board.visible = false; tileC.visible = false; PG.visible = true; pileC.visible = pileP.visible = false;
+    const tt = 3.4; show("K"); trio.visible = bal.visible = cmp.visible = false; board.visible = false; tileC.visible = false; PG.visible = true; pileC.visible = pileP.visible = false;
     animKitchen(tt, A); Object.values(tiles).forEach(g => (g.visible = false));
     key.position.set(-8, 8.4, 2.4); key.target.position.set(0, 0, -.75); key.target.updateMatrixWorld();
-    setCam([0, 9.4, -.45 + 9.4 * .42], [0, 0, -.45], 40, [0, .2, -.45], .012, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
+    setCam([0, 9.4, -.45 + 9.4 * .42], [0, 0, -.45], 40, [0, .2, -.45], .006, [0, 0, -1]); bloom.strength = .25; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(); return;
   }
   stage(t, A);
   filmPass.uniforms.time.value = (t * 30 | 0) * .017;

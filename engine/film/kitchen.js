@@ -287,7 +287,7 @@ export function makeContactShadow(rx, rz, op = .4) {
 }
 export function makePlate(R = 1.35) { // shallow ceramic plate, creamy white, glazed
   const pts = [[0, .02], [R * .52, .02], [R * .62, .05], [R * .9, .12], [R, .16], [R + .03, .17], [R + .03, .185], [R * .98, .19], [R * .86, .15], [R * .58, .085], [R * .5, .07], [0, .07]].map(a => new THREE.Vector2(a[0], a[1]));
-  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), new THREE.MeshPhysicalMaterial({ color: "#F2EBDD", roughness: .28, clearcoat: .7, clearcoatRoughness: .15, metalness: 0 })); m.castShadow = m.receiveShadow = true; return m;
+  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), new THREE.MeshPhysicalMaterial({ color: "#E6DDCB", roughness: .3, clearcoat: .6, clearcoatRoughness: .15, metalness: 0 })); m.castShadow = m.receiveShadow = true; return m;
 }
 
 // ---------- molecule worlds: plant-cell texture (Voronoi, filled, no line-network) ----------

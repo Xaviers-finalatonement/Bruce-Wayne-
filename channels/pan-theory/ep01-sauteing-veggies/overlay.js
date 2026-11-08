@@ -73,7 +73,7 @@ export function createOverlay(T, TH, cv) {
     // b10: the trio. Hard cut; the same tiles dim together
     illus(t, S("b10") + .05, E("b10") - .05, 235);
     if (z === "K" && t >= S("b10") && t < S("b11") && A.proj) { const a = smooth((t - S("b10") - .15) / .25) * (1 - smooth((t - E("b10") + .3) / .3)), X = 24;
-      [["microwave", -1.75, -.7], ["steamer", 1.75, -.7], ["pan", 0, 3.5]].forEach(([n, x, z2]) => { const p = A.proj(X + x, .2, z2); sticker([[n, CAST]], p.x, p.y, { a, size: 48, fill: rgba(CT, .96) }); }); }
+      [["microwave", -1.75, -.7], ["steamer", 1.75, -.7], ["pan", 2.15, 1.6]].forEach(([n, x, z2]) => { const p = A.proj(X + x, .2, z2); sticker([[n, CAST]], p.x, p.y, { a, size: 48, fill: rgba(CT, .96) }); }); }
     // b11
     st(t, T.tRaw - .1, E("b11") - .05, [["raw = top vitamin C sources", CAST]], CX, 245, { size: 48, fill: rgba(BUT, 1), padX: 28 });
     illus(t, S("b11") + .2, E("b11") - .05, 345);
@@ -91,7 +91,7 @@ export function createOverlay(T, TH, cv) {
     L.forEach(([s_, y], i) => { const w = mw(s_, sz) + 56, kk = clamp((t - T.tCard - .5 - i * .25) / .35); if (kk <= 0) return; ctx.save(); ctx.globalAlpha = smooth(kk * 2); ctx.translate(CX, y - 26); ctx.rotate(-.018 + i * .02); ctx.scale(.85 + .15 * eob(kk), .85 + .15 * eob(kk));
       ctx.fillStyle = C.butter; ctx.shadowColor = "rgba(31,29,27,.22)"; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8; rr(-w / 2, -sz * .72, w, sz * 1.26, 24); ctx.fill(); ctx.restore(); text(s_, CX, y, { size: sz, color: CAST, a: smooth(kk * 2), rot: -.018 + i * .02 }); });
     const k3 = smooth((t - T.tCard - 1.2) / .4); text("Food education, not diet advice.", CX, 1000, { f: NUN, size: 46, color: CAST, a: k3 });
-    const k4 = smooth((t - T.tSign) / .4); if (k4 > 0) { ctx.save(); ctx.globalAlpha = k4; ctx.fillStyle = CAST; ctx.beginPath(); ctx.arc(CX - 118, 1128, 15, 0, 6.3); ctx.fill(); ctx.fillRect(CX - 106, 1124, 34, 8); ctx.restore(); text("Pan Theory", CX + 30, 1146, { size: 48, w: 500, color: CAST, a: k4, ls: 1 }); }
+    const k4 = smooth((t - T.tSign) / .4); if (k4 > 0) { ctx.save(); ctx.globalAlpha = k4; ctx.fillStyle = CAST; ctx.beginPath(); ctx.arc(CX - 160, 1128, 15, 0, 6.3); ctx.fill(); ctx.fillRect(CX - 148, 1124, 34, 8); ctx.restore(); text("Pan Theory", CX + 40, 1146, { size: 46, w: 500, color: CAST, a: k4, ls: 1 }); }
   }
   function draw(t, A) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
