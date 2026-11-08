@@ -313,6 +313,19 @@ def sr_wet(c):  # soft wet texture: band-limited noise with a few tiny bubbles
     return x * db(-29)
 
 
+def sr_pour(c):  # water pouring into a glass: hissy band noise, rising pitch of the cavity as it fills, a few bubbles
+    dur = c.get("dur", 1.2); n = int(dur * SR); t = np.arange(n) / SR; u = np.clip(t / dur, 0, 1)
+    x = bandnoise(n, 1200, 6500) * (0.55 + 0.45 * np.sin(2 * np.pi * 9 * t + 1.3 * np.sin(2 * np.pi * 2.3 * t))) * np.clip(np.minimum(t / .08, (dur - t) / .15), 0, 1)
+    ph = np.cumsum(2 * np.pi * (300 + 700 * u) / SR); x = x * 0.6 + np.sin(ph) * 0.12 * (0.5 + 0.5 * np.sin(2 * np.pi * 5.5 * t))
+    return x * db(-30)
+
+
+def sr_drop(c):  # single droplet: short rising sine bloop plus a tiny ring
+    m = int(.22 * SR); tm = np.arange(m) / SR; f = 700 + 1500 * (1 - np.exp(-tm * 28))
+    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * env_exp(m, 0.05) * 0.55 + np.sin(2 * np.pi * 2100 * tm) * env_exp(m, 0.02) * 0.12
+    return x * db(-22) * c.get("gain", 1.0)
+
+
 def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s), sparse quiet droplets 3-6 s apart
     n = len(sfx); t = np.arange(n) / SR
     fade = np.minimum(1, np.maximum(0, t - 1.0) / 2.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - t)) / 2.4)  # round-4: bed drops out under the hook's first second and breathes out at the end card
@@ -343,7 +356,7 @@ PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
                        custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, spray=pt_spray, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
-    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.93, custom=dict(rub=sr_rub, wet=sr_wet)),
+    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.93, custom=dict(rub=sr_rub, wet=sr_wet, pour=sr_pour, drop=sr_drop)),
 }
 
 
