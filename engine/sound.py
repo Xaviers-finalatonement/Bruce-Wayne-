@@ -215,19 +215,45 @@ def pt_pluck(f, dur=0.9):  # Karplus-Strong string
     return out * np.minimum(1, np.arange(n) / (0.002 * SR)) * np.minimum(1, (n - np.arange(n)) / (0.1 * SR))
 
 
-def pt_bed(sfx, dur):  # light acoustic feel: 92 bpm plucked pattern in G major pentatonic + soft sub
-    n = len(sfx); beat = 60 / 92.0
-    notes = {"G3": 196.0, "B3": 246.9, "D4": 293.7, "E4": 329.6, "G4": 392.0, "A3": 220.0}
-    pat = ["G3", "D4", "B3", "D4", "E4", "D4", "B3", "A3", "G3", "D4", "G4", "D4", "E4", "B3", "A3", "D4"]
-    cache = {k: pt_pluck(v) for k, v in notes.items()}
-    fade = np.minimum(1, np.arange(n) / SR / 1.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - np.arange(n) / SR)) / 1.2)
+def pt_sizzleup(c):  # hook: oil meets the hot pan; sizzle that builds from a hush to full over ~1.6 s
+    dur = c.get("dur", 2.6); x = pt_sizzle({"dur": dur, "k": 1.5}); n = len(x); r = np.linspace(0, 1, n) ** 1.3
+    return x * (0.12 + 0.88 * r) * 1.35
+
+
+def _pt_hz(name):
+    semi = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}[name[0]]
+    return 440.0 * 2 ** ((semi - 9 + 12 * (int(name[-1]) - 4)) / 12.0)
+
+
+def pt_bed(sfx, dur):  # 92 bpm plucked bed: G - Em - C - D, a new chord every 4 bars; arpeggio + sparse bell counter-line + soft bass; drops out on "bedgap" cues
+    n = len(sfx); beat = 60 / 92.0; eighth = beat / 2; bar8 = 8
+    chords = [("G2", ["G3", "B3", "D4", "G4"], "D5"), ("E2", ["E3", "B3", "G4", "E4"], "B4"), ("C3", ["C4", "E4", "G4", "C4"], "G4"), ("D3", ["D4", "A3", "A4", "D4"], "A4")]
+    names = {nm for ch in chords for nm in [ch[0], ch[2]] + ch[1]}
+    cache = {nm: pt_pluck(_pt_hz(nm), 1.4 if nm[-1] in "23" else 0.9) for nm in names}
+    t_ = np.arange(n) / SR
+    fade = np.minimum(1, t_ / 1.5) * np.minimum(1, np.maximum(0, (dur + 0.4 - t_)) / 1.2)
+    gaps = []
+    try:
+        cj = json.load(open(os.path.join(sys.argv[1], "out", "cues.json")))
+        gaps = [(c["t"], c.get("dur", 1.0)) for c in cj if c.get("type") == "bedgap"]
+    except Exception:
+        pass
+    mult = np.ones(n)
+    for g0, gd in gaps:
+        mult = np.minimum(mult, np.interp(t_, [g0 - 0.05, g0 + 0.3, g0 + gd, g0 + gd + 0.8], [1, 0, 0, 1], left=1, right=1))
     bed = np.zeros(n); i = 0; t = 0.3
+    def put_note(nm, tt, gain):
+        j = int(tt * SR); x = cache[nm]; m = min(n - j, len(x))
+        if m > 0 and j >= 0: bed[j:j + m] += x[:m] * gain
     while t < dur:
-        x = cache[pat[i % len(pat)]] * (1.0 if i % 4 == 0 else 0.6)
-        j = int(t * SR); m = min(n - j, len(x))
-        if m > 0: bed[j:j + m] += x[:m]
-        t += beat / 2; i += 1
-    sfx += bed * fade * db(-27)
+        bar = i // bar8; pos = i % bar8; root, tones, top = chords[(bar // 4) % len(chords)]; phrase_bar = bar % 4
+        arp = [0, 2, 1, 2, 3, 2, 1, 2][pos]
+        put_note(tones[arp], t, 1.0 if pos % 4 == 0 else 0.6)                      # pattern 1: arpeggio
+        if pos == 0: put_note(root, t, 0.85)                                       # soft bass on the one
+        if phrase_bar >= 2 and pos in (3, 7): put_note(top, t, 0.5)                  # pattern 2: bell counter-line, second half of each phrase
+        if phrase_bar == 3 and pos == 5: put_note(tones[3], t, 0.4)
+        t += eighth; i += 1
+    sfx += bed * fade * mult * db(-27)
 
 
 # ---- palette "skin-receipts": thermal-printer ticks, soft paper/rubber stamp, water + fabric textures, light airy pad ----
@@ -282,7 +308,7 @@ def sr_bed(sfx, dur):
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
-                       custom=dict(sizzle=pt_sizzle, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
+                       custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
     "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.6),
 }
 

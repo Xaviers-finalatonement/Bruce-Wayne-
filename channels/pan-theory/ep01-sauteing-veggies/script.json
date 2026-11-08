@@ -6,15 +6,15 @@
   "voice": {
     "engine": "kokoro",
     "voice": "af_bella",
-    "speed": 0.94
+    "speed": 0.86
   },
   "beats": [
     {
       "id": "b01",
-      "vo": "Oil helps your carrots. Heat costs your peppers.",
+      "vo": "Oil helps your carrots. Heat can cost your peppers.",
       "claims": [
-        "C7",
-        "C5"
+        "C3",
+        "C8"
       ],
       "screen": [],
       "visual": "Overhead on a warm countertop: a pile of matte, chunky orange carrot coins on the left, red pepper strips on the right, a cast-iron pan between them. Soft window light. Reads in under 2 s."
@@ -53,7 +53,7 @@
       "screen": [
         "better with a little fat"
       ],
-      "visual": "Raw vs cooked split frame: left, pigment molecules drifting past a gut-wall surface and sliding by; right, the same molecules wrapped in small golden oil droplets that dock into the surface."
+      "visual": "Two molecule panels on plant cells: pigments sliding past the gut lining with no oil vs wrapped in golden oil droplets that dock into the lining (labels: no oil / with oil)."
     },
     {
       "id": "b05",
@@ -82,10 +82,10 @@
         "C6"
       ],
       "screen": [
-        "vitamins A · D · E · K",
+        "vitamins E · K",
         "absorbed more easily with fat"
       ],
-      "visual": "Overhead over a handful of spinach and broccoli florets hitting the pan; four chunky letter tiles A D E K land on the countertop beside it and glow where oil touches."
+      "visual": "Overhead over spinach and broccoli hitting the pan; E and K tiles land beside them, the A tile stays with the carrots."
     },
     {
       "id": "b08",
@@ -117,10 +117,8 @@
       "claims": [
         "C9"
       ],
-      "screen": [
-        "also: microwaving · steaming"
-      ],
-      "visual": "Cut to an overhead trio on the countertop: a pan, a steamer basket, a microwave plate, each with a few C tiles fading. Static overhead, tiles dim on each name."
+      "screen": [],
+      "visual": "Hard cut on 'Microwaving' to an overhead trio: pan, steamer basket, microwave plate, each with the same partial dim on its C tiles, tagged 'illustration, not to scale'. Nothing is removed, no order is implied."
     },
     {
       "id": "b11",
@@ -129,9 +127,9 @@
         "C10"
       ],
       "screen": [
-        "raw = best sources"
+        "raw = top vitamin C sources"
       ],
-      "visual": "Raw vs cooked side-by-side: left a raw pepper with a full row of C tiles; right a cooked one with fewer. Straight overhead, no move."
+      "visual": "Overhead, hard cut: a raw bell pepper (left) and a sautéed one (right), each with the same six C tiles; the cooked set dims to the same partial level as the trio. Tag: illustration, not to scale. No move."
     },
     {
       "id": "b12",
@@ -142,7 +140,7 @@
       "screen": [
         "a trade"
       ],
-      "visual": "Two chunky scale pans on the countertop balance level, oil droplet on one, heat shimmer on the other. Slow overhead push-in on the balance."
+      "visual": "Real kitchen scale (flat dish on a counter) with two small plates: raw peppers on one, sautéed carrots on the other, settling level. Slow overhead push-in."
     },
     {
       "id": "b13",
@@ -150,48 +148,48 @@
       "claims": [
         "C11"
       ],
-      "screen": [
-        "education, not a diet rule"
-      ],
+      "screen": [],
       "visual": "Back to the full overhead pan, veggies browning, steam curling up. Hold steady."
     },
     {
       "id": "b14",
-      "vo": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+      "vo": "The Pan Theory: carrots want a little oil. Peppers can keep more C raw.",
       "claims": [
         "C3",
-        "C7"
+        "C8",
+        "C10"
       ],
       "screen": [
         "The Pan Theory:",
-        "carrots + a little oil"
+        "carrots + a little oil",
+        "peppers: some raw"
       ],
-      "visual": "Signature card on the Countertop beige: 'The Pan Theory:' in Rubik with Tomato-red key word, one line below on a Butter highlight. Overhead pan with carrots behind; hold 1 s."
+      "visual": "Signature card on the Countertop beige: 'The Pan Theory:' in Rubik with Tomato-red key word, two Butter lines below. Food education, not diet advice."
     }
   ],
   "end_card": {
-    "text": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+    "text": "The Pan Theory: carrots want a little oil. Peppers can keep more C raw.",
     "channel": "Pan Theory"
   },
   "cover": {
     "headline": "What sautéing does to your veggies",
     "key_word": "trade"
   },
-  "end_hold": 1.8,
+  "end_hold": 2.4,
   "sound": "pan-theory",
   "gaps": {
-    "b01": 0.8,
-    "b02": 0.9,
-    "b03": 1.4,
-    "b04": 1.0,
-    "b05": 1.2,
-    "b06": 1.1,
-    "b07": 1.0,
-    "b08": 1.1,
-    "b09": 1.4,
-    "b10": 0.8,
+    "b01": 0.6,
+    "b02": 0.6,
+    "b03": 0.7,
+    "b04": 0.6,
+    "b05": 0.6,
+    "b06": 0.6,
+    "b07": 0.9,
+    "b08": 0.6,
+    "b09": 0.7,
+    "b10": 0.6,
     "b11": 0.9,
-    "b12": 1.3,
+    "b12": 0.6,
     "b13": 0.7
   }
 }

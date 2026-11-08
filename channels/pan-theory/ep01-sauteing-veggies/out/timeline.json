@@ -1,27 +1,27 @@
 {
- "duration": 70.324,
+ "duration": 70.066,
  "fps": 30,
- "speed": 0.94,
+ "speed": 0.86,
  "gap": 0.25,
  "sample_rate": 24000,
  "beats": [
   {
    "id": "b01",
    "start": 0.2,
-   "end": 2.823,
-   "next": 3.623,
+   "end": 3.2,
+   "next": 3.8,
    "sents": [
     {
      "s": 0.2,
-     "e": 1.407,
+     "e": 1.533,
      "c0": 0,
      "c1": 23
     },
     {
-     "s": 1.547,
-     "e": 2.823,
+     "s": 1.673,
+     "e": 3.2,
      "c0": 24,
-     "c1": 48
+     "c1": 51
     }
    ],
    "captions": [
@@ -29,33 +29,33 @@
      "text": "Oil helps your carrots.",
      "start": 0.2,
      "key": 1,
-     "end": 1.547
+     "end": 1.673
     },
     {
-     "text": "Heat costs your peppers.",
-     "start": 1.547,
-     "key": 1,
-     "end": 2.823
+     "text": "Heat can cost your peppers.",
+     "start": 1.673,
+     "key": 4,
+     "end": 3.2
     }
    ],
-   "vo": "Oil helps your carrots. Heat costs your peppers.",
+   "vo": "Oil helps your carrots. Heat can cost your peppers.",
    "screen": []
   },
   {
    "id": "b02",
-   "start": 3.623,
-   "end": 7.006,
-   "next": 7.906,
+   "start": 3.8,
+   "end": 7.354,
+   "next": 7.954,
    "sents": [
     {
-     "s": 3.623,
-     "e": 4.348,
+     "s": 3.8,
+     "e": 4.584,
      "c0": 0,
      "c1": 8
     },
     {
-     "s": 4.488,
-     "e": 7.006,
+     "s": 4.724,
+     "e": 7.353,
      "c0": 9,
      "c1": 55
     }
@@ -63,21 +63,21 @@
    "captions": [
     {
      "text": "One pan.",
-     "start": 3.623,
+     "start": 3.8,
      "key": 1,
-     "end": 4.488
+     "end": 4.724
     },
     {
      "text": "Two opposite things",
-     "start": 4.488,
+     "start": 4.724,
      "key": 1,
-     "end": 5.583
+     "end": 5.867
     },
     {
      "text": "happening to your veggies.",
-     "start": 5.583,
+     "start": 5.867,
      "key": 0,
-     "end": 7.006
+     "end": 7.354
     }
    ],
    "vo": "One pan. Two opposite things happening to your veggies.",
@@ -88,19 +88,19 @@
   },
   {
    "id": "b03",
-   "start": 7.906,
-   "end": 14.3,
-   "next": 15.7,
+   "start": 7.954,
+   "end": 14.81,
+   "next": 15.51,
    "sents": [
     {
-     "s": 7.906,
-     "e": 12.141,
+     "s": 7.954,
+     "e": 12.42,
      "c0": 0,
      "c1": 74
     },
     {
-     "s": 12.281,
-     "e": 14.299,
+     "s": 12.56,
+     "e": 14.811,
      "c0": 75,
      "c1": 111
     }
@@ -108,21 +108,21 @@
    "captions": [
     {
      "text": "Bright veggies like carrots are full of",
-     "start": 7.906,
+     "start": 7.954,
      "key": 1,
-     "end": 10.195
+     "end": 10.368
     },
     {
      "text": "plant pigments called carotenoids.",
-     "start": 10.195,
+     "start": 10.368,
      "key": 3,
-     "end": 12.281
+     "end": 12.56
     },
     {
      "text": "Your body turns them into vitamin A.",
-     "start": 12.281,
+     "start": 12.56,
      "key": 5,
-     "end": 14.3
+     "end": 14.81
     }
    ],
    "vo": "Bright veggies like carrots are full of plant pigments called carotenoids. Your body turns them into vitamin A.",
@@ -133,19 +133,19 @@
   },
   {
    "id": "b04",
-   "start": 15.7,
-   "end": 19.451,
-   "next": 20.451,
+   "start": 15.51,
+   "end": 19.544,
+   "next": 20.144,
    "sents": [
     {
-     "s": 15.7,
-     "e": 16.581,
+     "s": 15.51,
+     "e": 16.469,
      "c0": 0,
      "c1": 17
     },
     {
-     "s": 16.721,
-     "e": 19.451,
+     "s": 16.609,
+     "e": 19.543,
      "c0": 18,
      "c1": 71
     }
@@ -153,21 +153,21 @@
    "captions": [
     {
      "text": "Here's the catch.",
-     "start": 15.7,
+     "start": 15.51,
      "key": 2,
-     "end": 16.721
+     "end": 16.609
     },
     {
      "text": "Those pigments get absorbed",
-     "start": 16.721,
+     "start": 16.609,
      "key": 1,
-     "end": 18.163
+     "end": 18.159
     },
     {
      "text": "better with a little fat.",
-     "start": 18.163,
+     "start": 18.159,
      "key": 4,
-     "end": 19.451
+     "end": 19.544
     }
    ],
    "vo": "Here's the catch. Those pigments get absorbed better with a little fat.",
@@ -177,19 +177,19 @@
   },
   {
    "id": "b05",
-   "start": 20.451,
-   "end": 23.689,
-   "next": 24.889,
+   "start": 20.144,
+   "end": 23.585,
+   "next": 24.185,
    "sents": [
     {
-     "s": 20.451,
-     "e": 21.617,
+     "s": 20.144,
+     "e": 21.405,
      "c0": 0,
      "c1": 24
     },
     {
-     "s": 21.757,
-     "e": 23.689,
+     "s": 21.545,
+     "e": 23.585,
      "c0": 25,
      "c1": 64
     }
@@ -197,15 +197,15 @@
    "captions": [
     {
      "text": "Think of it like a ride.",
-     "start": 20.451,
+     "start": 20.144,
      "key": 5,
-     "end": 21.757
+     "end": 21.545
     },
     {
      "text": "The pigments travel along with the oil.",
-     "start": 21.757,
+     "start": 21.545,
      "key": 6,
-     "end": 23.689
+     "end": 23.585
     }
    ],
    "vo": "Think of it like a ride. The pigments travel along with the oil.",
@@ -213,13 +213,13 @@
   },
   {
    "id": "b06",
-   "start": 24.889,
-   "end": 27.094,
-   "next": 28.194,
+   "start": 24.185,
+   "end": 26.492,
+   "next": 27.092,
    "sents": [
     {
-     "s": 24.889,
-     "e": 27.094,
+     "s": 24.185,
+     "e": 26.492,
      "c0": 0,
      "c1": 41
     }
@@ -227,9 +227,9 @@
    "captions": [
     {
      "text": "So a splash of oil isn't just for flavor.",
-     "start": 24.889,
+     "start": 24.185,
      "key": 4,
-     "end": 27.094
+     "end": 26.492
     }
    ],
    "vo": "So a splash of oil isn't just for flavor.",
@@ -237,19 +237,19 @@
   },
   {
    "id": "b07",
-   "start": 28.194,
-   "end": 33.456,
-   "next": 34.456,
+   "start": 27.092,
+   "end": 32.637,
+   "next": 33.537,
    "sents": [
     {
-     "s": 28.194,
-     "e": 32.271,
+     "s": 27.092,
+     "e": 31.358,
      "c0": 0,
      "c1": 57
     },
     {
-     "s": 32.411,
-     "e": 33.456,
+     "s": 31.498,
+     "e": 32.637,
      "c0": 58,
      "c1": 76
     }
@@ -257,44 +257,44 @@
    "captions": [
     {
      "text": "Same story for vitamins E and K,",
-     "start": 28.194,
+     "start": 27.092,
      "key": 3,
-     "end": 30.554
+     "end": 29.562
     },
     {
      "text": "in spinach and broccoli.",
-     "start": 30.554,
+     "start": 29.562,
      "key": 3,
-     "end": 32.411
+     "end": 31.498
     },
     {
      "text": "Fat helps them in.",
-     "start": 32.411,
+     "start": 31.498,
      "key": 0,
-     "end": 33.456
+     "end": 32.637
     }
    ],
    "vo": "Same story for vitamins E and K, in spinach and broccoli. Fat helps them in.",
    "screen": [
-    "vitamins A · D · E · K",
+    "vitamins E · K",
     "absorbed more easily with fat"
    ]
   },
   {
    "id": "b08",
-   "start": 34.456,
-   "end": 39.467,
-   "next": 40.567,
+   "start": 33.537,
+   "end": 38.83,
+   "next": 39.43,
    "sents": [
     {
-     "s": 34.456,
-     "e": 35.498,
+     "s": 33.537,
+     "e": 34.668,
      "c0": 0,
      "c1": 18
     },
     {
-     "s": 35.638,
-     "e": 39.467,
+     "s": 34.808,
+     "e": 38.83,
      "c0": 19,
      "c1": 76
     }
@@ -302,21 +302,21 @@
    "captions": [
     {
      "text": "Now the flip side.",
-     "start": 34.456,
+     "start": 33.537,
      "key": 2,
-     "end": 35.638
+     "end": 34.808
     },
     {
      "text": "Peppers, broccoli and tomatoes are",
-     "start": 35.638,
+     "start": 34.808,
      "key": 1,
-     "end": 37.989
+     "end": 37.278
     },
     {
      "text": "packed with vitamin C.",
-     "start": 37.989,
+     "start": 37.278,
      "key": 2,
-     "end": 39.467
+     "end": 38.83
     }
    ],
    "vo": "Now the flip side. Peppers, broccoli and tomatoes are packed with vitamin C.",
@@ -326,13 +326,13 @@
   },
   {
    "id": "b09",
-   "start": 40.567,
-   "end": 45.294,
-   "next": 46.694,
+   "start": 39.43,
+   "end": 44.38,
+   "next": 45.08,
    "sents": [
     {
-     "s": 40.567,
-     "e": 45.294,
+     "s": 39.43,
+     "e": 44.38,
      "c0": 0,
      "c1": 69
     }
@@ -340,15 +340,15 @@
    "captions": [
     {
      "text": "Vitamin C dissolves in water,",
-     "start": 40.567,
+     "start": 39.43,
      "key": 2,
-     "end": 42.622
+     "end": 41.582
     },
     {
      "text": "and cooking can lower how much is left.",
-     "start": 42.622,
+     "start": 41.582,
      "key": 3,
-     "end": 45.294
+     "end": 44.38
     }
    ],
    "vo": "Vitamin C dissolves in water, and cooking can lower how much is left.",
@@ -359,13 +359,13 @@
   },
   {
    "id": "b10",
-   "start": 46.694,
-   "end": 50.881,
-   "next": 51.681,
+   "start": 45.08,
+   "end": 49.675,
+   "next": 50.275,
    "sents": [
     {
-     "s": 46.694,
-     "e": 50.881,
+     "s": 45.08,
+     "e": 49.676,
      "c0": 0,
      "c1": 68
     }
@@ -373,31 +373,29 @@
    "captions": [
     {
      "text": "Microwaving and steaming can lower it too,",
-     "start": 46.694,
+     "start": 45.08,
      "key": 4,
-     "end": 49.342
+     "end": 47.986
     },
     {
      "text": "so it's not just the pan.",
-     "start": 49.342,
+     "start": 47.986,
      "key": 5,
-     "end": 50.881
+     "end": 49.675
     }
    ],
    "vo": "Microwaving and steaming can lower it too, so it's not just the pan.",
-   "screen": [
-    "also: microwaving · steaming"
-   ]
+   "screen": []
   },
   {
    "id": "b11",
-   "start": 51.681,
-   "end": 55.043,
-   "next": 55.943,
+   "start": 50.275,
+   "end": 53.866,
+   "next": 54.766,
    "sents": [
     {
-     "s": 51.681,
-     "e": 55.043,
+     "s": 50.275,
+     "e": 53.866,
      "c0": 0,
      "c1": 53
     }
@@ -405,37 +403,37 @@
    "captions": [
     {
      "text": "That's why raw fruit and veg",
-     "start": 51.681,
+     "start": 50.275,
      "key": 2,
-     "end": 53.521
+     "end": 52.24
     },
     {
      "text": "top the vitamin C lists.",
-     "start": 53.521,
+     "start": 52.24,
      "key": 2,
-     "end": 55.043
+     "end": 53.866
     }
    ],
    "vo": "That's why raw fruit and veg top the vitamin C lists.",
    "screen": [
-    "raw = best sources"
+    "raw = top vitamin C sources"
    ]
   },
   {
    "id": "b12",
-   "start": 55.943,
-   "end": 58.699,
-   "next": 59.999,
+   "start": 54.766,
+   "end": 57.685,
+   "next": 58.285,
    "sents": [
     {
-     "s": 55.943,
-     "e": 57.757,
+     "s": 54.766,
+     "e": 56.672,
      "c0": 0,
      "c1": 30
     },
     {
-     "s": 57.897,
-     "e": 58.699,
+     "s": 56.812,
+     "e": 57.685,
      "c0": 31,
      "c1": 44
     }
@@ -443,15 +441,15 @@
    "captions": [
     {
      "text": "So sautéing isn't good or bad.",
-     "start": 55.943,
+     "start": 54.766,
      "key": 1,
-     "end": 57.897
+     "end": 56.812
     },
     {
      "text": "It's a trade.",
-     "start": 57.897,
+     "start": 56.812,
      "key": 2,
-     "end": 58.699
+     "end": 57.685
     }
    ],
    "vo": "So sautéing isn't good or bad. It's a trade.",
@@ -461,19 +459,19 @@
   },
   {
    "id": "b13",
-   "start": 59.999,
-   "end": 63.059,
-   "next": 64.559,
+   "start": 58.285,
+   "end": 61.676,
+   "next": 63.176,
    "sents": [
     {
-     "s": 59.999,
-     "e": 61.283,
+     "s": 58.285,
+     "e": 59.699,
      "c0": 0,
      "c1": 23
     },
     {
-     "s": 61.423,
-     "e": 63.059,
+     "s": 59.839,
+     "e": 61.676,
      "c0": 24,
      "c1": 57
     }
@@ -481,59 +479,58 @@
    "captions": [
     {
      "text": "This isn't a diet rule.",
-     "start": 59.999,
+     "start": 58.285,
      "key": 3,
-     "end": 61.423
+     "end": 59.839
     },
     {
      "text": "It's just what your pan is doing.",
-     "start": 61.423,
+     "start": 59.839,
      "key": 4,
-     "end": 63.059
+     "end": 61.676
     }
    ],
    "vo": "This isn't a diet rule. It's just what your pan is doing.",
-   "screen": [
-    "education, not a diet rule"
-   ]
+   "screen": []
   },
   {
    "id": "b14",
-   "start": 64.559,
-   "end": 68.524,
-   "next": 70.324,
+   "start": 63.176,
+   "end": 67.666,
+   "next": 70.066,
    "sents": [
     {
-     "s": 64.559,
-     "e": 66.696,
+     "s": 63.176,
+     "e": 65.805,
      "c0": 0,
-     "c1": 37
+     "c1": 42
     },
     {
-     "s": 66.836,
-     "e": 68.524,
-     "c0": 38,
-     "c1": 70
+     "s": 65.945,
+     "e": 67.666,
+     "c0": 43,
+     "c1": 71
     }
    ],
    "captions": [
     {
-     "text": "The Pan Theory: carrots like company.",
-     "start": 64.559,
-     "key": 5,
-     "end": 66.836
+     "text": "The Pan Theory: carrots want a little oil.",
+     "start": 63.176,
+     "key": 7,
+     "end": 65.945
     },
     {
-     "text": "Tonight, give them a little oil.",
-     "start": 66.836,
+     "text": "Peppers can keep more C raw.",
+     "start": 65.945,
      "key": 5,
-     "end": 68.524
+     "end": 67.666
     }
    ],
-   "vo": "The Pan Theory: carrots like company. Tonight, give them a little oil.",
+   "vo": "The Pan Theory: carrots want a little oil. Peppers can keep more C raw.",
    "screen": [
     "The Pan Theory:",
-    "carrots + a little oil"
+    "carrots + a little oil",
+    "peppers: some raw"
    ]
   }
  ]

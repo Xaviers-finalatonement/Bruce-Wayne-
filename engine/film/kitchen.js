@@ -148,7 +148,7 @@ export function makeTile(letter, bg, fg, size = 1) {
   const lt = new THREE.Mesh(new THREE.PlaneGeometry(.78, .78), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false })); lt.rotation.x = -Math.PI / 2; lt.position.y = .1305;
   body.castShadow = body.receiveShadow = true; const g = new THREE.Group(); g.add(body, lt); g.scale.setScalar(size);
   const base = new THREE.Color(bg), dim = new THREE.Color("#CDC3AF");
-  g.userData = { body, lt, glow: v => (body.material.emissiveIntensity = v), dimTo: u => { body.material.color.copy(base).lerp(dim, u); body.material.emissive.copy(base).lerp(dim, u); lt.material.opacity = 1 - .62 * u; } };
+  g.userData = { body, lt, glow: v => (body.material.emissiveIntensity = v), dimTo: u => { body.material.color.copy(base).lerp(dim, u * .6); body.material.emissive.copy(base).lerp(dim, u * .6); lt.material.opacity = 1 - .5 * u; } };
   return g;
 }
 
@@ -161,4 +161,167 @@ export function makeEnv(renderer) {
   panel(0xffd9b0, 3, [9, 3, -3], [1, 6, 6]);    // warm bounce right
   panel(0xf7e6cb, 2.2, [0, -7, 0], [14, 1, 14]); // counter bounce
   const tx = pm.fromScene(s, .035).texture; pm.dispose(); return tx;
+}
+
+// =====================================================================================================================
+// v2 (round 2): matte, filmed-looking food. Cut-face carrot coins (textured, sear-able), cupped pepper strips with white pith,
+// lobed bell peppers (raw / slumped + blistered), seasoned cast iron, wood-plank counter, ceramic plates, soft contact shadows,
+// plant-cell textures (Voronoi) and gut-lining villi for the molecule worlds. Everything procedural + deterministic.
+// =====================================================================================================================
+const cv2 = (w, h = w) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const tex2 = (c, srgb = true, rep) => { const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; if (rep) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep[0], rep[1]); } return t; };
+
+// ---- carrot cut face: cortex, paler core, cambium ring, radial fibres, damp specks. mode: fresh | sear | bump
+export function coinFaceTex(mode = "fresh") {
+  const S = 512, c = cv2(S), x = c.getContext("2d"), m = S / 2; const bump = mode === "bump";
+  x.fillStyle = bump ? "#808080" : "#C25E16"; x.fillRect(0, 0, S, S);
+  const R = S * .43;
+  if (!bump) {
+    // rim gradient (skin edge) then the cut face
+    const rim = x.createRadialGradient(m, m, R * .94, m, m, S * .5); rim.addColorStop(0, "#D96F1C"); rim.addColorStop(1, "#A8480F"); x.fillStyle = rim; x.fillRect(0, 0, S, S);
+    const g = x.createRadialGradient(m, m, 0, m, m, R); g.addColorStop(0, mode === "sear" ? "#E9A24A" : "#F6B866"); g.addColorStop(.3, mode === "sear" ? "#E58A2E" : "#F4A140"); g.addColorStop(.42, mode === "sear" ? "#C9701E" : "#EC8625"); g.addColorStop(.5, "#D96A14"); g.addColorStop(.58, mode === "sear" ? "#D2761F" : "#EE7E1E"); g.addColorStop(1, mode === "sear" ? "#B45A14" : "#E26F16");
+    x.fillStyle = g; x.beginPath(); x.arc(m, m, R, 0, 6.3); x.fill();
+  } else { x.fillStyle = "#808080"; x.beginPath(); x.arc(m, m, R, 0, 6.3); x.fill(); }
+  // radial fibres (xylem rays)
+  x.save(); x.beginPath(); x.arc(m, m, R, 0, 6.3); x.clip();
+  for (let i = 0; i < 220; i++) { const a = hash(i * 1.7) * 6.283, r0 = R * (.12 + .5 * hash(i * 3)), r1 = r0 + R * (.15 + .4 * hash(i * 5)); x.strokeStyle = bump ? `rgba(${hash(i) > .5 ? "40,40,40" : "220,220,220"},.35)` : `rgba(${hash(i * 7) > .5 ? "150,70,10" : "255,205,130"},${.10 + .12 * hash(i * 9)})`; x.lineWidth = 1 + 2 * hash(i * 11); x.beginPath(); x.moveTo(m + Math.cos(a) * r0, m + Math.sin(a) * r0); x.lineTo(m + Math.cos(a + (hash(i) - .5) * .06) * r1, m + Math.sin(a + (hash(i) - .5) * .06) * r1); x.stroke(); }
+  // core ring + cambium ring
+  x.lineWidth = 7; x.strokeStyle = bump ? "rgba(60,60,60,.8)" : "rgba(196,92,16,.65)"; x.beginPath(); x.arc(m, m, R * .43, 0, 6.3); x.stroke();
+  x.lineWidth = 4; x.strokeStyle = bump ? "rgba(70,70,70,.7)" : "rgba(180,80,12,.45)"; x.beginPath(); x.arc(m, m, R * .86, 0, 6.3); x.stroke();
+  // moisture specks / granules
+  for (let i = 0; i < 700; i++) { const a = hash(i * 2.3) * 6.283, r = R * Math.sqrt(hash(i * 4.1)), s = .8 + 2.4 * hash(i * 6) ** 2; x.fillStyle = bump ? `rgba(${hash(i) > .5 ? 200 : 60},${hash(i) > .5 ? 200 : 60},${hash(i) > .5 ? 200 : 60},.35)` : (hash(i * 8) > .55 ? `rgba(255,226,170,${.12 + .2 * hash(i * 3)})` : `rgba(140,60,8,${.08 + .12 * hash(i * 3)})`); x.beginPath(); x.arc(m + Math.cos(a) * r, m + Math.sin(a) * r, s, 0, 6.3); x.fill(); }
+  if (mode === "sear") { // Maillard: caramel blotches, strongest toward the rim and in patches
+    for (let i = 0; i < 38; i++) { const a = hash(i * 9) * 6.283, r = R * (.25 + .75 * Math.sqrt(hash(i * 13))), rr = 22 + 56 * hash(i * 17), gg = x.createRadialGradient(m + Math.cos(a) * r, m + Math.sin(a) * r, 0, m + Math.cos(a) * r, m + Math.sin(a) * r, rr); gg.addColorStop(0, `rgba(${88 + 40 * hash(i)},${40 + 18 * hash(i * 3)},10,${.55 + .3 * hash(i * 5)})`); gg.addColorStop(1, "rgba(120,60,10,0)"); x.fillStyle = gg; x.fillRect(0, 0, S, S); }
+    const rg = x.createRadialGradient(m, m, R * .55, m, m, R); rg.addColorStop(0, "rgba(100,50,10,0)"); rg.addColorStop(1, "rgba(86,40,8,.55)"); x.fillStyle = rg; x.fillRect(0, 0, S, S);
+  }
+  x.restore();
+  return tex2(c, !bump);
+}
+// Coin material whose cut face blends from fresh to seared (uniform uSear; vertex-colour alpha = how much that face touches the pan).
+export function makeCoinMaterial(fresh, sear, bumpT) {
+  const mat = new THREE.MeshStandardMaterial({ map: fresh, bumpMap: bumpT, bumpScale: 1.4, vertexColors: true, roughness: .66, metalness: 0 });
+  mat.userData.sear = { value: 0 }; mat.userData.map2 = { value: sear };
+  mat.onBeforeCompile = sh => { sh.uniforms.uSear = mat.userData.sear; sh.uniforms.map2 = mat.userData.map2;
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform float uSear; uniform sampler2D map2;")
+      .replace("#include <map_fragment>", "{ vec4 s1 = texture2D( map, vMapUv ); vec4 s2 = texture2D( map2, vMapUv ); diffuseColor *= mix( s1, s2, clamp( uSear * vColor.a, 0., 1. ) ); }"); };
+  return mat;
+}
+export function makeCoin2(seed = 0, R = .3, T = .1) { // chunky irregular coin: planar UV on both cut faces, rim UV on the side
+  const k = R / .3, pts = [new THREE.Vector2(0, -T)];
+  [.06, .12, .18, .22].forEach(r => pts.push(new THREE.Vector2(r * k, -T)));
+  for (let a = 0; a <= 10; a++) { const th = a / 10 * Math.PI; pts.push(new THREE.Vector2((.245 + .05 * Math.sin(th)) * k, -T * Math.cos(th))); }
+  [.22, .18, .14, .10, .06, 0].forEach(r => pts.push(new THREE.Vector2(r * k, T)));
+  const g = new THREE.LatheGeometry(pts, 56), ox = 1 + .12 * hash(seed * 3.3), oz = 1 - .06 * hash(seed * 5.1);
+  mapVerts(g, (x, y, z) => { const r = Math.hypot(x, z), an = Math.atan2(z, x), w = 1 + .1 * vn(Math.cos(an) * 1.5 + seed * 7, Math.sin(an) * 1.5, seed * 3.1) + .04 * vn(Math.cos(an) * 4.5 + seed, Math.sin(an) * 4.5, 2.2) + .012 * vn(Math.cos(an) * 12 + seed, Math.sin(an) * 12, 5.5);
+    const edge = Math.min(1, r / (.2 * k)); return [x * w * ox, y + .02 * edge * vn(x * 6 + seed, 1.3, z * 6) * (y > 0 ? 1 : .5), z * w * oz]; });
+  g.computeVertexNormals();
+  const p = g.attributes.position, n = g.attributes.normal, uv = new Float32Array(p.count * 2), col = new Float32Array(p.count * 4), Rm = R * 1.12;
+  for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), ny = n.getY(i), r = Math.hypot(x, z);
+    const face = Math.abs(ny) > .62 && r < .27 * k; let u, v;
+    if (face) { u = .5 + x / (2 * Rm); v = .5 + z / (2 * Rm); } else { const a = Math.atan2(z, x); u = .5 + Math.cos(a) * .485; v = .5 + Math.sin(a) * .485; }
+    uv[i * 2] = u; uv[i * 2 + 1] = v;
+    const ao = face ? 1 : .78 + .22 * (y / T * .5 + .5); col[i * 4] = col[i * 4 + 1] = col[i * 4 + 2] = ao; col[i * 4 + 3] = y < 0 ? 1 : (face ? .38 : .7); }
+  g.setAttribute("uv", new THREE.BufferAttribute(uv, 2)); g.setAttribute("color", new THREE.BufferAttribute(col, 4)); return g;
+}
+
+// ---- bell-pepper strip: cupped, soft-edged, satin skin outside, white pith + ribs inside (cup opens toward +y)
+export function makeStrip2(seed = 0, L = 1.1, W = .36) {
+  const g = new THREE.BoxGeometry(W, .09, L, 6, 2, 26), hw = W / 2, bend = .35 + .65 * hash(seed), tw = (hash(seed * 3) - .5) * .5, sk = hash(seed * 7);
+  const skinA = C_("#B3190F"), skinB = C_("#D93A1B"), skinC = C_("#E5671F"), pith = C_("#F6F0DA"), pith2 = C_("#E3E0A8"), cut = C_("#EBDDA8");
+  colorize(g, (c, x, y, z, nx, ny) => { const u = x / hw, s = .5 + .5 * vn(x * 7 + seed, z * 1.6, 0);
+    if (ny < -.5) { c.copy(skinA).lerp(skinB, s); c.lerp(skinC, smooth((vn(z * 2.2 + seed, 3, 1) + .3) * .8) * .35); c.lerp(skinA, Math.abs(u) ** 3 * .5); c.multiplyScalar(.92 + .16 * vn(x * 30, z * 2, seed)); }
+    else if (ny > .5) { c.copy(pith).lerp(pith2, Math.abs(u) ** 2 * .7); c.multiplyScalar(.93 + .07 * Math.sin(x * 120 + vn(z * 3, 1, seed) * 4)); c.lerp(cut, smooth(Math.abs(z) / (L / 2) - .88) * .5); }
+    else c.copy(cut); });
+  mapVerts(g, (x, y, z) => { const zn = z / (L / 2), u = x / hw, ang = tw * zn; let xx = x * Math.cos(ang) - y * Math.sin(ang), yy = x * Math.sin(ang) + y * Math.cos(ang);
+    yy *= 1 - .6 * Math.pow(Math.abs(u), 4); yy += .11 * u * u * (1 - .3 * zn * zn) - .15 * bend * zn * zn + .008 * vn(x * 5, z * 4, seed); xx += .03 * vn(z * 3 + seed, 4, 0);
+    return [xx * (1 - .1 * Math.pow(zn, 4)), yy, z * (1 + .02 * vn(x * 4, z, seed)) + u * .06 * (sk - .5)]; });
+  g.computeVertexNormals(); return g;
+}
+
+// ---- whole bell pepper: four broad lobes with sharp creases, top dimple + stem; cooked = slumped, wrinkled, blistered skin
+export function makePepper2(seed = 0, cooked = false) {
+  const g = new THREE.SphereGeometry(1, 120, 84), skinA = C_(cooked ? "#9C2A14" : "#BE2115"), skinB = C_(cooked ? "#C4421C" : "#E0471F"), blis = C_("#3B160A"), hi = C_("#E8782A");
+  const H = cooked ? .6 : .84, Wd = cooked ? 1.1 : 1;
+  const blister = (x, y, z) => { const b = vn(x * 7 + seed * 3, y * 7, z * 7), d = vn(x * 16, y * 16 + 3, z * 16); return cooked ? smooth((b + .25 * d - .18) / .3) : 0; };
+  mapVerts(g, (x, y, z) => { const an = Math.atan2(z, x), s = y, lobeW = Math.pow(Math.abs(Math.cos(2 * an + .35)), .42), crease = .82 + .18 * lobeW;
+    const belly = .92 + .1 * Math.cos(s * 1.3 - .25) , shoulder = 1 - .35 * smooth((s - .45) / .55), foot = s < -.55 ? 1 - .14 * smooth((-s - .55) / .45) * (1 - lobeW) : 1;
+    let r = crease * belly * shoulder * foot * Wd, yy = s * H;
+    if (s > .5) yy -= .26 * smooth((s - .5) / .5) * (1 + .15 * lobeW); // top dimple
+    const w = 1 + (cooked ? .05 * vn(x * 4 + seed, y * 4, z * 4) + .02 * vn(x * 12, y * 12, z * 12) + .035 * blister(x, y, z) : .012 * vn(x * 5 + seed, y * 5, z * 5));
+    if (cooked) yy -= .1 * Math.max(0, s) * Math.abs(vn(x * 3, 1, z * 3));
+    return [x * r * w * .9, yy, z * r * w * .9]; });
+  g.computeVertexNormals();
+  colorize(g, (c, x, y, z) => { const s = .5 + .5 * vn(x * 3.2 + seed, y * 2.4, z * 3.2); c.copy(skinA).lerp(skinB, s * .8); c.lerp(hi, smooth(y * 1.2 - .1) * .22 + (cooked ? 0 : .06 * vn(x * 6, y * 6, z * 6))); c.multiplyScalar(.93 + .12 * vn(x * 24, y * 18, z * 24)); const b = blister(x / .9, y / (H || 1), z / .9); if (b > 0) c.lerp(blis, b * .85); });
+  const stem = new THREE.CylinderGeometry(.075, .12, .34, 14, 4); mapVerts(stem, (x, y, z) => [x + .1 * (y + .17) ** 2 * 3.2, y, z]); xf(stem, [0, H * .86 - .08, 0], [.12, 0, .22]); colorize(stem, (c, x, y) => c.copy(C_("#5C8A36")).lerp(C_("#8EB35A"), .5 + .5 * vn(x * 9, y * 9, 1)));
+  const cap = new THREE.SphereGeometry(.2, 20, 10, 0, 6.3, 0, 1.2); xf(cap, [0, H * .86 - .22, 0], [Math.PI, 0, 0], [1, .5, 1]); colorize(cap, c => c.copy(C_("#4F7D34")));
+  const m = merge([g, stem, cap]); m.computeVertexNormals(); return m;
+}
+
+// ---- seasoned cast-iron skillet (spun rings, bronze patina, worn bright spots)
+export function makePan2(R = 1.6, H = .44) {
+  const grp = makePan(R, H), c = cv2(512, 512), x = c.getContext("2d");
+  x.fillStyle = "#1B1816"; x.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 160; i++) { const y = hash(i) * 512, h = 2 + 12 * hash(i * 3); x.fillStyle = `rgba(${hash(i * 5) > .5 ? "62,44,30" : "6,5,4"},${.1 + .22 * hash(i * 7)})`; x.fillRect(0, y, 512, h); }
+  for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(${hash(i * 3) > .6 ? "88,66,48" : "30,22,16"},${.04 + .12 * hash(i * 5)})`; x.beginPath(); x.arc(hash(i) * 512, hash(i * 11 + 2) * 512, 1 + 6 * hash(i * 7) ** 2, 0, 6.3); x.fill(); }
+  const t = tex2(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, 1);
+  const mat = grp.userData.mat; mat.map = t; mat.color.set("#CFC4BA"); mat.metalness = .5; mat.roughness = .5; mat.clearcoat = .55; mat.clearcoatRoughness = .32; mat.needsUpdate = true; return grp;
+}
+
+// ---- warm pale-oak plank counter ----
+export function makeCounterWood(size = 140, tile = 5) {
+  const S = 1024, c = cv2(S), x = c.getContext("2d"), tones = ["#D6C0A0", "#CCB594", "#DDC9AA", "#D1BA98", "#D9C4A4"], N = 4, pw = S / N;
+  for (let p = 0; p < N; p++) { x.fillStyle = tones[p % 5]; x.fillRect(p * pw, 0, pw, S);
+    for (let i = 0; i < 70; i++) { const px = p * pw + hash(p * 100 + i) * pw; x.strokeStyle = `rgba(${hash(i * 3 + p) > .45 ? "128,86,48" : "250,226,190"},${.05 + .12 * hash(i * 2 + p)})`; x.lineWidth = .6 + 2.2 * hash(i * 5 + p); x.beginPath(); x.moveTo(px, 0); for (let s = 1; s <= 10; s++) x.lineTo(px + Math.sin(s * .9 + p * 3 + i) * (3 + 6 * hash(i * 7)) + (hash(i * 11 + s) - .5) * 4, s / 10 * S); x.stroke(); }
+    const kx = p * pw + pw * (.25 + .5 * hash(p * 7)), ky = S * hash(p * 13 + 1); for (let r = 0; r < 5; r++) { x.strokeStyle = `rgba(110,72,38,${.12 - r * .02})`; x.lineWidth = 2; x.beginPath(); x.ellipse(kx, ky, 8 + r * 7, 20 + r * 16, 0, 0, 6.3); x.stroke(); }
+    x.fillStyle = "rgba(96,62,30,.55)"; x.fillRect(p * pw - 1, 0, 3, S); x.fillStyle = "rgba(255,238,210,.25)"; x.fillRect(p * pw + 2, 0, 2, S); }
+  for (let i = 0; i < 6; i++) { const y = hash(i * 17) * S; x.fillStyle = "rgba(96,62,30,.35)"; x.fillRect(Math.floor(hash(i * 19) * N) * pw, y, pw, 2); } // butt joints
+  const t = tex2(c, true, [size / tile, size / tile]); const bump = t.clone(); bump.colorSpace = THREE.NoColorSpace; bump.needsUpdate = true;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshStandardMaterial({ map: t, bumpMap: bump, bumpScale: .35, roughness: .66, metalness: 0 }));
+  m.rotation.x = -Math.PI / 2; m.receiveShadow = true; return m;
+}
+// soft dark blob on the counter (cheap ambient occlusion under objects). Add as a child at y~0.004; keep it out of the DOF depth pass.
+export function makeContactShadow(rx, rz, op = .4) {
+  const c = cv2(128), x = c.getContext("2d"), g = x.createRadialGradient(64, 64, 8, 64, 64, 62); g.addColorStop(0, "rgba(30,18,8,1)"); g.addColorStop(.55, "rgba(30,18,8,.5)"); g.addColorStop(1, "rgba(30,18,8,0)"); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, opacity: op, depthWrite: false, toneMapped: true }));
+  m.rotation.x = -Math.PI / 2; m.scale.set(rx * 2, rz * 2, 1); m.position.y = .006; return m;
+}
+export function makePlate(R = 1.35) { // shallow ceramic plate, creamy white, glazed
+  const pts = [[0, .02], [R * .52, .02], [R * .62, .05], [R * .9, .12], [R, .16], [R + .03, .17], [R + .03, .185], [R * .98, .19], [R * .86, .15], [R * .58, .085], [R * .5, .07], [0, .07]].map(a => new THREE.Vector2(a[0], a[1]));
+  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), new THREE.MeshPhysicalMaterial({ color: "#F2EBDD", roughness: .28, clearcoat: .7, clearcoatRoughness: .15, metalness: 0 })); m.castShadow = m.receiveShadow = true; return m;
+}
+
+// ---------- molecule worlds: plant-cell texture (Voronoi, filled, no line-network) ----------
+// opts: { n cells across, seed, wall, wallIn, c0 (cell centre), c1 (cell edge), vac (vacuole tint or null), wallW }
+// returns { tex, pts: [[u,v,r]] } where pts are cell centres in 0..1 (for placing crystals / molecules).
+export function cellTexture(o) {
+  const S = o.size || 1024, n = o.n || 8, c = cv2(S), x = c.getContext("2d"), im = x.createImageData(S, S), d = im.data, seed = o.seed || 1;
+  const col = h => { const q = C_(h); return [q.r * 255, q.g * 255, q.b * 255]; }, W = col(o.wall), WI = col(o.wallIn), C0 = col(o.c0), C1 = col(o.c1), VA = o.vac ? col(o.vac) : null;
+  const P = []; for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) P.push([(i + .5 + (hash(seed * 31 + j * 17 + i * 5) - .5) * .8) / n, (j + .5 + (hash(seed * 37 + i * 13 + j * 7) - .5) * .8) / n]);
+  const wW = o.wallW || .075, tint = []; P.forEach((p, k) => tint.push(.85 + .3 * hash(k * 3 + seed)));
+  for (let py = 0; py < S; py++) for (let px = 0; px < S; px++) { const u = px / S, v = py / S, ci = Math.floor(u * n), cj = Math.floor(v * n); let f1 = 9, f2 = 9, k1 = 0;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const ii = ((ci + di) % n + n) % n, jj = ((cj + dj) % n + n) % n, p = P[jj * n + ii], ox = ci + di < 0 ? -1 : ci + di >= n ? 1 : 0, oy = cj + dj < 0 ? -1 : cj + dj >= n ? 1 : 0, dx = u - (p[0] + ox), dy = v - (p[1] + oy), dd = Math.hypot(dx, dy);
+      if (dd < f1) { f2 = f1; f1 = dd; k1 = jj * n + ii; } else if (dd < f2) f2 = dd; }
+    const e = (f2 - f1) * n, wall = smooth(1 - e / wW), inner = smooth(1 - e / (wW * 2.6)) - wall * .0, cc = clamp(f1 * n * 1.7), vac = VA ? smooth(1 - cc * 1.5) * .55 : 0;
+    let r = lerp(C0[0], C1[0], cc * cc) * tint[k1], g_ = lerp(C0[1], C1[1], cc * cc) * tint[k1], b = lerp(C0[2], C1[2], cc * cc) * tint[k1];
+    if (VA) { r = lerp(r, VA[0], vac); g_ = lerp(g_, VA[1], vac); b = lerp(b, VA[2], vac); }
+    r = lerp(r, WI[0], inner * .55); g_ = lerp(g_, WI[1], inner * .55); b = lerp(b, WI[2], inner * .55);
+    r = lerp(r, W[0], wall); g_ = lerp(g_, W[1], wall); b = lerp(b, W[2], wall);
+    const sh = 1 - .22 * smooth(e / (wW * 3)) * 0 + .06 * (hash(px * .91 + py * 3.7) - .5); const o4 = (py * S + px) * 4; d[o4] = r * sh; d[o4 + 1] = g_ * sh; d[o4 + 2] = b * sh; d[o4 + 3] = 255; }
+  x.putImageData(im, 0, 0); const t = tex2(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return { tex: t, pts: P };
+}
+
+// ---------- gut lining: rows of soft, rounded villi (matte, pink), extruded from a smooth outline ----------
+export function makeVilli(width, seed = 1, hMin = 1.2, hMax = 2.0, w = 1.0, base = "#EDAA9A", dark = "#B2605A", body = 1.4) {
+  const sh = new THREE.Shape(), G = .05, N = Math.ceil(width / (w + G)), x0 = -width / 2; sh.moveTo(x0 - .2, -body); sh.lineTo(x0 - .2, 0);
+  for (let i = 0; i < N; i++) { const xi = x0 + i * (w + G), h = hMin + (hMax - hMin) * hash(seed * 11 + i * 3.1), ww = w * (.8 + .4 * hash(seed * 5 + i)), lean = (hash(seed * 7 + i) - .5) * .3;
+    sh.bezierCurveTo(xi + ww * .02, h * .45, xi + ww * .14 + lean * .5, h * .96, xi + ww * .5 + lean, h); sh.bezierCurveTo(xi + ww * .86 + lean * .5, h * .96, xi + ww * .98, h * .45, xi + ww, 0); sh.lineTo(xi + ww + G, 0); }
+  sh.lineTo(x0 + width + .2, 0); sh.lineTo(x0 + width + .2, -body); sh.closePath();
+  const g = new THREE.ExtrudeGeometry(sh, { depth: 1.1, bevelEnabled: true, bevelThickness: .3, bevelSize: .16, bevelSegments: 4, curveSegments: 12 });
+  const b = C_(base), dk = C_(dark); colorize(g, (c, x, y, z, nx, ny, nz) => { c.copy(dk).lerp(b, smooth((y + .1) / 1.4)); c.multiplyScalar(.9 + .14 * vn(x * 2.5 + seed, y * 3, z * 2)); c.lerp(C_("#F6CDBE"), smooth(y - 1.1) * .4 * Math.max(0, nz)); });
+  return g;
+}
+export function villiTips(width, seed = 1, hMin = 1.2, hMax = 2.0, w = 1.0) { // [x, height] of each finger tip (matches makeVilli)
+  const G = .05, N = Math.ceil(width / (w + G)), x0 = -width / 2, r = [];
+  for (let i = 0; i < N; i++) { const xi = x0 + i * (w + G), ww = w * (.8 + .4 * hash(seed * 5 + i)), lean = (hash(seed * 7 + i) - .5) * .3; r.push([xi + ww * .5 + lean, hMin + (hMax - hMin) * hash(seed * 11 + i * 3.1)]); }
+  return r;
 }
