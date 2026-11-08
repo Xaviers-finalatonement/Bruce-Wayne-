@@ -269,7 +269,7 @@ def sr_hit(gain=1.0):  # rubber stamp on paper: soft low thud + short paper slap
     body = np.sin(2 * np.pi * (95 + 45 * np.exp(-t / 0.03)) * t) * env_exp(n, 0.07)
     slap = bandnoise(n, 700, 4200) * env_exp(n, 0.015)
     sub = np.sin(2 * np.pi * 52 * t) * env_exp(n, 0.16)
-    return (body * 1.0 + slap * 0.55 + 0.7 * sub) * db(-9) * gain  # round-3: a stronger stamp hit widens the loudness range
+    return (body * 1.0 + slap * 0.55 + 0.7 * sub) * db(-5) * gain  # round-3: a stronger stamp hit widens the loudness range
 
 
 def sr_swell(dur):  # water / fabric texture: soft band noise breathing in and out
@@ -335,7 +335,7 @@ PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
                        custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
-    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.8, custom=dict(rub=sr_rub, wet=sr_wet)),
+    "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.93, custom=dict(rub=sr_rub, wet=sr_wet)),
 }
 
 
@@ -350,7 +350,7 @@ def main(ep):
     tl = json.load(open(os.path.join(out, "timeline.json")))
     cues = json.load(open(os.path.join(out, "cues.json"))) if os.path.exists(os.path.join(out, "cues.json")) else []
     N = int((tl["duration"] + 0.6) * SR)
-    vo = np.zeros(N); sfx = np.zeros(N)
+    vo = np.zeros(N); sfx = np.zeros(N); hb = np.zeros(N)  # hb: stamp hits, never ducked (round-5: wider loudness range)
     for b in tl["beats"]:
         s, sr = sf.read(os.path.join(out, "audio", b["id"] + ".wav"))
         s = np.interp(np.arange(int(len(s) * SR / sr)) / SR * sr, np.arange(len(s)), s)
@@ -361,7 +361,7 @@ def main(ep):
         pal["bed"](sfx, tl["duration"])
         for c in cues:
             k = c["type"]
-            if k == "hit": put(sfx, pal["hit"](c.get("gain", 1.0)), c["t"])
+            if k == "hit": put(hb if name == "skin-receipts" else sfx, pal["hit"](c.get("gain", 1.0)), c["t"])
             elif k == "swell": put(sfx, pal["swell"](c.get("dur", 1.5)), c["t"])
             elif k == "riser": put(sfx, pal["riser"](c.get("dur", 2.0)), c["t"])
             elif k == "sweep": put(sfx, pal["sweep"](c.get("dur", .5)), c["t"])
@@ -389,7 +389,7 @@ def main(ep):
     e = np.sqrt(np.convolve(vo ** 2, np.ones(w) / w, mode="same"))
     e = np.convolve(e, np.ones(int(0.15 * SR)) / int(0.15 * SR), mode="same")
     duck = 1 - (pal["duck"] if pal else 0.65) * np.clip(e / (e.max() * 0.25 + 1e-9), 0, 1)
-    mix = vo * 0.9 + sfx * duck
+    mix = vo * 0.9 + sfx * duck + hb
     mix = np.tanh(mix * 0.9) / 0.9 if np.abs(mix).max() > 0.95 else mix
     wav = os.path.join(out, "mix.wav")
     sf.write(wav, np.stack([mix, mix], 1), SR, subtype="PCM_24")

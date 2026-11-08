@@ -2,7 +2,7 @@
 // loopArchGeo: one terry loop = an upright arch of 2-ply twisted yarn; BOTH feet end below the ground plane (z < 0), so nothing floats.
 // Local frame: x = foot to foot, y = across the arch, z = up (away from the ground cloth). Vertex colours carry a baked contact-AO (dark at the feet).
 import * as THREE from "three";
-export function loopArchGeo({ plies = 2, segs = 18, radial = 5, hw = .0011, hh = .003, depth = .0007, rp = .00022, rt = .00032, twist = 3.2, aoMin = .5, shoulder = .72 } = {}) {
+export function loopArchGeo({ plies = 2, segs = 18, radial = 5, hw = .0013, hh = .0027, depth = .0014, rp = .00026, rt = .00037, twist = 3.2, aoMin = .38, shoulder = .8 } = {}) {
   const pos = [], nor = [], idx = [], cl = [];
   for (let p = 0; p < plies; p++) {
     const base = pos.length / 3;
@@ -32,7 +32,7 @@ export function fibreGeo(len, r, bend, S = 4, sides = 3) {
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3)); g.setIndex(idx); return g;
 }
 // centre point + outward unit normal of the arch's yarn at parameter t in (0,1) (local loop frame), used to plant fuzz on the yarn
-export function archPoint(t, { hw = .0011, hh = .003, depth = .0007, shoulder = .72 } = {}) {
+export function archPoint(t, { hw = .0013, hh = .0027, depth = .0014, shoulder = .8 } = {}) {
   const th = Math.PI * t, st = Math.sin(th), p = new THREE.Vector3(-hw * Math.cos(th), 0, -depth + (hh + depth) * Math.pow(st, shoulder));
   const tg = new THREE.Vector3(hw * Math.sin(th), 0, (hh + depth) * shoulder * Math.pow(Math.max(1e-3, st), shoulder - 1) * Math.cos(th)).normalize();
   return { p, tg, nrm: new THREE.Vector3(-tg.z, 0, tg.x) };

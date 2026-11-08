@@ -177,7 +177,6 @@ export function createOverlay(T, TH, cv) {
     if (A.cheek && (A.id === "b10" || A.id === "b12" && false)) {
       const out = 1 - smooth((t - END("b10") + .05) / .3), a = smooth((t - W("b10", "The study never")) / .35) * out, c = A.cheek;
       ctx.save(); ctx.globalAlpha = a; ctx.setLineDash([16, 12]); ctx.strokeStyle = SLATE; ctx.lineWidth = 5; ctx.beginPath(); ctx.ellipse(c.x, c.y, c.rx, c.ry, -.3, 0, 6.3); ctx.stroke(); ctx.restore();
-      txt("?", c.x, c.y + 70, { size: 200, color: SLATE, a: a * .9 });
     }
     if (A.nt) { const t0 = W("b11", "This study"), u = (t - t0) / .22; if (u >= 0 && t < END("b11") + .2) tag("not tested here", A.nt.x, A.nt.y, { size: 46, color: SLATE, sc: 1 + .18 * (1 - eo3(u)), a: 1 - smooth((t - END("b11")) / .2) }); }
   }
