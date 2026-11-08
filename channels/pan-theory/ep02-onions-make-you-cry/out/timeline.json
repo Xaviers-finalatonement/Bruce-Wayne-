@@ -1,0 +1,511 @@
+{
+ "duration": 70.116,
+ "fps": 30,
+ "speed": 0.83,
+ "gap": 0.45,
+ "sample_rate": 24000,
+ "beats": [
+  {
+   "id": "b01",
+   "start": 0.2,
+   "end": 3.095,
+   "next": 3.545,
+   "sents": [
+    {
+     "s": 0.2,
+     "e": 3.095,
+     "c0": 0,
+     "c1": 48
+    }
+   ],
+   "captions": [
+    {
+     "text": "Your onion shoots tiny",
+     "start": 0.2,
+     "key": 2,
+     "end": 1.587
+    },
+    {
+     "text": "droplets when you cut it.",
+     "start": 1.587,
+     "key": 0,
+     "end": 3.095
+    }
+   ],
+   "vo": "Your onion shoots tiny droplets when you cut it.",
+   "screen": []
+  },
+  {
+   "id": "b02",
+   "start": 3.545,
+   "end": 7.96,
+   "next": 8.41,
+   "sents": [
+    {
+     "s": 3.545,
+     "e": 7.96,
+     "c0": 0,
+     "c1": 63
+    }
+   ],
+   "captions": [
+    {
+     "text": "One lab caught it on cameras far",
+     "start": 3.545,
+     "key": 5,
+     "end": 5.858
+    },
+    {
+     "text": "faster than your eyes can see.",
+     "start": 5.858,
+     "key": 0,
+     "end": 7.96
+    }
+   ],
+   "vo": "One lab caught it on cameras far faster than your eyes can see.",
+   "screen": [
+    "5,000 – 20,000 frames per second"
+   ]
+  },
+  {
+   "id": "b03",
+   "start": 8.41,
+   "end": 12.203,
+   "next": 12.653,
+   "sents": [
+    {
+     "s": 8.41,
+     "e": 12.204,
+     "c0": 0,
+     "c1": 55
+    }
+   ],
+   "captions": [
+    {
+     "text": "Droplets burst out at up to",
+     "start": 8.41,
+     "key": 0,
+     "end": 10.341
+    },
+    {
+     "text": "about ninety miles an hour.",
+     "start": 10.341,
+     "key": 1,
+     "end": 12.203
+    }
+   ],
+   "vo": "Droplets burst out at up to about ninety miles an hour.",
+   "screen": [
+    "up to 40 m/s",
+    "≈ 90 mph"
+   ]
+  },
+  {
+   "id": "b04",
+   "start": 12.653,
+   "end": 17.347,
+   "next": 17.797,
+   "sents": [
+    {
+     "s": 12.653,
+     "e": 17.347,
+     "c0": 0,
+     "c1": 69
+    }
+   ],
+   "captions": [
+    {
+     "text": "That was a lab rig that drops",
+     "start": 12.653,
+     "key": 6,
+     "end": 14.694
+    },
+    {
+     "text": "a blade onto half an onion, not a chef.",
+     "start": 14.694,
+     "key": 1,
+     "end": 17.347
+    }
+   ],
+   "vo": "That was a lab rig that drops a blade onto half an onion, not a chef.",
+   "screen": [
+    "lab rig · not a chef"
+   ]
+  },
+  {
+   "id": "b05",
+   "start": 17.797,
+   "end": 24.07,
+   "next": 24.52,
+   "sents": [
+    {
+     "s": 17.797,
+     "e": 24.07,
+     "c0": 0,
+     "c1": 90
+    }
+   ],
+   "captions": [
+    {
+     "text": "Within a fiftieth of a second,",
+     "start": 17.797,
+     "key": 2,
+     "end": 19.958
+    },
+    {
+     "text": "they split into hundreds,",
+     "start": 19.958,
+     "key": 3,
+     "end": 21.77
+    },
+    {
+     "text": "even thousands, of smaller drops.",
+     "start": 21.77,
+     "key": 1,
+     "end": 24.07
+    }
+   ],
+   "vo": "Within a fiftieth of a second, they split into hundreds, even thousands, of smaller drops.",
+   "screen": [
+    "< 0.02 s",
+    "hundreds → thousands"
+   ]
+  },
+  {
+   "id": "b06",
+   "start": 24.52,
+   "end": 32.606,
+   "next": 33.056,
+   "sents": [
+    {
+     "s": 24.52,
+     "e": 25.323,
+     "c0": 0,
+     "c1": 8
+    },
+    {
+     "s": 25.563,
+     "e": 27.283,
+     "c0": 9,
+     "c1": 39
+    },
+    {
+     "s": 27.423,
+     "e": 32.606,
+     "c0": 40,
+     "c1": 107
+    }
+   ],
+   "captions": [
+    {
+     "text": "Why cry?",
+     "start": 24.52,
+     "key": 0,
+     "end": 25.563
+    },
+    {
+     "text": "Cutting breaks open the cells.",
+     "start": 25.563,
+     "key": 0,
+     "end": 27.423
+    },
+    {
+     "text": "A reaction turns the onion's sulfur",
+     "start": 27.423,
+     "key": 1,
+     "end": 30.208
+    },
+    {
+     "text": "compounds into an eye irritant.",
+     "start": 30.208,
+     "key": 0,
+     "end": 32.606
+    }
+   ],
+   "vo": "Why cry? Cutting breaks open the cells. A reaction turns the onion's sulfur compounds into an eye irritant.",
+   "screen": [
+    "sulfur compounds",
+    "→ propanethial S-oxide"
+   ]
+  },
+  {
+   "id": "b07",
+   "start": 33.056,
+   "end": 37.961,
+   "next": 38.411,
+   "sents": [
+    {
+     "s": 33.056,
+     "e": 37.117,
+     "c0": 0,
+     "c1": 66
+    },
+    {
+     "s": 37.257,
+     "e": 37.961,
+     "c0": 67,
+     "c1": 73
+    }
+   ],
+   "captions": [
+    {
+     "text": "It switches on nerves in your cornea,",
+     "start": 33.056,
+     "key": 1,
+     "end": 35.394
+    },
+    {
+     "text": "the clear front of your eye.",
+     "start": 35.394,
+     "key": 1,
+     "end": 37.257
+    },
+    {
+     "text": "Tears.",
+     "start": 37.257,
+     "key": 0,
+     "end": 37.961
+    }
+   ],
+   "vo": "It switches on nerves in your cornea, the clear front of your eye. Tears.",
+   "screen": [
+    "cornea",
+    "→ tears"
+   ]
+  },
+  {
+   "id": "b08",
+   "start": 38.411,
+   "end": 42.815,
+   "next": 43.265,
+   "sents": [
+    {
+     "s": 38.411,
+     "e": 42.815,
+     "c0": 0,
+     "c1": 68
+    }
+   ],
+   "captions": [
+    {
+     "text": "One chemist suggested the droplets",
+     "start": 38.411,
+     "key": 2,
+     "end": 40.678
+    },
+    {
+     "text": "carry that irritant to your eyes.",
+     "start": 40.678,
+     "key": 2,
+     "end": 42.815
+    }
+   ],
+   "vo": "One chemist suggested the droplets carry that irritant to your eyes.",
+   "screen": [
+    "suggested, not shown here"
+   ]
+  },
+  {
+   "id": "b09",
+   "start": 43.265,
+   "end": 48.522,
+   "next": 48.972,
+   "sents": [
+    {
+     "s": 43.265,
+     "e": 47.327,
+     "c0": 0,
+     "c1": 64
+    },
+    {
+     "s": 47.467,
+     "e": 48.522,
+     "c0": 65,
+     "c1": 80
+    }
+   ],
+   "captions": [
+    {
+     "text": "The tough outer skin lets the",
+     "start": 43.265,
+     "key": 1,
+     "end": 45.169
+    },
+    {
+     "text": "flesh under it get squeezed first.",
+     "start": 45.169,
+     "key": 4,
+     "end": 47.467
+    },
+    {
+     "text": "Then it bursts.",
+     "start": 47.467,
+     "key": 2,
+     "end": 48.522
+    }
+   ],
+   "vo": "The tough outer skin lets the flesh under it get squeezed first. Then it bursts.",
+   "screen": [
+    "skin holds · flesh squeezed · bursts"
+   ]
+  },
+  {
+   "id": "b10",
+   "start": 48.972,
+   "end": 52.26,
+   "next": 52.71,
+   "sents": [
+    {
+     "s": 48.972,
+     "e": 50.775,
+     "c0": 0,
+     "c1": 31
+    },
+    {
+     "s": 50.915,
+     "e": 52.261,
+     "c0": 32,
+     "c1": 50
+    }
+   ],
+   "captions": [
+    {
+     "text": "A blunter knife makes it worse.",
+     "start": 48.972,
+     "key": 1,
+     "end": 50.915
+    },
+    {
+     "text": "So do faster cuts.",
+     "start": 50.915,
+     "key": 2,
+     "end": 52.26
+    }
+   ],
+   "vo": "A blunter knife makes it worse. So do faster cuts.",
+   "screen": [
+    "blunt",
+    "fast",
+    "more droplets"
+   ]
+  },
+  {
+   "id": "b11",
+   "start": 52.71,
+   "end": 55.756,
+   "next": 56.206,
+   "sents": [
+    {
+     "s": 52.71,
+     "e": 55.756,
+     "c0": 0,
+     "c1": 44
+    }
+   ],
+   "captions": [
+    {
+     "text": "A sharper blade gave fewer, slower droplets.",
+     "start": 52.71,
+     "key": 6,
+     "end": 55.756
+    }
+   ],
+   "vo": "A sharper blade gave fewer, slower droplets.",
+   "screen": [
+    "sharp = fewer, slower"
+   ]
+  },
+  {
+   "id": "b12",
+   "start": 56.206,
+   "end": 58.996,
+   "next": 59.446,
+   "sents": [
+    {
+     "s": 56.206,
+     "e": 58.996,
+     "c0": 0,
+     "c1": 41
+    }
+   ],
+   "captions": [
+    {
+     "text": "But the team tracked droplets, not tears.",
+     "start": 56.206,
+     "key": 4,
+     "end": 58.996
+    }
+   ],
+   "vo": "But the team tracked droplets, not tears.",
+   "screen": [
+    "droplets ✓",
+    "tears ?"
+   ]
+  },
+  {
+   "id": "b13",
+   "start": 59.446,
+   "end": 61.696,
+   "next": 62.946,
+   "sents": [
+    {
+     "s": 59.446,
+     "e": 61.696,
+     "c0": 0,
+     "c1": 37
+    }
+   ],
+   "captions": [
+    {
+     "text": "And it's one study, still a preprint.",
+     "start": 59.446,
+     "key": 6,
+     "end": 61.696
+    }
+   ],
+   "vo": "And it's one study, still a preprint.",
+   "screen": [
+    "one study · preprint"
+   ]
+  },
+  {
+   "id": "b14",
+   "start": 62.946,
+   "end": 68.316,
+   "next": 70.116,
+   "sents": [
+    {
+     "s": 62.946,
+     "e": 65.57,
+     "c0": 0,
+     "c1": 43
+    },
+    {
+     "s": 65.71,
+     "e": 68.316,
+     "c0": 44,
+     "c1": 82
+    }
+   ],
+   "captions": [
+    {
+     "text": "The Pan Theory: sharpen your knife tonight.",
+     "start": 62.946,
+     "key": 3,
+     "end": 65.71
+    },
+    {
+     "text": "Fewer droplets, and maybe fewer tears.",
+     "start": 65.71,
+     "key": 1,
+     "end": 68.316
+    }
+   ],
+   "vo": "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears.",
+   "screen": [
+    "The Pan Theory:",
+    "sharp knife → fewer droplets"
+   ]
+  }
+ ]
+}

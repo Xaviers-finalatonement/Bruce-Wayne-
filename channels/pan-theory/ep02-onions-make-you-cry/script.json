@@ -6,7 +6,7 @@
   "voice": {
     "engine": "kokoro",
     "voice": "af_bella",
-    "speed": 1.0
+    "speed": 0.83
   },
   "beats": [
     {
@@ -180,6 +180,24 @@
     "headline": "Why onions make you cry",
     "key_word": "droplets"
   },
-  "end_hold": 1.8,
-  "sound": "pan-theory"
+  "end_hold": 3.0,
+  "sound": "pan-theory",
+  "gaps": {
+    "b01": 0.6,
+    "b02": 0.6,
+    "b03": 0.7,
+    "b04": 0.6,
+    "b05": 0.6,
+    "b06": 0.6,
+    "b07": 0.9,
+    "b08": 0.6,
+    "b09": 0.7,
+    "b10": 0.6,
+    "b11": 0.9,
+    "b12": 0.6,
+    "b13": 0.6
+  },
+  "holds": {
+    "b13": 0.0
+  }
 }
