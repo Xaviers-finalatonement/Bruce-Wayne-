@@ -234,3 +234,74 @@ No score is under 3, and (a) and (g) are at the minimum of 4.
    - **The Sun:** ring the Sun dot with a thin callout circle and a leader line to "the Sun" (25.5–30.4 s) so viewers can find it, without changing its size.
    - **N1:** optionally reword the claim line.
    - **N2:** fix the YouTube description before upload.
+
+## Round 3 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode), same method as rounds 1–2.
+**Reviewed:** `out/wip/ep02.mp4` (73.08 s, 1080×1920, 30 fps, 2192 frames, 86.3 MB; matches `out/render-report.md`), `out/ep02.srt`, `out/timeline.json`, `script.json`, `claims.md`, `platform.json`, `out/cover.png`, the round-3 diff of `engine/film/astronaut.js`, `scene.js`, `overlay.js` and `timing.js` (commit 63fe212).
+**Method:** stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s; two contact sheets, one frame every 1.5 s from 3.0 to 72.0 s, with timestamps burned in and the safe-area lines drawn on (y 154, y 1536, x 950); 540-wide frames at 6.0, 22, 42, 67 and 70.5 s; a strip at 2.6 / 3.0 / 17.0 / 40.6 / 43.3 / 49.5 / 59.5 / 69.3 / 69.8 / 70.1 s; full-resolution crops of the hook figure (1.0 s), the window friend (6.6 s), the wrist shot (23.0 s) and the left payoff figure (66.0 s); the cover. `blackdetect` over 64 s to the end found no black segments.
+**Audio caveat:** I still cannot hear the film. Loudness −14.4 LUFS, LRA 2.0 LU and true peak −1.4 dBTP pass. The voice is still stock Kokoro `am_michael`.
+
+### Scores
+
+| | Criterion | R1 | R2 | R3 | Evidence |
+|---|---|---|---|---|---|
+| a | Hook in first 2 s | 4 | 4 | **4** | The lensed hole and a recognisable EVA-suited figure (gold visor lit by the disc) are there at 0.0 s. "TO ANYONE FAR AWAY, YOU'D **FREEZE** AT THE EDGE" is up by 0.5 s. From 0 to 1.5 s the figure floats with clear air above the top arc, with a dark side and a motion trail. Still weak: by 2.0–3.0 s it settles back onto the top lensed arc, and the freeze is only implied. |
+| b | One thread | 4 | 4 | **4** | Unchanged and sound. The claim line now reads "CLAIM: far away, you'd seem to freeze" (≈62.2 s), which matches the hook's framing. The small-hole aside (47.5–51.5 s) is still a side trip. |
+| c | Picture moves with the sentence | 4 | 4 | **4** | New hits: "Friends far away" (3.3–7.8 s) now shows a suited friend behind a lit window. The Sun has a callout ring and a leader line (25.5–30.4 s). "Nothing from inside can reach us" (57.6–61.4 s) now has the frozen, reddening figure at the faint ring. The left payoff figure visibly reddens and dims by 69.3 s, and the right one falls fully into the shadow. Misses: "Like the one in our galaxy's center" (28.3–30.4 s) still adds nothing new. Both payoff panels still look alike from 65.3 to ≈68.2 s, apart from the clocks. |
+| d | Motivated camera | 4 | 4 | **4** | The join push-in is now 1.34× and readable (65.3–70.3 s). The wrist shot is an over-the-shoulder with depth of field. The stretch is turned toward 3/4 (ry 0.95). |
+| e | Voice carries meaning, screen carries figures | 4 | 4 | **4** | Fixed: "WHAT THEY SEE" fades out before "SLOWS", the "Unproven." caption is hidden while the stamp is up (64.5 s), and the Sun can be found. Leftovers: at ≈6.0 s "STOPS" slams in over a still-visible orange "SLOWS", and at full scale its top reaches y ≈ 114, inside the top 8 % (a few frames). The burned caption overlaps the window hull at 4.5–7.8 s. At ≈40.6 s the "(NASA simulation)" tag lags mid-frame while 12.8 moves to the corner. |
+| f | Rhythm | 3 | 4 | **4** | The 57.6–61.4 s static spell is filled. The end card now holds about 2.7 s. The runtime is 73.1 s, inside the 70–80 s range. Leftovers: 65.3–68.2 s is still a near-mirror split. The motion-blur "ghosts" at 16.5–18.5 s read as a row of stacked copies, not as blur. |
+| g | Ending | 4 | 4 | **4** | The payoff now lands: the right figure starts falling on "To you" (68.22 s) and is gone into the shadow by ≈69.95 s; the VO ends at 69.96 s; the card fades in from 70.26 s over 0.25 s over the dimmed split, with no black frame (`blackdetect` clean). The left figure is visibly red-brown and dim at 69.3 s. The end card is sourced (C13 + UNPROVEN). It is not a 5 because the first 3 s of the split are near-identical, and both figures stand on the top arc. |
+| h | Production value | 3 | 3 | **4** (low) | **What changed:** `engine/film/astronaut.js` is a real rebuild (lathes, extrusions and tubes): a layered torso, a chest control box with switches and a display, a metal neck ring, a bubble helmet with a gold visor shader that mirrors the disc, bellows elbows and knees, layered cuffs, gloves, boots, a backpack with tanks and hoses, and varied PBR roughness. **At the sizes where the figure appears most of the time** (the hook at about 250 px, the stretch, both splits, the inside view, the window friend), it now reads as a stylised EVA suit with real-object detail (1.0, 42, 49.5, 66 s), not a capsule mannequin. The black-hole shader, the inside view and the singularity were already premium, and with grain and depth of field the film meets the ep01 round-3 bar of "polished stylised CG with real-object detail, depth, grain". **Why only a low 4:** the wrist shot (19.7–25.0 s, crop at 23.0 s) is the largest view of the suit, and there it is a smooth vinyl toy. The helmet back is a plain cream egg with one dark plug, the backpack is a flat peach slab, the forearm is an untextured lavender tube with two rings, and the glove is a dark lump. The fold and seam bump map does not show. The helmet is barely softer than the forearm. The window friend (3.3–7.8 s) is a flat 2D canvas hull (a rounded rectangle with rivet dots) that reads as a picture-in-picture card, and the friend is fully lit in an orange box, not a rim-lit silhouette. |
+
+### Round-2 fix list status
+
+| # | Fix | Status | Notes |
+|---|---|---|---|
+| 1 | Replace the primitive astronaut (gating) | **Done** | This is a sculpted EVA suit with every listed part. Visor reflection, the chest box, hoses, bellows and boots all read at 200–300 px. Caveat: the "no capsule or sphere silhouette at 940 px" test is only partly met. At wrist-shot scale the forearm still reads as a plain tube and the helmet back as an egg, because the fold and seam bump map is too weak to show. |
+| 2 | Rebuild the wrist shot and the far friend (gating) | **Mostly done** | **Wrist shot:** the staging is done. The helmet back and shoulder are at frame left, the clock is strapped to the forearm with a strap and buckle, the crystal carries a disc streak, depth of field is on, and no full body appears. The finish is still toy-smooth, and the forearm is not visibly sharper than the helmet. **Far friend:** a window with a suited figure, kept above y 1500. It is done in layout, but the hull is a flat 2D panel and the friend is lit flat, not as a rim-lit silhouette. |
+| 3 | Let the payoff land, then cut | **Done** | `T.tCard` = end of b15 + 0.4 s (70.36 s). The fall runs from "To you" and finishes by ≈69.95 s. The card is a 0.25 s fade with no black frames. The left figure reddens to full and dims to alpha ≈ 0.45 from 66 s. The push-in is 1.34×. |
+| 4 | Stop the perching | **Partly** | **Done:** the hook figure floats clear from 0 to 1.5 s with a dark side and a trail. The small-hole split figure floats clear. The stretch starts at normal proportions (K ramps from "stretch") at a more 3/4 angle. **Not done:** the hook figure settles onto the top arc by 2.0–3.0 s, the b04 figure stands on the arc (16.5–18.5 s), and both payoff figures have their boots on the top arc (65.3–69 s). |
+| 5 | Fill the static spells | **Mostly done** | 57.6–61.4 s now has the frozen, reddening figure at the ring. The left clock slows from the first word of b15, but the two panels still read alike until ≈68.2 s. |
+| 6 | Small text items | **Done** | "WHAT THEY SEE" fades out before "SLOWS". The "Unproven." caption is hidden under the stamp. The Sun has a callout ring, a leader line and its label. N1 is reworded to "CLAIM: far away, you'd seem to freeze" (auto-fit to 840 px). N2 is fixed: the YouTube description now says "Nobody has watched anyone fall in" (C12). New small leftover: "STOPS" overlaps "SLOWS" and crosses y 154 at ≈6.0 s. |
+
+### Verdict: **PASS**
+
+- No score is under 3.
+- (a), (g) and (h) are all at 4.
+- Nothing factual or ethical is open.
+
+(h) is a low 4: the gating rebuild is real, and the cheapest frame is no longer a primitive mannequin. The pre-upload notes below are polish, not gates.
+
+### Factual and ethical items
+
+- F1–F5, N1 and N2 are all **closed**.
+- Every on-screen label and number, the spoken lines, the cover and `platform.json` match an OK row with its hedge:
+  - **Hook, cover and TikTok title:** "To anyone far away, you'd freeze at the edge" = C1 (far-away framing).
+  - **Claim line:** "far away, you'd seem to freeze" = C1.
+  - **≈ 3 HOURS and ≈ 4.3 MILLION SUNS:** both carry "(NASA simulation)" = C4, C5.
+  - **"space flows inward at light speed":** = C6.
+  - **12.8 s and the corner timer:** "NASA simulation" = C7.
+  - **SPAGHETTIFICATION:** = C9.
+  - **"can tear you apart early":** = C10.
+  - **"singularity = ?":** = C11.
+  - **End card:** "Nothing from inside can reach us." = C13; UNPROVEN = C12.
+  - **YouTube description:** "would see you slow down and freeze … NASA's simulation says … about three hours … then seconds to spaghettification … Nobody has watched anyone fall in" = C1, C4, C7, C12.
+  - **Instagram:** "you'd seem to freeze" = C1.
+- `claims.md` lists no open items.
+
+### Pre-upload notes (not gating, in order of impact)
+
+1. **(h) Wrist shot finish (19.7–25.0 s).**
+   - **Surface:** raise the fabric bump strength, or swap it for a normal map, so the folds and stitched seams read at this scale. Add a seam line or comm port break-up to the helmet back, and a textured cuff and glove with visible fingers.
+   - **Focus:** pull focus harder, so the helmet and backpack go clearly soft and the cuff, strap and clock stay crisp.
+2. **(h) Window friend (3.3–7.8 s).**
+   - **Hull:** give the 2D hull lighting and depth: a bevel, a disc-coloured specular sweep, and a darker, unevenly lit panel without the even rivet row. Or render the module in 3D.
+   - **Friend:** light the friend as a dark silhouette with a Horizon rim, not as a fully lit figure in an orange box.
+   - **Caption:** keep the burned caption off the hull.
+3. **(h/c) Perching.** Keep visible air under the figure at 2.0–3.0 s (the hook settle), 16.5–18.5 s (b04) and 65.3–69 s (both payoff figures' boots sit on the top arc).
+4. **(e/f) Small items.**
+   - **Ghosts:** replace the stacked-copy "ghosts" (16.5–18.5 s) with real motion blur, or drop them.
+   - **≈6.0 s:** fade "SLOWS" fully out before "STOPS" slams in, and cap the slam scale so it stays below y 154.
+   - **≈40.6 s:** move the "(NASA simulation)" tag with the 12.8 number.

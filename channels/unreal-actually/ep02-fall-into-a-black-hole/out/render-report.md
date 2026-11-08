@@ -10,3 +10,8 @@
   - none
 
 Contact sheet: `contact-sheet.jpg` (a frame every 2.5 s).
+
+## Final (shipped) file
+
+- `out/ep02.mp4`: 86.3 MB, 73.08 s, -14.4 LUFS, TP -1.4 dBTP, no black frames.
+- Gate: PASSED round 3 (see scorecard.md).
