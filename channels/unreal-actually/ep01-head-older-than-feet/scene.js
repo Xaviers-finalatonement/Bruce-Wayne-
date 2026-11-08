@@ -418,7 +418,7 @@ function setShot(sh, path, t, tt) {
   sh.update(t);
 }
 window.__seek = function (t) {
-  if (COVER) { setShot(A, [{ t: 0, p: [.55, 1.35, 8.2], l: [.6, 1.45, 0], f: 60, fp: [.6, 1.2, 0], ap: .0002 }], 0.5); HC.userData.set(21.2, { angle: 54, hot: 1.4 }); FC.userData.set(15, { angle: 20, hot: .8 });
+  if (COVER) { setShot(A, [{ t: 0, p: [.55, 1.45, 8.2], l: [.6, 1.58, 0], f: 60, fp: [.6, 1.2, 0], ap: .0002 }], 0.5); HC.userData.set(21.2, { angle: 54, hot: 1.4 }); FC.userData.set(15, { angle: 20, hot: .8 });
     A.A = { head: anchorOf(HC, .3), feet: anchorOf(FC, .3) }; filmPass.uniforms.time.value = .5; composer.render(); ov.drawCover(A.A); return; }
   const shk = shakeAt(t);
   let cur = SH[SH.length - 1]; for (const s of SH) if (t >= s[0] && t < s[1]) { cur = s; break; }
