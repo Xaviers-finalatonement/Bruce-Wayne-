@@ -183,7 +183,7 @@
     "headline": "To anyone far away, you'd freeze at the edge",
     "key_word": "freeze"
   },
-  "end_hold": 1.8,
+  "end_hold": 3.1,
   "sound": "unreal-actually",
   "gaps": {
     "b01": 0.35,

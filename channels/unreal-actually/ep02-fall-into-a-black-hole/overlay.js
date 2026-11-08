@@ -6,7 +6,7 @@ export function createOverlay(T, TH, cv) {
   const C = TH.colors, { S, E, END, W } = T;
   const HOT = C.horizon, UV = C.ultraviolet, TXT = C.static, HAZE = C.haze, ABY = C.abyss;
   const Ty = createType(cv, TH), { ctx, col, ANTON, BARL, txt, fitSize, slam, ring, rrect, line, tag } = Ty;
-  const captions = t => Ty.captions(t, T.tSign - .15, c => c.beat === "b01"), initCaps = Ty.initCaps;
+  const captions = t => Ty.captions(t, T.tCard - .1, (c, tt) => c.beat === "b01" || (c.text === "Unproven." && tt >= T.tStamp)), initCaps = Ty.initCaps;
   const capR = (() => { ctx.save(); ctx.font = `400 100px ${ANTON}`; const r = ctx.measureText("H").actualBoundingBoxAscent / 100; ctx.restore(); return r || .73; })();
   const mw = (s, size, ls = 0) => { ctx.save(); ctx.font = `400 ${size}px ${ANTON}`; ctx.letterSpacing = ls + "px"; const w = ctx.measureText(s).width; ctx.restore(); return w; };
   const SX = 505; // text centre (safe area 70..940)
@@ -51,7 +51,8 @@ export function createOverlay(T, TH, cv) {
     const lt = t - S("b13"), tS = T.tStamp, cy = 800;
     ctx.save(); ctx.globalAlpha = smooth(lt / .3); ctx.strokeStyle = col(TXT, .5); ctx.lineWidth = 3; corners(); ctx.restore();
     txt("CASE FILE 002", SX, 340, { f: BARL, w: 800, size: 46, ls: 14, color: HAZE, a: smooth(lt / .25), glow: 6 }); line([[170, 378], [840, 378]], col(HAZE, .6), 2, 0, smooth(lt / .4));
-    const ca = smooth((lt - .15) / .3); txt("CLAIM: you'd freeze at the edge", SX, 470, { f: BARL, w: 800, size: 50, color: TXT, ls: 0, a: ca, glow: 8, gcol: ABY });
+    const ca = smooth((lt - .15) / .3); const CL = "CLAIM: far away, you'd seem to freeze"; ctx.save(); ctx.font = `800 50px ${BARL}`; const clw = ctx.measureText(CL).width; ctx.restore();
+    txt(CL, SX, 470, { f: BARL, w: 800, size: Math.min(50, Math.floor(50 * 840 / clw)), color: TXT, ls: 0, a: ca, glow: 8, gcol: ABY });
     const sl = slam(t, tS, .16), sz = fitSize("UNPROVEN", 760, 280);
     if (!sl) { ctx.save(); ctx.globalAlpha = .5 + .3 * Math.sin(t * 20); ctx.setLineDash([16, 14]); ctx.strokeStyle = UV; ctx.lineWidth = 5; ctx.shadowColor = UV; ctx.shadowBlur = 16; rrect(150, cy - 175, 710, 330, 14); ctx.stroke(); ctx.restore(); txt("VERDICT", SX, cy + 30, { size: 110, color: col(HAZE, .9), ls: 14 }); return; }
     const age = t - tS;
@@ -60,7 +61,7 @@ export function createOverlay(T, TH, cv) {
     if (sl.sc < 1.02) { ctx.save(); ctx.translate(SX, cy - 10); ctx.rotate(-.04); ctx.strokeStyle = UV; ctx.lineWidth = 8; ctx.shadowColor = UV; ctx.shadowBlur = 20; rrect(-415, -160, 830, 320, 14); ctx.stroke(); ctx.lineWidth = 3; rrect(-430, -176, 860, 352, 18); ctx.stroke(); ctx.restore(); }
   }
   function endCard(t) { // end card: status line, the reason nobody can check, sign-off (the stamp is not repeated)
-    const t0 = T.tSign - .35, lt = t - t0;
+    const t0 = T.tCard, lt = t - t0;
     ctx.save(); ctx.globalAlpha = smooth(lt / .3); ctx.strokeStyle = col(TXT, .5); ctx.lineWidth = 3; corners(); ctx.restore();
     txt("CASE FILE 002", SX, 420, { f: BARL, w: 800, size: 46, ls: 14, color: HAZE, a: smooth(lt / .25), glow: 6 }); line([[170, 458], [840, 458]], col(HAZE, .6), 2, 0, smooth(lt / .4));
     txt("UNPROVEN", SX, 640, { size: fitSize("UNPROVEN", 600, 190), color: UV, ls: 6, a: smooth((lt - .1) / .3), glow: 14 });
@@ -75,12 +76,18 @@ export function createOverlay(T, TH, cv) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920); ctx.translate(shk[0], shk[1]);
     hook(t);
     if (t >= S("b02") && t < S("b03")) { const lt = t - S("b02"), out = 1 - smooth((t - END("b02") + .3) / .3);
-      if (A.ledge) { const y0 = A.ledge, pts = [[0, y0], [60, y0 + 4], [150, y0 - 1], [230, y0 + 5], [300, y0 + 2], [350, y0 + 16]]; ctx.save(); const g = ctx.createLinearGradient(0, y0, 0, y0 + 130); g.addColorStop(0, col(C.panel2, 1)); g.addColorStop(1, col(ABY, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, y0); pts.forEach(p => ctx.lineTo(p[0], p[1])); ctx.lineTo(330, y0 + 130); ctx.lineTo(0, y0 + 130); ctx.closePath(); ctx.fill();
-        ctx.strokeStyle = col(HOT, .6); ctx.lineWidth = 3; ctx.shadowColor = HOT; ctx.shadowBlur = 10; ctx.beginPath(); ctx.moveTo(0, y0); pts.forEach(p => ctx.lineTo(p[0], p[1])); ctx.stroke(); ctx.restore(); }
-      lab("WHAT THEY SEE", SX, 262, smooth(lt / .3) * out, { color: TXT, ls: 8 });
+      if (A.win) { const w = A.win, hx = -40, hy = 962, hw = 470, hh = 480, hole = () => { ctx.moveTo(w.x + 44, w.y); ctx.arcTo(w.x + w.w, w.y, w.x + w.w, w.y + w.h, 44); ctx.arcTo(w.x + w.w, w.y + w.h, w.x, w.y + w.h, 44); ctx.arcTo(w.x, w.y + w.h, w.x, w.y, 44); ctx.arcTo(w.x, w.y, w.x + w.w, w.y, 44); ctx.closePath(); };
+        ctx.save(); ctx.globalAlpha = out; const g = ctx.createLinearGradient(hx, hy, hx + hw, hy + hh); g.addColorStop(0, col(C.panel2, 1)); g.addColorStop(1, col(ABY, 1)); ctx.fillStyle = g;
+        ctx.beginPath(); ctx.moveTo(hx, hy + 30); ctx.arcTo(hx, hy, hx + 30, hy, 30); ctx.arcTo(hx + hw, hy, hx + hw, hy + 30, 30); ctx.arcTo(hx + hw, hy + hh, hx + hw - 30, hy + hh, 30); ctx.lineTo(hx, hy + hh); ctx.closePath(); hole(); ctx.fill("evenodd");
+        ctx.strokeStyle = col(HOT, .7); ctx.lineWidth = 3; ctx.shadowColor = HOT; ctx.shadowBlur = 12; ctx.beginPath(); ctx.moveTo(hx, hy + 30); ctx.arcTo(hx, hy, hx + 30, hy, 30); ctx.arcTo(hx + hw, hy, hx + hw, hy + 30, 30); ctx.lineTo(hx + hw, hy + 200); ctx.stroke(); ctx.shadowBlur = 0;
+        ctx.strokeStyle = col(HAZE, .28); ctx.lineWidth = 2; [[hx, 1015, hx + hw, 1015], [hx, 1390, hx + hw, 1390], [400, 1015, 400, 1390]].forEach(l => { ctx.beginPath(); ctx.moveTo(l[0], l[1]); ctx.lineTo(l[2], l[3]); ctx.stroke(); });
+        ctx.fillStyle = col(HAZE, .4); for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc(20 + i * 48, 990, 4, 0, 6.3); ctx.fill(); ctx.beginPath(); ctx.arc(20 + i * 48, 1415, 4, 0, 6.3); ctx.fill(); }
+        ctx.strokeStyle = col(C.panel2, 1); ctx.lineWidth = 16; ctx.beginPath(); hole(); ctx.stroke(); ctx.strokeStyle = col(HAZE, .75); ctx.lineWidth = 3; ctx.beginPath(); hole(); ctx.stroke();
+        ctx.save(); ctx.beginPath(); hole(); ctx.clip(); const gl = ctx.createLinearGradient(w.x, w.y, w.x + w.w * .6, w.y + w.h); gl.addColorStop(0, "rgba(255,255,255,.0)"); gl.addColorStop(.35, "rgba(255,255,255,.10)"); gl.addColorStop(.5, "rgba(255,255,255,0)"); gl.addColorStop(.7, "rgba(255,200,140,.12)"); gl.addColorStop(1, "rgba(255,255,255,0)"); ctx.fillStyle = gl; ctx.fillRect(w.x, w.y, w.w, w.h); ctx.restore(); ctx.restore(); }
+      lab("WHAT THEY SEE", SX, 262, smooth(lt / .3) * out * (1 - smooth((t - T.tSlow + .3) / .2)), { color: TXT, ls: 8 });
       const g = smooth((t - S("b02") - .2) / .3) * out; if (g > 0 && A.tau != null) { gauge(800, 430, 66, A.tau, g, t > T.tStop + .2); lab("YOUR CLOCK", 800, 560, g, { color: A.rate < .08 ? HAZE : HOT, ls: 4 }); }
       const a1 = smooth((t - T.tSlow) / .15) * (1 - smooth((t - T.tStop + .05) / .12)); if (a1 > 0) txt("SLOWS", SX, 372, { size: 130, color: HOT, glow: 28, ls: 8, a: a1, sc: 1 + .35 * (1 - eo3((t - T.tSlow) / .16)) });
-      const sl = slam(t, T.tStop, .16); if (sl) txt("STOPS", SX, 372, { size: 150, color: TXT, glow: 24, gcol: HOT, ls: 8, a: sl.a * out, sc: sl.sc });
+      const sl = slam(t, T.tStop, .16); if (sl) txt("STOPS", SX, 392, { size: 150, color: TXT, glow: 24, gcol: HOT, ls: 8, a: sl.a * out, sc: sl.sc });
     }
     if (t >= S("b03") && t < S("b04")) { const out = 1 - smooth((t - E("b03") + .35) / .3), a1 = smooth((t - T.tHorizon) / .3) * out;
       if (a1 > 0) { txt("EVENT HORIZON", SX, 330, { size: 92, color: TXT, ls: 16, a: a1, glow: 14, gcol: HOT }); line([[300, 352], [710, 352]], col(HOT, .8), 2, 8, a1); if (A.edge) line([[A.edge.x, 366], [A.edge.x, A.edge.y - 14]], col(HOT, .7), 2, 8, a1 * .8); } }
@@ -89,7 +96,8 @@ export function createOverlay(T, TH, cv) {
     if (t >= S("b06") && t < S("b07")) { const a = smooth((t - T.tBig) / .2) * (1 - smooth((t - E("b06") + .3) / .3)), sl = slam(t, T.tBig + .02, .15);
       if (a > 0 && sl) { txt("≈ 4.3 MILLION SUNS", SX, 336, { size: fitSize("≈ 4.3 MILLION SUNS", 800, 130), color: TXT, glow: 22, gcol: HOT, ls: 4, a: sl.a * a, sc: sl.sc }); lab("(NASA simulation)", SX, 404, a * smooth((t - T.tBig - .2) / .3), { color: TXT, ls: 3 }); }
       if (A.sun) { const u = smooth((t - T.tBig - .5) / .4) * (1 - smooth((t - E("b06") + .3) / .3));
-        if (u > 0) { ctx.save(); ctx.globalAlpha = u; ctx.fillStyle = "#FFD23F"; ctx.shadowColor = "#FFD23F"; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(A.sun.x, A.sun.y, A.sun.r, 0, 6.3); ctx.fill(); ctx.restore(); lab("the Sun", A.sun.x + 24, A.sun.y + 14, u, { align: "left", ls: 3, color: TXT }); } } }
+        if (u > 0) { ctx.save(); ctx.globalAlpha = u; ctx.fillStyle = "#FFD23F"; ctx.shadowColor = "#FFD23F"; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(A.sun.x, A.sun.y, A.sun.r, 0, 6.3); ctx.fill(); ctx.restore(); ctx.save(); ctx.globalAlpha = u * .9; ctx.strokeStyle = col(TXT, .9); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(A.sun.x, A.sun.y, 24, 0, 6.3); ctx.stroke(); ctx.beginPath(); ctx.moveTo(A.sun.x + 17, A.sun.y + 17); ctx.lineTo(A.sun.x + 62, A.sun.y + 46); ctx.stroke(); ctx.restore();
+          lab("the Sun", A.sun.x + 70, A.sun.y + 60, u, { align: "left", ls: 3, color: TXT }); } } }
     if (t >= S("b07") && t < S("b08")) { const a = smooth((t - T.tFlow) / .3) * (1 - smooth((t - E("b07") + .3) / .3)); if (a > 0) lab("space flows inward at light speed", SX, 300, a, { color: TXT, ls: 1, size: 40 }); }
     if (A.flash > 0) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = col(HOT, .55 * A.flash); ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); }
     // b08: 12.8 s holds (no fake fast countdown); then it settles into a corner timer that runs in real time through the stretch
@@ -122,10 +130,10 @@ export function createOverlay(T, TH, cv) {
       ctx.save(); ctx.globalAlpha = Math.max(0, a); ctx.strokeStyle = UV; ctx.lineWidth = 4; ctx.shadowColor = UV; ctx.shadowBlur = 20; ctx.beginPath(); ctx.arc(p.cx, p.cy, r, 0, 6.3); ctx.stroke();
       if (p.u > .85 && p.u < 1.25) { ctx.globalAlpha = Math.max(0, (1.25 - p.u) / .4) * .5; ctx.lineWidth = 9; ctx.strokeStyle = HOT; ctx.beginPath(); ctx.arc(p.cx, p.cy, p.R * 1.0, 0, 6.3); ctx.stroke(); } ctx.restore(); });
     if (t >= S("b13") && t < S("b15")) verdict(t);
-    if (t >= S("b15") && t < T.tSign - .35) { const lt = t - S("b15"); split(A.sx, smooth(lt / .3));
+    if (t >= S("b15") && t < T.tCard + .15) { const lt = t - S("b15"); split(A.sx, smooth(lt / .3));
       lab("FAR AWAY", 295, 400, smooth(lt / .3), { size: 44, ls: 5, color: TXT }); lab("TO YOU", 745, 400, smooth((t - T.tYou + .1) / .3), { size: 44, ls: 5, color: HOT });
       if (A.gL) { gauge(A.gL.x + 40, A.gL.y, 50, A.gL.tau, smooth(lt / .5), A.gL.frozen); gauge(A.gR.x, A.gR.y, 50, A.gR.tau * 9, smooth((t - T.tYou) / .4), false); } }
-    if (t >= T.tSign - .35) { const u = smooth((t - (T.tSign - .35)) / .3); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.save(); ctx.globalAlpha = u * .94; ctx.fillStyle = ABY; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); ctx.translate(shk[0], shk[1]);
+    if (t >= T.tCard - .1) { const u = smooth((t - (T.tCard - .1)) / .25); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.save(); ctx.globalAlpha = u * .94; ctx.fillStyle = ABY; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); ctx.translate(shk[0], shk[1]);
       ctx.save(); ctx.globalAlpha = u; endCard(t); ctx.restore(); }
     ctx.getImageData(0, 0, 1, 1);
   }

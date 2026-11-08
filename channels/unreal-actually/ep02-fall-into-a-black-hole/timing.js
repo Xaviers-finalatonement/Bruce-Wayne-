@@ -18,7 +18,7 @@ export function makeTiming(tl) {
   T.tPin = W("b12", "a point of endless"); T.tQ = W("b12", "Nobody knows"); T.tNoth = S("b14") + .3; T.tInfo = W("b14", "This is math");
   T.tStamp = W("b13", "Unproven");
   T.tMath = W("b14", "This is math");
-  T.tSign = END("b15") + .12;
+  T.tCard = END("b15") + .4; T.tSign = T.tCard + .8; // end card cuts in only after the fall and the VO have finished
   T.tWorld = S("b15"); T.tYou = W("b15", "To you");
   T.cuts = [S("b02"), S("b03"), S("b04"), S("b05"), S("b06"), S("b07"), S("b09"), S("b11"), S("b12"), S("b14"), S("b13"), S("b15")];
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
@@ -34,7 +34,7 @@ export function makeTiming(tl) {
   cue(S("b11") + .1, "swell", { dur: T.tTear - S("b11") }); cue(T.tTear, "hit", { gain: 1.2 });
   cue(S("b12") + .2, "swell", { dur: 4 }); cue(T.tQ, "pop");
   cue(T.tStamp - 1.8, "riser", { dur: 1.8 }); cue(T.tStamp + .02, "hit", { gain: 1.4 });
-  cue(S("b15") + .1, "swell", { dur: 2.8 }); cue(T.tSign + .05, "hit", { gain: .6 });
+  cue(S("b15") + .1, "swell", { dur: 2.8 }); cue(T.tCard + .05, "hit", { gain: .6 });
   T.cuts.forEach(c => cue(c - .02, "sweep", { dur: .4 }));
   cue(S("b05"), "tick", { t1: E("b05"), rate: 1 });
   cue(T.tCorner, "tick", { t1: S("b11"), rate: 1 }); cue(T.tNoth, "pop"); cue(T.tNoth + 1.8, "pop", {});
