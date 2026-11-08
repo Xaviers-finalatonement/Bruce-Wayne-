@@ -378,3 +378,113 @@ This is again a single-criterion fail. Round 3 fixed most of the overlay, chart 
    - **Foley:** replace the band-noise `sr_rub` and `sr_wet` with recorded cloth and water foley.
    - **Voice:** reconsider stock `af_heart`.
    - **After a pass:** Bruce spot-checks C4/C5/C6/C8, and the approved render is copied to `out/ep01.mp4`.
+
+## Round 4 — 2026-11-08
+
+**Reviewer:** independent gate pass (did not build the episode), same rules and calibration as rounds 1–3.
+**Reviewed:** `out/wip/ep01.mp4` (74.02 s, 1080×1920, 30 fps, 2220 frames, 82.4 MB, stream start 0.000), `out/ep01.srt`, `claims.md`, `platform.json`, `out/render-report.md`, `out/cover.png`, and the round-4 commit `ceb810a` (`scene.js`, `overlay.js`, `engine/film/terry.js`, `engine/sound.py`).
+**Method:**
+- Stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s.
+- Two contact sheets, one frame every 1.5 s (every 45th frame), 0–73.5 s, with the timestamps burned from pts. The stream starts at 0.000, so they are true times.
+- 540-wide frames at 22.0, 44.0, 55.5 and 60.5 s.
+- Strips at 42.0 / 43.0 / 45.5 / 47.0 / 54.6 / 56.0 (face), 59.4–61.5 (pull-back), and 4.5 / 9.0 / 16.5 / 19.8 / 53.0 / 66.5 plus the cover (towels, end slide, cover).
+- Full-resolution 540×540 centre crops of the terry at 1.0 and 39.0 s.
+
+**Audio caveat:** I cannot hear the film. I judged sound only from the render report (−14.0 LUFS, LRA 2.1 LU, TP −1.5 dBTP) and the `engine/sound.py` diff.
+
+### Scores
+
+| | Criterion | R1 | R2 | R3 | R4 | Evidence |
+|---|---|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | 4 | 4 | **4** | **Fixed:** the title "Your towel grows a film?" is fully opaque on frame 0 (`overlay.js` k = 1), and the macro drifts sideways from 0.0. The teal film is in by 1.5 s, with rods by 2.0. **Why not 5:** 0.0–1.0 s is still a pale, low-contrast field, and the pile still reads as white curls, not towel (see h). |
+| b | One thread | 4 | 4 | 4 | **4** | **Unchanged:** claim → Lines 1–3 → disposables → UNKNOWN → a summary that answers both the hook and the claim. |
+| c | Picture moves with the sentence | 3 | 4 | 4 | **4** | **Better:** "Does the film hurt your skin?" (43.0) and "pat your skin dry with a clean one" (54.6–56.0) now land on a face with a towel. **Misses:** "Harm to your skin?" still plays over towels (61.0–61.5). A "?" is printed into the towel's pile (45.5–47.0). That puts a graphic inside the physical world. |
+| d | Motivated camera | 3 | 3 | 3 | **4** | **Fixed in R4:** sideways drift on the hook from frame 0. The 26-towel grid travels (12.0 → 13.5). The rail moves through the calendar (15.0 → 16.5 → 18.0). There is a push on the disposable pair (48.0 → 51.0) and a closer second angle on the face (45.5–47.0). **Holds:** the microscope push, the pull-back and the end slide. **Why not 5:** the "never share towels" rail (52.5–54.0) is still near-locked. The face shots move on a static subject, with no touch-led motion. I sampled the forearm slide only at 30.0, so I have not verified that it spans 29.7–31.4. |
+| e | Voice carries meaning, screen carries figures | 3 | 4 | 4 | **4** | **Unchanged:** the counter, "6 months / tested every 2 months", the ≈36 px chart labels, "Staph: typically < 1 %", "not tested here" and the disclaimer. **Small:** the dimmed receipt lines are still small Courier. |
+| f | Rhythm | 3 | 4 | 4 | **4** | **Unchanged:** 74.0 s, and the end card is held ≈3 s. **Not heard:** LRA is 2.1 LU even with the new bed swell (target ≥ 4). |
+| g | Ending | 3 | 4 | 4 | **4** | **Fixed:** the hard teal square is now a soft, irregular stain on the dark towel (61.0–61.5). **Holds:** the solid UNKNOWN stamp (58.5), no end-card collision, the neutral pair under "Disposable towels?" (63–64.5), and the clean end card with its disclaimer (70.5–73.5). **Why not 5:** the pull-back still flickers through a grey squiggle moiré (60.0–60.4). The end-slide panels are now curved, but they read as terracotta or leather columns rather than skin (66.5). |
+| h | Production value | 2 | 3 | 3 | **3** | **Better:** the face now has a nose tip, a nostril, lips, a chin, a jaw and a neck (42.0–43.0, 54.6–56.0). The ground weave is finer. The teal decal is now a stain. The end panels have curvature. The window light and the stamp hold. **Still below the calibration bar** (the sister episodes reached 4 once every flagged hero asset read as the real object, and nothing read as a placeholder): <br>• **(1) The signature macro is still not terry.** Look at the 1.0 s and 39.0 s crops. The loops are still twisted ribbons, curled into S and hook shapes, and they end in flat cut caps. They are not closed arches with both feet in the ground. The pile is sparse, with ground visible around nearly every loop. At phone size the hook, the cover and 22.0 still read as a school of white shrimp. The ground is a regular, fine basket grid. <br>• **(2) The face is in the uncanny valley.** The head is bald, with uniform orange-peach plasticine skin and even stipple. The landmarks are soft blobs: a red smear for the lips with no lip border or philtrum, and a dark smudge for the nostril (42.0, 55.5). That matches `scene.js:263`, "Ellipsoid + landmarks as 3D gaussians". Heavy defocus smears them further. On the close angle (44.0–47.0) the dome on its neck reads as a bald mannequin head, or a knee. It is now recognisably a face, but a wax or deformed one. The owner ruled that out explicitly, and it reads worse than R3's neutral "egg". <br>• **(3) The towel is still a rigid block.** It has a rounded-rectangle outline, straight sides and an even thickness. The pile is an inset panel, there are two printed stripes, there is no layered fold edge and it does not squash on contact (42.0, 45.5, 56.0). It reads as a sponge in a wrapper, with a "?" printed on it. <br>• **(4) The hanging towels** still read as flat slabs with straight edges at phone size (4.5, 16.5, 19.8, 53.0). The drape code (`scene.js:119`) does not show on screen. |
+
+### Status of the round-3 fix list
+
+1. **Rebuild the signature macro as real terry: PARTLY (minor).**
+   - **Done:** the teal square is now a soft stain (61.0). The cover is re-rendered. The ground weave is finer, and there is ply twist and stray fibre.
+   - **Not done:** the loops still have free flat-cut ends and do not form arches (1.0 and 39.0 crops). The density is not ~3×, so the loops do not touch. The capsules still float among the loops instead of in the ground (39.0, F7). The squiggle frames remain (60.0–60.4).
+2. **Make the cheek a face and the towel a towel: PARTLY, with a new defect.**
+   - **Done:** a ¾ lower face with a nose, a nostril, lips, a chin and a jaw (42–43, 54.6–56).
+   - **Not done:** the face is uncanny (blob landmarks, bald, plasticine). There is no vellus or pore read under a raking key, and no earlobe or hairline. The towel is still a rigid rounded block with an inset pile panel and no squash, and it now has a "?" printed on it.
+3. **Give the hanging towels cloth drape: PARTLY.**
+   - **Done:** the end-slide panels are curved (66.5).
+   - **Not visible:** the roll at the rail, the longer front layer, the waviness, the sway and the hem flare (4.5–19.8, 53.0, 61.0).
+4. **Add motivated movement to the locked shots: MOSTLY DONE.**
+   - **Done:** the hook drift with the title opaque on frame 0, the grid travel (12–13.5), the calendar rail move (15–18) and the disposables push (48–51).
+   - **Open:** 52.5–54.0 is near-locked. I have not verified the forearm slide across 29.7–31.4.
+5. **Sound and paperwork: PARTLY.**
+   - **Done:** the bed now drops out for the first second, breathes out under the end card and has a slow swell (`sound.py:310`).
+   - **Not done:** LRA is 2.1 LU (target ≥ 4). The foley is still band noise (`sr_rub` and `sr_wet`). The voice is still stock `af_heart`.
+   - **Pending after a pass:** Bruce's spot-check of C4/C5/C6/C8, and the copy to `out/ep01.mp4`.
+
+### Factual and ethical items
+
+| Item | Status | Note |
+|---|---|---|
+| F1 bar magnitudes | closed | "illustration, not to scale" (24.0–28.5). |
+| F2 cover verdict | closed | The cover shows "What's growing on your towel?", the Skin Receipts pill, "RECEIPT TOTAL" with UNKNOWN, and the disclaimer. There is no claim line, and nothing endorses disposable towels. |
+| F3 Staph hedge | closed | "typically" in the VO, on the tag (33.0–36.0) and in C5. |
+| F4 counter | closed | |
+| F5 disposable framing | closed | The neutral pair at 48–51 and 63–64.5. "not tested here" on a pill. |
+| F6 skin-tone representation | mostly closed (not blocking) | Five tones on the end slide. The deep-brown forearm reads as skin (30.0). The face is light-toned. Its uncanniness is a craft defect under (h), not a representation issue. |
+| F7 film placement | partly, minor | The capsules still drift among the loops (2.0, 39.0). |
+| F8 paperwork | mostly closed | **Open:** Bruce's spot-check and the copy to `out/ep01.mp4` after a pass. |
+
+**On-screen labels and spoken lines:** each SRT line (1–39) and each label maps to an OK row with a matching hedge:
+- C0–C13.
+- The "illustration" labels on the dishes and the bars.
+- "towel-loving bacteria?" (C7, kept as a question).
+- "not measured" (C8).
+- "not tested here" (C9).
+
+The new "?" on the towel and the dashed circle carry no claim.
+
+**Clean:** no brands, products, dosing or diagnosis. The disclaimer is on screen throughout and on the end card. `platform.json` is hedged.
+
+**Facts and ethics:** none open.
+
+### Verdict: **FAIL**
+
+**Scores:** nothing is below 3, and (a) = 4 and (g) = 4 meet the gate. (d) rises to 4. Production value **(h) = 3 is still below the required 4**.
+
+**Facts:** none open.
+
+This is the third single-criterion fail on (h). The overlay, camera and ending work is in. The two hero assets are still not real objects:
+- the terry pile, on the hook, the cover and ≈13 s of macro;
+- the face and the towel.
+
+The face now adds an uncanny-valley problem.
+
+### FIX LIST (round 4 → round 5)
+
+1. **(Gating, h) Terry loops as closed arches (0–2.0, 21–23, 37–41, 57–60.4, cover).**
+   - **Loops:** build each loop as a 2-ply tube swept along an arch, from foot A up to the apex and down to foot B. Bury both ends at least one tube radius below the ground plane, so no end cap is ever visible.
+   - **Density:** place the feet on a jittered grid whose pitch is about one loop width, so neighbouring loops touch. Vary height by ±20 % and lean by ±15°.
+   - **Capsules:** keep them in the ground between the feet (F7).
+   - **Pull-back:** delete the squiggle moiré frames at 60.0–60.4. Cut, or blur-dissolve, straight from the stamp macro to the rail.
+   - **Acceptance:** a 540×540 full-res crop at 1.0 s with zero flat ends and no ground visible through the pile. Re-render the cover from that macro.
+2. **(Gating, h) A face that is not uncanny, and a towel that is cloth (42–47, 54.3–56.1).**
+   - **Face:** replace the Gaussian-blob landmarks with sculpted geometry:
+     - a lip border with a philtrum and a mouth line;
+     - a real nostril opening with an alar crease;
+     - a sideburn or hairline, and an earlobe in frame, so the head is not bald.
+   - **Skin:** vary the tone (redder at the nose and cheek, cooler at the jaw), with pores and vellus under the raking key. Keep the landmarks sharp: put the DOF falloff on the background, not on the features.
+   - **Close angle:** frame the cheek, the jaw and the ear at 44–47, not the bald dome.
+   - **Towel:** a folded cloth with two or three visible layers at the open edge. The fold edge is rounded and the pile is continuous over the fold, not an inset panel. The hem band is raised and woven. It compresses ~10–15 % against the cheek.
+   - **"?":** remove it from the pile. Put the question in the overlay if it is needed.
+   - **Fallback:** if the face still reads as wax at 540 px, play the press on the forearm (30.6 grade) instead.
+3. **(h) Make the drape read at phone size (3–20, 52.5–54, 61).**
+   - **Exaggerate it until it is visible at 270 px wide:** a ≥ 3 cm rounded roll over the rail, the front layer ≈15 % longer than the back, 2–3 soft vertical waves, a 1–2° sway, and a flared, scalloped hem with pile showing along the side edges.
+   - **End slide (66.5):** grade the panels toward skin (pores, a soft edge falloff, less terracotta sheen).
+4. **(Not heard; lower priority) Sound and paperwork.**
+   - **Dynamics:** get LRA to ≥ 4 LU. Duck the bed ≥ 8 dB under the VO, and let the stamp hit and the end card sit 3–4 dB above the bed.
+   - **Foley:** replace the band-noise `sr_rub` and `sr_wet` with recorded cloth and water.
+   - **Camera:** add a slow move on the 52.5–54.0 rail.
+   - **After a pass:** Bruce spot-checks C4/C5/C6/C8, and the approved render is copied to `out/ep01.mp4`.
