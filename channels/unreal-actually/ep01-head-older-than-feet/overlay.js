@@ -19,8 +19,8 @@ export function createOverlay(T, TH, cv) {
       const a = smooth(t / .4);
       tag("HEAD", A.head.x - A.head.r - 22, A.head.y + 14, { color: HOT, align: "right", a });
       if (A.feet.y < 1230) tag("FEET", A.feet.x - A.feet.r - 22, A.feet.y + 14, { color: UV, align: "right", a });
-      if (t < S("b02") || t >= S("b05")) tag("speeds exaggerated", 505, 1254, { size: 30, ls: 2, color: TXT, a: .9 });
-      if (t < S("b03")) tag("AHEAD", (A.head.x + A.feet.x) / 2 - 20, (A.head.y + A.feet.y) / 2 + 12, { color: HOT, align: "right", a: smooth((t - .5) / .3), size: 34 });
+      if (t < S("b02") || t >= S("b05")) tag("speeds exaggerated", 420, 1500, { size: 40, ls: 2, color: TXT, a: .92 });
+      if (t < S("b03")) tag("AHEAD", A.head.x + 62, (A.head.y + A.feet.y) / 2 + 12, { color: HOT, align: "left", a: smooth((t - .5) / .3), size: 36 });
       const g = W("b05", "Your feet"); ring(A.feet.x, A.feet.y, A.feet.r, A.feet.r + 90, (t - g) / .8, UV, 6);
       ring(A.head.x, A.head.y, A.head.r, A.head.r + 90, (t - W("b05", "Your head is")) / .8, HOT, 6); ring(A.head.x, A.head.y, A.head.r, A.head.r + 130, (t - W("b05", "faster")) / .9, HOT, 7);
     }
@@ -38,14 +38,14 @@ export function createOverlay(T, TH, cv) {
     if (t >= S("b04") && t < S("b05")) { const lt = t - S("b04");
       txt("FASTER", 910, 245, { size: 64, color: HOT, align: "right", ls: 5, glow: 18, a: smooth((lt - 1.4) / .3) });
       txt("SLOWER", 910, 1235, { size: 64, color: UV, align: "right", ls: 5, glow: 18, a: smooth((lt - .3) / .3) * (1 - smooth((lt - 2.4) / .3)) });
-      tag("speeds exaggerated", 70, 1236, { align: "left", size: 40, ls: 2, color: TXT, a: smooth((lt - 1) / .4) * (1 - smooth((lt - 2.6) / .3)) }); }
+      tag("speeds exaggerated", 505, 1500, { size: 40, ls: 2, color: TXT, a: smooth(lt / .25) }); }
     if (t >= S("b06") && t < S("b09")) {
       const tS = W("b06", "in 2010"), sl = slam(t, tS, .16);
       if (sl && t < S("b07") + 1.6) { ctx.save(); ctx.globalAlpha = 1 - smooth((t - (S("b07") + 1.2)) / .4);
         txt("2010 · NIST", 505, 360, { size: 124, color: HOT, sc: sl.sc, a: sl.a, glow: 28, ls: 2, rot: -.04 });
         if (sl.sc < 1.05) { ctx.save(); ctx.translate(505, 314); ctx.rotate(-.04); ctx.strokeStyle = HOT; ctx.lineWidth = 6; ctx.shadowColor = HOT; ctx.shadowBlur = 20; rrect(-330, -100, 660, 170, 10); ctx.stroke(); ctx.restore(); }
         ctx.restore(); ring(505, 300, 150, 560, (t - tS) / .6, HOT, 7); }
-      if (A.dim) { const dd = smooth((t - (W("b07", "Two steps") + .2)) / .4); if (dd > 0) tag("33 cm ≈ 1 ft", A.dim.x, A.dim.y, { a: dd, size: 58, ls: 1 }); }
+      if (A.dim) { const dd = smooth((t - (W("b07", "Two steps") + .2)) / .4); if (dd > 0) tag("33 cm ≈ 1 ft", A.dim.x, A.dim.y + 16, { a: dd, size: 50, ls: 0 }); }
     }
     if (t >= S("b09") && t < S("b11")) {
       const a = smooth((t - W("b09", "seventy")) / .3) * (1 - smooth((t - W("b09", "about ninety") + .3) / .4));
@@ -57,6 +57,11 @@ export function createOverlay(T, TH, cv) {
       }
       if (t >= W("b10", "But real")) { const u = (t - W("b10", "But real")) / 1.1; txt("REAL", 505, 560, { size: 250, color: HOT, glow: 40, a: smooth(u * 8) * (1 - smooth((t - E("b10") + .5) / .4)), sc: 1 + .12 * (1 - eo3(u * 1.6)) }); }
     }
+    if (t >= W("b11", "GPS satellites") + .4 && t < S("b12") && A.sat) { const u = smooth((t - W("b11", "GPS satellites") - .4) / .35), bx = clamp(A.sat.x + A.sat.r * 1.5, 150, 890), by = clamp(A.sat.y - A.sat.r * 1.25, 440, 900), R = 60;
+      ctx.save(); ctx.globalAlpha = u; rrect(bx - 86, by - 86, 172, 172, 22); ctx.fillStyle = col(ABY, .88); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 3; ctx.stroke();
+      ctx.strokeStyle = col(TXT, .9); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(bx, by - 8, R, 0, 6.3); ctx.stroke(); for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; ctx.beginPath(); ctx.moveTo(bx + Math.sin(a) * (R - 8), by - 8 - Math.cos(a) * (R - 8)); ctx.lineTo(bx + Math.sin(a) * R, by - 8 - Math.cos(a) * R); ctx.stroke(); }
+      const ha = (t - S("b11")) * 5.4; ctx.strokeStyle = HOT; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(bx, by - 8); ctx.lineTo(bx + Math.sin(ha) * (R - 12), by - 8 - Math.cos(ha) * (R - 12)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(bx, by - 8); ctx.lineTo(bx + 22, by - 8 - 14); ctx.strokeStyle = TXT; ctx.stroke();
+      txt("FAST", bx, by + 66, { f: BARL, w: 800, size: 28, ls: 5, color: HOT }); ctx.restore(); }
     if (t >= S("b11") && t < S("b12")) { const g = W("b11", "GPS"); txt("GPS", 130, 330, { size: 150, color: TXT, glow: 24, gcol: HOT, align: "left", ls: 6, a: smooth((t - g) / .15), sc: 1 + .4 * (1 - eo3((t - g) / .16)) }); }
     if (t >= S("b12") && t < T.th0) { const ta = smooth((t - T.tSlow0 + .2) / .25), sc = 1 + .25 * (1 - eo3((t - T.tSlow0 + .2) / .2));
       txt("SET SLOW", 505, 262, { size: 118, color: HOT, glow: 26, ls: 4, a: ta, sc }); txt("BEFORE LAUNCH", 505, 352, { size: 76, color: TXT, ls: 6, a: ta });

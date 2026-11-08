@@ -8,7 +8,7 @@ export function makeTiming(tl) {
   T.hookEnd = END("b01") + .1;
   T.tSag = W("b03", "It slows");
   T.tRaise0 = W("b07", "raised"); T.tRaise1 = W("b07", "Two steps") - .1;
-  T.tl0 = S("b09") + .2; T.tl1 = W("b09", "those two steps");
+  T.tl0 = W("b09", "Over a whole"); T.tl1 = W("b09", "those two steps");
   T.tSlow0 = W("b12", "set them"); T.tSlow1 = W("b12", "on the ground");
   T.th0 = W("b12", "Without"); T.tDrift0 = W("b12", "your map"); T.tDrift1 = W("b12", "would be wrong") + .5; T.tSnap = E("b12") - .45;
   T.tTrue = W("b13", "True"); T.tRule = W("b13", "The higher");

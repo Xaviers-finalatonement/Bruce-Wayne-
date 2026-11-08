@@ -24,9 +24,7 @@
       "claims": [
         "C1"
       ],
-      "screen": [
-        "head +0.000 000 000 001 s"
-      ],
+      "screen": [],
       "visual": "Push to the head clock; number-free AHEAD meter fills."
     },
     {
@@ -102,8 +100,7 @@
       ],
       "screen": [
         "79 years",
-        "≈ 0.000 000 09 s",
-        "90 billionths of a second"
+        "≈ 0.000 000 09 s"
       ],
       "visual": "79-year light filament in deep perspective; camera pushes along it to the microscopic gap labelled ≈ 0.000 000 09 s."
     },
