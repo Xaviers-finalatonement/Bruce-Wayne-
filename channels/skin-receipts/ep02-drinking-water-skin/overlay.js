@@ -97,7 +97,7 @@ export function createOverlay(T, TH, cv) {
     if (scroll > 2) { const tg = ctx.createLinearGradient(0, TOP - 24, 0, TOP + 40); tg.addColorStop(0, "rgba(255,255,255,1)"); tg.addColorStop(1, "rgba(255,255,255,0)"); ctx.fillStyle = tg; ctx.fillRect(PX + 1, TOP - 26, PW - 2, 68); }
     // stamps land in the clear margin beside their line (screen space)
     stampDefs.forEach(s => {
-      const a = t - s.t; if (a < 0 || (o.limit != null && s.id === "unk")) return;
+      const a = t - s.t; if (a < 0 || s.id === "unk") return;
       const anchor = s.at === "total" ? items.find(i => i.st === "total") : items.find(i => i.beat === s.at && i.st === "head"); if (!anchor) return;
       const cy = TOP + (s.id === "hold" ? anchor.y0 + 56 : anchor.y1 + 18) - scroll, vis = smooth((cy - TOP + 20) / 70) * (1 - smooth((cy - (CLIPB - 20)) / 60)); if (vis <= 0.01) return;
       const img = stampImg[s.id], cx = PX + PW + 112, u = clamp(a / .13), sc = 1 + .42 * (1 - eo3(u));

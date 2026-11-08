@@ -103,26 +103,30 @@ const wall = new THREE.Mesh(new THREE.PlaneGeometry(4, 2.4), wallM); wall.positi
 const GH = .115, GB = .009, rin = y => .0268 + (y - GB) / (GH - GB) * .0052, N_SEG = 36;
 const shellGeo = new THREE.LatheGeometry([[0, 0], [.027, 0], [.0299, .0022], [.0345, GH - .0008], [.0349, GH], [.0318, GH], [.0316, GH - .001], [rin(.03) + .0004, .03], [rin(GB), GB + .001], [.0225, GB], [0, GB]].map(p => new THREE.Vector2(p[0], p[1])), 48);
 const shellMat = new THREE.MeshPhysicalMaterial({ color: 0x000000, roughness: .025, metalness: 0, ior: 1.5, specularIntensity: 1, envMapIntensity: 2.4, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-const waterMat = (att, tint) => new THREE.MeshPhysicalMaterial({ color: col(tint || "#ffffff"), roughness: 0, metalness: 0, transmission: 1, ior: 1.33, thickness: .05, attenuationColor: col(att), attenuationDistance: .09, specularIntensity: 1, envMapIntensity: 1.6 });
-const WATER = waterMat("#8fc9e4"), JUICE = waterMat("#f08a1c", "#ffc070"), SOUP = null;
+const waterMat = (att, tint) => new THREE.MeshPhysicalMaterial({ color: col(tint || "#ffffff"), roughness: 0, metalness: 0, transmission: 1, ior: 1.33, thickness: .05, attenuationColor: col(att), attenuationDistance: .6, clearcoat: 1, clearcoatRoughness: 0, specularIntensity: 1, envMapIntensity: 1.6 });
+const WATER = waterMat("#cfe6f0"), JUICE = waterMat("#f08a1c", "#ffc070"), SOUP = null;
 function makeCaustic() { const n = 256, c = document.createElement("canvas"); c.width = c.height = n; const g = c.getContext("2d"), im = g.createImageData(n, n);
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { const u = x / n * 6.283, v = y / n * 6.283, a = Math.sin(u * 2 + Math.sin(v * 3) * 1.3) + Math.sin(v * 2 + Math.sin(u * 3 + 1) * 1.3) + Math.sin((u + v) * 3 + Math.sin((u - v) * 2) * 1.5);
     const w = Math.pow(1 - Math.abs(Math.sin(a * 1.15)), 7), fx = (x / n - .5) / .46, fy = (y / n - .5) / .36, fall = Math.exp(-(fx * fx + fy * fy) * 2.2) * smooth(1 - Math.hypot(fx, fy)), v8 = clamp((.12 + w * .95) * fall * 255, 0, 255), i = (y * n + x) * 4;
     im.data[i] = v8 * 1.0; im.data[i + 1] = v8 * .94; im.data[i + 2] = v8 * .82; im.data[i + 3] = 255; }
   g.putImageData(im, 0, 0); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
 const causticT = makeCaustic();
+const rimMat = new THREE.MeshBasicMaterial({ color: 0xffffff, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: .9 }), bubG = new THREE.SphereGeometry(.0011, 8, 6), bubM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .55, depthWrite: false });
 const causticMat = k => new THREE.MeshBasicMaterial({ map: causticT, color: col("#ffffff"), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: k });
 function makeGlass(mat, o) { o = o || {}; const g = new THREE.Group(); const shell = mesh(shellGeo, shellMat, g, false); shell.renderOrder = 3;
   const N = N_SEG, nv = N * 3 + 1, pos = new Float32Array(nv * 3), idx = []; const A = 0, B = N, Cc = 2 * N, Ce = 3 * N;
   for (let i = 0; i < N; i++) { const j = (i + 1) % N; idx.push(A + i, A + j, B + i, B + i, A + j, B + j, B + i, B + j, Cc + i, Cc + i, B + j, Cc + j, Cc + i, Cc + j, Ce); }
   const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setIndex(idx);
-  const water = mesh(geo, mat, g, true); water.frustumCulled = false; const cl = [0, 1].map(k => { const m = new THREE.Mesh(new THREE.PlaneGeometry(.17, .125), causticMat(0)); m.rotation.x = -Math.PI / 2; m.rotation.z = .0; m.position.set(.062, .0007 + k * .0001, -.036); m.rotation.z = 0.6; g.add(m); return m; });
-  g.userData = { f: -1, set(f, rip, ph, cau) { const w = g.userData; water.visible = f > .004; const kc = (cau == null ? 1 : cau) * smooth(f * 4) * (o.cau == null ? 1 : o.cau);
-      cl.forEach((m, k) => { m.material.opacity = .46 * kc * (k ? .7 : 1) * (1 + .12 * Math.sin(ph * .9 + k * 2)); m.scale.setScalar((1 + .05 * Math.sin(ph * .7 + k * 1.9)) * (.8 + .3 * f)); m.rotation.z = .6 + (k ? .5 : 0) + .03 * Math.sin(ph * .5 + k); m.visible = kc > .01; });
+  const water = mesh(geo, mat, g, true); water.frustumCulled = false;
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(1, .0005, 6, 40), rimMat); rim.rotation.x = Math.PI / 2; rim.renderOrder = 4; g.add(rim);
+  const bubs = Array.from({ length: 9 }, () => { const b = new THREE.Mesh(bubG, bubM); b.visible = false; g.add(b); return b; }); const cl = [0, 1].map(k => { const m = new THREE.Mesh(new THREE.PlaneGeometry(.17, .125), causticMat(0)); m.rotation.x = -Math.PI / 2; m.rotation.z = .0; m.position.set(.062, .0007 + k * .0001, -.036); m.rotation.z = 0.6; g.add(m); return m; });
+  g.userData = { f: -1, set(f, rip, ph, cau) { const w = g.userData; water.visible = f > .004; rim.visible = bubs.forEach(b => (b.visible = false)) || water.visible; const kc = (cau == null ? 1 : cau) * smooth(f * 4) * (o.cau == null ? 1 : o.cau);
+      cl.forEach((m, k) => { m.material.opacity = .85 * kc * (k ? .7 : 1) * (1 + .12 * Math.sin(ph * .9 + k * 2)); m.scale.setScalar((1 + .05 * Math.sin(ph * .7 + k * 1.9)) * (.8 + .3 * f)); m.rotation.z = .6 + (k ? .5 : 0) + .03 * Math.sin(ph * .5 + k); m.visible = kc > .01; });
       if (!water.visible) return; const y0 = GB + .0006, y1 = y0 + f * (GH * .9 - y0), r0 = rin(y0) - .0004, r1 = rin(y1) - .0004, p = pos;
       for (let i = 0; i < N; i++) { const a = i / N * 6.2832, c = Math.cos(a), s = Math.sin(a), rp = rip * (Math.sin(3 * a + ph) * .0011 + Math.sin(5 * a - ph * 1.3) * .0006);
         p.set([c * r0, y0, s * r0], (A + i) * 3); p.set([c * r1, y1 + .0012 + rp, s * r1], (B + i) * 3); p.set([c * r1 * .55, y1 - .0003 + rp * .6 + rip * .0014 * Math.sin(2 * a + ph * 1.1), s * r1 * .55], (Cc + i) * 3); }
-      p.set([0, y1 - .0008 + rip * .002 * Math.sin(ph * 1.7), 0], Ce * 3); geo.attributes.position.needsUpdate = true; geo.computeVertexNormals(); geo.computeBoundingSphere(); } };
+      p.set([0, y1 - .0008 + rip * .002 * Math.sin(ph * 1.7), 0], Ce * 3); rim.scale.set(r1 * .985, r1 * .985, 1); rim.position.y = y1 + .0013; bubs.forEach((b, i) => { b.visible = rip > .4; if (b.visible) { const u = (ph * .35 + i * .37) % 1; b.position.set((hash(i * 3.1) - .5) * .026, y0 + u * (y1 - y0), (hash(i * 5.3) - .5) * .026); b.scale.setScalar(.6 + hash(i) * .9); } });
+      geo.attributes.position.needsUpdate = true; geo.computeVertexNormals(); geo.computeBoundingSphere(); } };
   gW.add(g); return g; }
 
 // row of eight tumblers (x = i * PITCH), a hero glass is glass 0; extras for the food beat; the empty "no comparison" slot
@@ -158,11 +162,11 @@ function splash(x, y, t, on) { drops.forEach((m, i) => { const ph = ((t * 2.4 + 
 const ARM_R = .0525;
 function buildArm(x0, hex, seed, rough) { const g = new THREE.Group(); scene.add(g); g.position.x = x0; g.visible = false;
   const geo = new THREE.CylinderGeometry(.055, .05, 1.6, 96, 1, true); geo.rotateY(Math.PI); geo.rotateZ(Math.PI / 2);
-  const skin = skinMat(hex, [6, 26], { rough: rough || .46, relief: .9, pore: 1.1, seed }); const arm = mesh(geo, skin, g);
-  g.add(hairs(1300, hairGeo(.0075, .00019, .5), new THREE.MeshStandardMaterial({ color: col(seed === 11 ? "#1b0e08" : "#2a1a10"), roughness: .5 }), i => { const x = -.55 + hash(i * 1.7 + seed) * 1.1, th = (hash(i * 3.1 + seed) - .5) * 3.4 + .2, R = .0525 - x * .0006, n = V3(0, Math.sin(th), Math.cos(th)), a = (hash(i * 5.3) - .5) * .7;
+  const skin = skinMat(hex, [6, 26], { rough: rough || .46, relief: seed === 11 ? .9 : 1.2, pore: seed === 11 ? 1.1 : 2.2, seed, sssK: seed === 11 ? 1 : 2.2 }); const arm = mesh(geo, skin, g);
+  g.add(hairs(1300, hairGeo(.0075, .00019, .5), new THREE.MeshStandardMaterial({ color: col(seed === 11 ? "#1b0e08" : "#4a3020"), roughness: .5 }), i => { const x = -.55 + hash(i * 1.7 + seed) * 1.1, th = (hash(i * 3.1 + seed) - .5) * 3.4 + .2, R = .0525 - x * .0006, n = V3(0, Math.sin(th), Math.cos(th)), a = (hash(i * 5.3) - .5) * .7;
     const d = V3(Math.cos(a) * .8, 0, 0).addScaledVector(n, .5 + hash(i * 6.1) * .3).addScaledVector(V3(0, 1, 0), Math.sin(a) * .2).normalize(); return { p: V3(x, R * n.y, R * n.z), d, s: .6 + hash(i * 8.3) * .9 }; }, seed));
-  const bk = new THREE.Mesh(new THREE.PlaneGeometry(3, 2), new THREE.MeshBasicMaterial({ map: canvasTex(256, (gg, n) => { const gr = gg.createRadialGradient(n * .55, n * .45, 0, n * .5, n * .5, n * .75); gr.addColorStop(0, "#5a3a2a"); gr.addColorStop(1, "#1d110c"); gg.fillStyle = gr; gg.fillRect(0, 0, n, n); }, null) })); bk.position.set(0, .05, -.16); g.add(bk); return g; }
-const A1X = 80, A2X = 100, gA1 = buildArm(A1X, C.skin[3], 11), gA2 = buildArm(A2X, "#B27A55", 23, .5);
+  const bk = new THREE.Mesh(new THREE.PlaneGeometry(3, 2), new THREE.MeshBasicMaterial({ map: canvasTex(256, (gg, n) => { const gr = gg.createRadialGradient(n * .55, n * .45, 0, n * .5, n * .5, n * .75); gr.addColorStop(0, seed === 11 ? "#5a3a2a" : "#9a6a4c"); gr.addColorStop(1, seed === 11 ? "#1d110c" : "#4a2c1e"); gg.fillStyle = gr; gg.fillRect(0, 0, n, n); }, null) })); bk.position.set(0, .05, -.16); g.add(bk); return g; }
+const A1X = 80, A2X = 100, gA1 = buildArm(A1X, C.skin[3], 11), gA2 = buildArm(A2X, "#CC9068", 23, .5);
 { const g12 = makeGlass(WATER, { cau: .6 }); gW.remove(g12); gA2.add(g12); g12.position.set(.17, -.045, -.07); g12.scale.setScalar(1); g12.userData.set(.72, .1, 0.3, .0); gA2.userData.glass = g12; g12.userData.set(.72, .05, 1, 0); }
 // probe: matte white body, navy grip with a teal band, steel ring, sensor face with fine electrode lines
 const probe = new THREE.Group(); scene.add(probe); probe.visible = false;
@@ -194,7 +198,7 @@ function updMol(t) { mol.forEach((M, pi) => { M.homes.forEach((h, i) => { let x 
 // ------------------------------------------------------------ STAGE G: five skin tones, light to deep (end slide)
 const gG = new THREE.Group(); scene.add(gG); const GX = 120; gG.position.x = GX; gG.visible = false; const GW = .2;
 C.skin.forEach((h, i) => { const geo = new THREE.PlaneGeometry(GW, 1.1, 40, 60), p = geo.attributes.position, cv = []; for (let k = 0; k < p.count; k++) { const y = p.getY(k), x = p.getX(k); p.setZ(k, -.35 * y * y - 6 * x * x - .006 * Math.cos(x * 15 + i) + .004 * Math.sin(y * 11 + i * 2)); const ex = smooth((Math.abs(x) / (GW / 2) - .45) / .55), ey = smooth((Math.abs(y) - .3) / .25), vv = 1 - .3 * ex - .22 * ey, mt = .5 + .5 * Math.sin(x * 23 + y * 9 + i * 3.1) * Math.cos(y * 6 - i); cv.push(vv * (1 - .06 * mt), vv * (1 - .3 * ex * .6 - .06 * ey - .04 * mt), vv * (1 - .36 * ex * .6 - .08 * ey - .06 * mt)); } geo.setAttribute("color", new THREE.Float32BufferAttribute(cv, 3)); geo.computeVertexNormals(); // curved panel + edge falloff
-  const m = mesh(geo, skinMat(col(h).lerp(col("#8a7466"), .14).getStyle(), [GW / .013, 1.1 / .013], { vc: 1, rough: .62, cc: .05, sheen: .25, sssK: .35, relief: .1 + .03 * i, pore: 2.2 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
+  const m = mesh(geo, skinMat(col(h).lerp(col("#8a7466"), .14).getStyle(), [GW / .02, 1.1 / .02], { vc: 1, rough: .62, cc: .05, sheen: .25, sssK: .35, relief: .35 + .05 * i, pore: 3.2 + .15 * i, seed: 40 + i * 7, freckle: i === 0 ? 1 : i === 1 ? .5 : 0 }), gG); m.position.set(i * GW, 0, 0);
   const sh = hairs(260, hairGeo(.005, .00015, .5), new THREE.MeshStandardMaterial({ color: col(i < 2 ? "#a58c78" : "#120a06"), roughness: .6, transparent: true, opacity: i < 2 ? .5 : .9 }), k => { const x = (hash(k * 1.3 + i) - .5) * GW * .94, y = (hash(k * 2.9 + i) - .5) * .36, z = -.35 * y * y - 6 * x * x, n = V3(12 * x, .7 * y, 1).normalize(), a = hash(k * 4.7) * .6; return { p: V3(x + i * GW, y, z), d: n.clone().multiplyScalar(.5).add(V3(Math.sin(a), -.7, 0)).normalize(), s: .6 + hash(k * 6.1) * .9 }; }, 40 + i); gG.add(sh); });
 
 
@@ -226,15 +230,15 @@ function camFor(id, t) {
   switch (id) {
     case "b01": { const q = U(t, 0, S("b02")); return K1([lerp(-.06, .05, q), .05, .7], [lerp(-.02, .035, q), .058, 0], 85, [150, 130], 2, [0, .058, 0]); }
     case "b02": { const lv = U(t, T.pour.t0, T.pour.t1); return K1([lerp(.05, .1, u), lerp(.09, .12, u), lerp(.5, .41, u)], [0, lerp(.055, .09, lv), 0], 70, [140, 90], 1.5, [0, .06, 0]); }
-    case "b03": { const x = lerp(.06, .56, eio(U(t, T.fill0 - .1, T.fill0 + 7 * T.fillDt + .3))); return K1([x, .14, .95], [x, .06, 0], 70, [150, 60], 1.2, [x, .06, 0]); }
+    case "b03": { const x = lerp(.06, .56, eio(U(t, T.fill0 - .1, T.fill0 + 7 * T.fillDt + .3))); return K1([x, .14, .95], [x, .06, 0], 70, [330, 60], 1.2, [x, .06, 0]); }
     case "b04": { const q = eio(u), x = lerp(.58, .76, q); return K1([x, lerp(.12, .09, q), lerp(1.2, .55, q)], [x, .03, 0], 70, [130, 40], 1.2, [x, .01, 0]); }
     case "b05": { const x = lerp(.12, .56, eio(u)); return K1([x, .17, 1.0], [x, .04, .1], 60, [150, 20], 1.5, [x, .03, .14]); }
-    case "b06": { const x = probeX(t) * .85; return K1([A1X + x + .03, .17, .42], [A1X + x, .015, .03], 85, [190, 60], 1.4, [A1X + x, .02, .05]); }
+    case "b06": { const x = probeX(t) * .85; return K1([A1X + x + .02, .15, .34], [A1X + x, .015, .03], 85, [190, 60], 1.4, [A1X + x, .02, .05]); }
     case "b07": case "b08": { const q = U(t, S("b07"), E("b08")); return K1([lerp(.26, .34, q), .12, 1.0], [lerp(.26, .34, q), .07, 0], 50, [110, 0], 3.4, [lerp(.26, .34, q), .07, .5]); }
     case "b09": { const q = eio(u); return K1([XX, -.02, lerp(.82, .76, q)], [XX, -.02, 0], 50, [110, -110], 1, [XX, 0, 0]); }
     case "b10": { const q = eio(u); return K1([lerp(.66, .42, q), lerp(.1, .16, q), lerp(.85, 1.95, q)], [lerp(.7, .4, q), .04, 0], 50, [120, 10], 1.2, [lerp(.7, .4, q), .04, 0]); }
     case "b11": return K1([lerp(.3, .44, u), .13, 1.5], [lerp(.3, .44, u), .06, 0], 50, [110, 0], 3.4, [lerp(.3, .44, u), .06, .7]);
-    case "b12": return K1([A2X + lerp(.0, .05, u), lerp(.15, .12, u), lerp(.36, .28, u)], [A2X + lerp(.03, .06, u), .01, .01], 70, [150, 20], 1.4, [A2X + lerp(.03, .06, u), .02, .04]);
+    case "b12": return K1([A2X + lerp(.0, .05, u), lerp(.14, .11, u), lerp(.27, .21, u)], [A2X + lerp(.03, .06, u), .01, .01], 70, [150, 20], 1.4, [A2X + lerp(.03, .06, u), .02, .04]);
     case "b13": return K1([lerp(.02, .05, u), .1, lerp(.52, .42, u)], [0, .065, 0], 70, [130, 150], 1.4, [0, .06, 0]);
     case "b14": { const q = eio(u); return K1([lerp(.05, .2, q), lerp(.1, .2, q), lerp(.42, 1.35, q)], [lerp(0, .06, q), .06, 0], 60, [130, 120], 1.3, [lerp(0, .06, q), .06, 0]); }
     case "b15": return slideCam(t);
@@ -273,10 +277,10 @@ function stage(t) {
     key.position.copy(focus).add(V3(-1.3, 1.5, .85).multiplyScalar(1.2)); key.target.position.copy(focus); key.target.updateMatrixWorld(); key.intensity = 2.2;
     Object.assign(key.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, near: .3, far: 6 }); key.shadow.camera.updateProjectionMatrix(); scene.environmentIntensity = .4; hemi.intensity = .32;
   } else {
-    key.position.copy(focus).add(stg === "X" ? V3(-.5, .6, 1.2) : V3(-1.2, .5, .7).multiplyScalar(.6)); key.target.position.copy(focus); key.target.updateMatrixWorld(); key.intensity = stg === "X" ? 2.3 : stg === "G" ? 1.9 : 2.4; scene.environmentIntensity = stg === "X" ? .7 : .45; hemi.intensity = stg === "X" ? .7 : .45;
+    key.position.copy(focus).add(stg === "X" ? V3(-.5, .6, 1.2) : V3(-1.2, .5, .7).multiplyScalar(.6)); key.target.position.copy(focus); key.target.updateMatrixWorld(); key.intensity = stg === "X" ? 2.3 : stg === "G" ? 2.9 : id === "b12" ? 3.6 : 2.4; scene.environmentIntensity = stg === "X" ? .7 : .45; hemi.intensity = stg === "X" ? .7 : .45;
     const ext = stg === "G" ? .6 : stg === "X" ? .35 : .22; Object.assign(key.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, near: .1, far: 6 }); key.shadow.camera.updateProjectionMatrix();
   }
-  probe.visible = stg === "A1";
+  probe.visible = stg === "A1"; probe.scale.setScalar(.55);
   if (stg === "A1") { const x = probeX(t), p = probeP(t), th = .25, n = V3(0, Math.sin(th), Math.cos(th)), P = V3(x, ARM_R * Math.sin(th), ARM_R * Math.cos(th)), qn = new THREE.Quaternion().setFromUnitVectors(V3(0, 1, 0), V3(-.55, .75, -.2).normalize());
     probe.quaternion.copy(qn); const hover = (1 - p) * .03; probe.position.copy(P).addScaledVector(n, hover - .0016 * p).add(gA1.position).addScaledVector(V3(.05, 0, 0).applyQuaternion(probe.quaternion), 0); probe.updateMatrixWorld(true);
     skinU.uPress.value.copy(P); skinU.uDepth.value = .0042 * Math.pow(p, 1.4); skinU.uAO.value = .6 * Math.pow(p, 1.2);
