@@ -184,10 +184,10 @@ export function coinFaceTex(mode = "fresh") {
   } else { x.fillStyle = "#808080"; x.beginPath(); x.arc(m, m, R, 0, 6.3); x.fill(); }
   // radial fibres (xylem rays)
   x.save(); x.beginPath(); x.arc(m, m, R, 0, 6.3); x.clip();
-  for (let i = 0; i < 220; i++) { const a = hash(i * 1.7) * 6.283, r0 = R * (.12 + .5 * hash(i * 3)), r1 = r0 + R * (.15 + .4 * hash(i * 5)); x.strokeStyle = bump ? `rgba(${hash(i) > .5 ? "40,40,40" : "220,220,220"},.35)` : `rgba(${hash(i * 7) > .5 ? "150,70,10" : "255,205,130"},${.10 + .12 * hash(i * 9)})`; x.lineWidth = 1 + 2 * hash(i * 11); x.beginPath(); x.moveTo(m + Math.cos(a) * r0, m + Math.sin(a) * r0); x.lineTo(m + Math.cos(a + (hash(i) - .5) * .06) * r1, m + Math.sin(a + (hash(i) - .5) * .06) * r1); x.stroke(); }
+  for (let i = 0; i < 420; i++) { const a = hash(i * 1.7) * 6.283, r0 = R * (.12 + .5 * hash(i * 3)), r1 = r0 + R * (.15 + .4 * hash(i * 5)); x.strokeStyle = bump ? `rgba(${hash(i) > .5 ? "40,40,40" : "220,220,220"},.35)` : `rgba(${hash(i * 7) > .5 ? "140,58,6" : "255,214,150"},${.18 + .2 * hash(i * 9)})`; x.lineWidth = 1 + 2 * hash(i * 11); x.beginPath(); x.moveTo(m + Math.cos(a) * r0, m + Math.sin(a) * r0); x.lineTo(m + Math.cos(a + (hash(i) - .5) * .06) * r1, m + Math.sin(a + (hash(i) - .5) * .06) * r1); x.stroke(); }
   // core ring + cambium ring
-  x.lineWidth = 7; x.strokeStyle = bump ? "rgba(60,60,60,.8)" : "rgba(196,92,16,.65)"; x.beginPath(); x.arc(m, m, R * .43, 0, 6.3); x.stroke();
-  x.lineWidth = 4; x.strokeStyle = bump ? "rgba(70,70,70,.7)" : "rgba(180,80,12,.45)"; x.beginPath(); x.arc(m, m, R * .86, 0, 6.3); x.stroke();
+  x.lineWidth = 12; x.strokeStyle = bump ? "rgba(40,40,40,.9)" : "rgba(176,74,8,.85)"; x.beginPath(); x.arc(m, m, R * .43, 0, 6.3); x.stroke();
+  x.lineWidth = 6; x.strokeStyle = bump ? "rgba(60,60,60,.85)" : "rgba(168,70,8,.6)"; x.beginPath(); x.arc(m, m, R * .86, 0, 6.3); x.stroke();
   // moisture specks / granules
   for (let i = 0; i < 700; i++) { const a = hash(i * 2.3) * 6.283, r = R * Math.sqrt(hash(i * 4.1)), s = .8 + 2.4 * hash(i * 6) ** 2; x.fillStyle = bump ? `rgba(${hash(i) > .5 ? 200 : 60},${hash(i) > .5 ? 200 : 60},${hash(i) > .5 ? 200 : 60},.35)` : (hash(i * 8) > .55 ? `rgba(255,226,170,${.12 + .2 * hash(i * 3)})` : `rgba(140,60,8,${.08 + .12 * hash(i * 3)})`); x.beginPath(); x.arc(m + Math.cos(a) * r, m + Math.sin(a) * r, s, 0, 6.3); x.fill(); }
   if (mode === "sear") { // Maillard: caramel blotches, strongest toward the rim and in patches
@@ -287,7 +287,7 @@ export function makeContactShadow(rx, rz, op = .4) {
 }
 export function makePlate(R = 1.35) { // shallow ceramic plate, creamy white, glazed
   const pts = [[0, .02], [R * .52, .02], [R * .62, .05], [R * .9, .12], [R, .16], [R + .03, .17], [R + .03, .185], [R * .98, .19], [R * .86, .15], [R * .58, .085], [R * .5, .07], [0, .07]].map(a => new THREE.Vector2(a[0], a[1]));
-  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), new THREE.MeshPhysicalMaterial({ color: "#E6DDCB", roughness: .3, clearcoat: .6, clearcoatRoughness: .15, metalness: 0 })); m.castShadow = m.receiveShadow = true; return m;
+  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), new THREE.MeshPhysicalMaterial({ color: "#CDBFA6", roughness: .42, envMapIntensity: .3, clearcoat: .3, clearcoatRoughness: .25, metalness: 0 })); m.castShadow = m.receiveShadow = true; return m;
 }
 
 // ---------- molecule worlds: plant-cell texture (Voronoi, filled, no line-network) ----------
@@ -324,4 +324,91 @@ export function villiTips(width, seed = 1, hMin = 1.2, hMax = 2.0, w = 1.0) { //
   const G = .05, N = Math.ceil(width / (w + G)), x0 = -width / 2, r = [];
   for (let i = 0; i < N; i++) { const xi = x0 + i * (w + G), ww = w * (.8 + .4 * hash(seed * 5 + i)), lean = (hash(seed * 7 + i) - .5) * .3; r.push([xi + ww * .5 + lean, hMin + (hMax - hMin) * hash(seed * 11 + i * 3.1)]); }
   return r;
+}
+
+// =====================================================================================================================
+// v3 (round 3): food that reads as filmed. Varied pepper strips (tapered, curled ends, translucent white pith face, ribs + seeds),
+// broccoli florets on pale stalks, wilted veined spinach, 3/4-view bell peppers (raw vs the same pepper slumped + blistered),
+// and a dense irregular field of wet 3D villi with a folded base.
+// =====================================================================================================================
+const ht = (a, b, t) => a + (b - a) * t;
+export function makeStrip3(seed = 0, L = 1.1, W = .36, ribbed = false) {
+  const g = new THREE.BoxGeometry(W, .11, L, 8, 3, 44), hw = W / 2, bend = .3 + .7 * hash(seed * 1.3), tw = (hash(seed * 3) - .5) * .55, sk = hash(seed * 7), curl = .12 + .3 * hash(seed * 11), cd = hash(seed * 13) > .5 ? 1 : -1, sway = (hash(seed * 17) - .5) * .22;
+  const skinA = C_("#A91208"), skinB = C_("#D4321A"), skinC = C_("#E8661E"), grn = C_("#B99A2A"), pith = C_("#EBE6C4"), pith2 = C_("#DCD6A4"), rimC = C_("#E3A98A"), cut = C_("#F0E2B6");
+  colorize(g, (c, x, y, z, nx, ny) => { const u = x / hw, zn = z / (L / 2), s = .5 + .5 * vn(x * 6 + seed, z * 1.4, 0);
+    if (ny < -.5) { c.copy(skinA).lerp(skinB, s); c.lerp(skinC, smooth((vn(z * 2.2 + seed, 3, 1) + .35) * .9) * .4); c.lerp(skinA, Math.abs(u) ** 3 * .5); c.lerp(grn, smooth((zn * (sk > .5 ? 1 : -1) - .72) / .28) * .5); c.multiplyScalar(.9 + .18 * vn(x * 34, z * 2.4, seed)); }
+    else if (ny > .5) { c.copy(pith).lerp(pith2, Math.abs(u) ** 2 * .6); c.lerp(rimC, smooth((Math.abs(u) - .72) / .28) * .55); c.multiplyScalar(.94 + .06 * Math.sin(x * 90 + vn(z * 3, 1, seed) * 5)); c.lerp(cut, smooth(Math.abs(zn) - .9) * .5); }
+    else c.copy(cut).lerp(rimC, .35); });
+  const T = (x, y, z) => { const zn = z / (L / 2), u = x / hw, ang = tw * zn + sway * zn * zn; let xx = x * Math.cos(ang) - y * Math.sin(ang), yy = x * Math.sin(ang) + y * Math.cos(ang);
+    const taper = 1 - .6 * Math.pow(Math.abs(zn), 3.2); xx *= taper; yy *= 1 - .55 * Math.pow(Math.abs(u), 4) * 1; yy *= .75 + .25 * taper;
+    yy += .12 * u * u * taper * (1 - .3 * zn * zn) - .12 * bend * zn * zn + curl * .75 * Math.pow(Math.abs(zn), 3.2) * (zn > 0 ? 1 : .55) + .008 * vn(x * 5, z * 4, seed); xx += cd * .05 * Math.pow(Math.abs(zn), 3) + .035 * vn(z * 3 + seed, 4, 0);
+    return [xx, yy, z * (1 + .02 * vn(x * 4, z, seed))]; };
+  mapVerts(g, T); g.computeVertexNormals(); const parts = [g];
+  if (ribbed) { // a pale rib along the middle of the white face + a few seeds
+    const rib = new THREE.BoxGeometry(.07, .055, L * .62, 2, 2, 14); mapVerts(rib, (x, y, z) => { const zn = z / (L / 2); return T(x * (1 - .5 * zn * zn), y + .07, z); }); rib.computeVertexNormals(); colorize(rib, (c, x, y, z) => c.copy(pith).lerp(C_("#E4DCA8"), .3 + .3 * vn(x * 9, z * 5, seed))); parts.push(rib);
+    for (let k = 0; k < 7; k++) { const sd = new THREE.SphereGeometry(.03, 7, 5); const zz = (hash(seed * 5 + k) - .5) * L * .55, xx = (hash(seed * 7 + k) - .5) * W * .5; const p = T(xx, .1, zz); xf(sd, p, [hash(k) * 3, hash(k * 3) * 3, 0], [1, .45, .8]); colorize(sd, c => c.copy(C_("#F2E6A6")).multiplyScalar(.92 + .1 * hash(k))); parts.push(sd); } }
+  const m = merge(parts); m.computeVertexNormals(); m.userData = { L, W }; return m;
+}
+export function makeFloret2(seed = 0) { // broccoli: pale stalk forking into branches, each ending in a dome of small bumpy buds
+  const parts = [], stem = C_("#A8C77A"), stemL = C_("#D2E3A2"), dk = C_("#1D4719"), md = C_("#2F6628"), lt = C_("#4C8A38"), blu = C_("#2E6B52");
+  const cyl = (r0, r1, a, b) => { const d = new THREE.Vector3(...b).sub(new THREE.Vector3(...a)), len = d.length(), g = new THREE.CylinderGeometry(r1, r0, len, 9, 2); const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
+    g.applyMatrix4(new THREE.Matrix4().compose(new THREE.Vector3((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2), q, new THREE.Vector3(1, 1, 1))); colorize(g, (c, x, y, z) => c.copy(stem).lerp(stemL, .5 + .5 * vn(x * 9, y * 5, z * 9 + seed))); parts.push(g); };
+  const top = [0, .55, 0]; cyl(.15, .1, [0, 0, 0], top);
+  const nb = 4 + (seed % 2); for (let i = 0; i < nb; i++) { const a = i / nb * 6.283 + hash(seed + i) * .6, tilt = .55 + .3 * hash(seed * 2 + i), len = .26 + .1 * hash(seed * 3 + i), P = [Math.sin(tilt) * Math.cos(a) * len, top[1] + Math.cos(tilt) * len, Math.sin(tilt) * Math.sin(a) * len];
+    cyl(.07, .045, top, P);
+    const n = 46 + (hash(seed * 11 + i) * 10 | 0), R = .2 + .05 * hash(seed * 13 + i);
+    for (let k = 0; k < n; k++) { const aa = hash(seed * 17 + i * 31 + k) * 6.283, el = Math.acos(1 - hash(seed * 19 + i * 7 + k * 3) * .95), r = .036 + .034 * hash(seed * 23 + i * 5 + k), g = new THREE.IcosahedronGeometry(r, 1),
+        pc = [P[0] + Math.sin(el) * Math.cos(aa) * R, P[1] + .02 + Math.cos(el) * R * .75, P[2] + Math.sin(el) * Math.sin(aa) * R];
+      mapVerts(g, (x, y, z) => { const s = 1 + .22 * vn(x * 40 + k, y * 40, z * 40); return [x * s, y * s * .9, z * s]; }); xf(g, pc); g.computeVertexNormals();
+      const hv = hash(seed * 29 + i * 13 + k); colorize(g, (c, x, y) => { c.copy(dk).lerp(md, hv).lerp(lt, clamp((y - P[1] - .1) * 3) * .5 * hv); c.lerp(blu, .25 * hash(k * 7 + i)); }); parts.push(g); } }
+  const m = merge(parts); m.computeVertexNormals(); return m;
+}
+export function makeLeaf2(seed = 0, L = 1.0, Wd = .74, wilt = 1) { // wilted spinach: ovate, ruffled, drooping, veined, glossy dark
+  const g = new THREE.PlaneGeometry(1, 1, 22, 30), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) { const u = p.getX(i) * 2, v = p.getY(i) + .5;
+    const shape = Math.pow(Math.sin(Math.PI * Math.pow(v, .62)), .8) * (1 + .12 * Math.sin(v * 3.2)), hwv = .5 * Wd * shape + .012, edge = Math.abs(u), x = u * hwv * (1 + .07 * vn(u * 4 + seed, v * 6, 2) * edge), z = (v - .5) * L;
+    const y = .13 * wilt * u * u * Math.sin(Math.PI * v) - .09 * wilt * v * v + .05 * Math.sin(v * 2.4 + seed) + (.035 + .03 * wilt) * vn(x * 9 + seed, z * 9, seed) * (edge + .25) + .028 * vn(x * 21, z * 21, seed + 4) * edge - .07 * wilt * Math.abs(u) * (1 - v);
+    p.setXYZ(i, x, y, z); }
+  g.computeVertexNormals();
+  const dark = C_("#1F4F20"), mid = C_("#2F6B2A"), lite = C_("#4E8C34"), rib = C_("#A9C874");
+  colorize(g, (c, x, y, z) => { const v = z / L + .5, hwv = .5 * Wd * Math.pow(Math.sin(Math.PI * Math.pow(Math.min(.999, Math.max(.001, v)), .62)), .8) + .012, u = x / hwv;
+    c.copy(dark).lerp(mid, .5 + .5 * vn(x * 5 + seed, z * 5, 1)).lerp(lite, clamp(.5 * vn(x * 9, z * 9, seed + 3) + .1) * .4);
+    c.lerp(rib, Math.exp(-Math.pow(x / (.02 * (1.2 - v * .7)), 2)) * .9 * (1 - v * .5)); // midrib
+    const vein = Math.abs(((v * 7.5 - Math.abs(u) * 1.7) % 1 + 1) % 1 - .5) * 2; c.lerp(rib, smooth((vein - .86) / .14) * .5 * (1 - v * .4) * clamp(Math.abs(u) * 3)); // lateral veins
+    c.multiplyScalar(.85 + .28 * clamp(.5 + y * 4)); });
+  return g;
+}
+// 3/4-view bell pepper. cooked = the SAME pepper slumped, softened, with dark blistered patches.
+export function makePepper3(seed = 1, cooked = false) {
+  const g = new THREE.SphereGeometry(1, 128, 96), skinA = C_(cooked ? "#8E2410" : "#B01E12"), skinB = C_(cooked ? "#C03E1A" : "#E2461E"), hiC = C_("#EE8A32"), blis = C_("#2B1208"), pale = C_("#D9733A");
+  const H = cooked ? .72 : 1.0, Wd = cooked ? 1.12 : .96;
+  const blisterAt = (x, y, z) => { if (!cooked) return 0; const b = vn(x * 6 + seed * 3, y * 6, z * 6) + .45 * vn(x * 15, y * 15 + 3, z * 15); return smooth((b - .3) / .24); };
+  mapVerts(g, (x, y, z) => { const an = Math.atan2(z, x), s = y, lobe = Math.pow(Math.abs(Math.cos(2 * an + .35)), .5), crease = .72 + .28 * lobe;
+    const belly = .92 + .1 * Math.cos(s * 1.4 - .3), shoulder = 1 - .22 * smooth((s - .5) / .5), foot = s < -.5 ? 1 - .2 * smooth((-s - .5) / .5) * (1 - lobe) : 1;
+    let r = crease * belly * shoulder * foot * Wd, yy = s * H;
+    if (s > .5) yy -= .3 * smooth((s - .5) / .5) * (1 + .15 * lobe); // dimple round the stem
+    let w = 1 + .012 * vn(x * 5 + seed, y * 5, z * 5);
+    if (cooked) { w += .028 * vn(x * 3.5 + seed, y * 3.5, z * 3.5) + .012 * vn(x * 11, y * 11, z * 11) + .02 * blisterAt(x, y, z); yy -= .16 * Math.max(0, s) * (0.5 + 0.5 * vn(x * 2 + 1, 1, z * 2)); r *= 1 + .08 * smooth(s * .5 + .3) * Math.cos(an - .6); }
+    return [x * r * w * .92 + (cooked ? .08 * Math.max(0, s) : 0), yy, z * r * w * .92]; });
+  g.computeVertexNormals();
+  colorize(g, (c, x, y, z) => { const s = .5 + .5 * vn(x * 3 + seed, y * 2.2, z * 3); c.copy(skinA).lerp(skinB, s * .85); c.lerp(hiC, smooth(y * 1.1 - .1) * .2 + (cooked ? 0 : .05 * vn(x * 6, y * 6, z * 6))); c.multiplyScalar((.92 + .14 * vn(x * 26, y * 20, z * 26)) * (.8 + .2 * Math.pow(Math.abs(Math.cos(2 * Math.atan2(z, x) + .35)), .5)));
+    const b = blisterAt(x / .92, y / H, z / .92); if (b > 0) { c.lerp(pale, b * .35); c.lerp(blis, smooth((b - .45) / .4) * .9); } });
+  const stem = new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, 0), new THREE.Vector3(.02, .2, .01), new THREE.Vector3(.1, .38, .03), new THREE.Vector3(.2, .46, .06)]), 14, .105, 10, false);
+  xf(stem, [0, H * .86 - .12, 0]); mapVerts(stem, (x, y, z) => [x, y, z]); colorize(stem, (c, x, y) => c.copy(C_("#4F7D2E")).lerp(C_("#92B65C"), clamp((y - H * .7) * 1.3) * .6 + .2 * vn(x * 9, y * 9, 1)));
+  const cap = new THREE.SphereGeometry(.3, 24, 12, 0, 6.3, 0, 1.25); xf(cap, [0, H * .86 - .27, 0], [Math.PI, 0, 0], [1, .55, 1]); colorize(cap, (c, x, y, z) => c.copy(C_("#46722C")).lerp(C_("#6E9A44"), .5 + .5 * vn(x * 12, y * 12, z * 12)));
+  const m = merge([g, stem, cap]); m.computeVertexNormals(); return m;
+}
+// Dense, irregular villi: tapered wet fingers with lean, varied heights, packed in jittered rows on a folded (plicae) base.
+export function makeVilli2(width, depth, seed = 1, hMin = .9, hMax = 2.1, base = "#F8C6B8", dark = "#C2706A") {
+  const parts = [], tips = [], b0 = C_(base), dk = C_(dark), sp = .27, cols = Math.ceil(width / sp), rows = 7, bd = new THREE.PlaneGeometry(width + 1, depth + 1, 90, 16);
+  bd.rotateX(-Math.PI / 2); mapVerts(bd, (x, y, z) => [x, -.4 + .16 * Math.sin(x * .8 + vn(x * .3, 1, seed) * 3) * (.6 + .4 * Math.cos(z * .9)), z - depth / 2 + .2]); bd.computeVertexNormals();
+  colorize(bd, (c, x, y, z) => c.copy(dk).multiplyScalar(.75)); parts.push(bd);
+  for (let r = 0; r < rows; r++) for (let i = 0; i < cols; i++) { const k = seed * 101 + r * 977 + i * 13.7;
+    const x = -width / 2 + (i + .5 + (r % 2) * .5) * sp + (hash(k) - .5) * sp * .9, z = -r * (depth / rows) + (hash(k + 1) - .5) * .22, h0 = hMin + (hMax - hMin) * Math.pow(hash(k + 2), .8), h = h0 * (1 - r * .035), r0 = .12 + .08 * hash(k + 3), lean = (hash(k + 4) - .5) * .7, sq = .65 + .3 * hash(k + 5);
+    const pts = [], qc = .72; for (let s = 0; s <= 12; s++) { const q = s / 12, cap = q > qc ? Math.sqrt(Math.max(0, 1 - Math.pow((q - qc) / (1 - qc), 2))) : 1; pts.push(new THREE.Vector2(Math.max(.0001, r0 * (1.05 - .12 * q) * cap), -.15 + (h + .15) * q)); }
+    const g = new THREE.LatheGeometry(pts, 8); mapVerts(g, (px, py, pz) => { const q = clamp(py / h); return [px + lean * q * q * h * .5, py, pz * sq]; });
+    xf(g, [x, 0, z]); g.computeVertexNormals();
+    const rowDark = 1 - r * .075; colorize(g, (c, px, py, pz) => { const q = clamp(py / h); c.copy(dk).lerp(b0, smooth(q * 1.4)).lerp(C_("#FFDCCF"), smooth((q - .55) / .45) * .55); c.multiplyScalar(rowDark * (.92 + .16 * hash(k + 6))); });
+    parts.push(g); if (r === 0) tips.push([x + lean * h * .5, h, hash(k + 7)]); }
+  tips.sort((a, b) => a[0] - b[0]); const m = merge(parts); m.computeVertexNormals(); return { geo: m, tips };
 }

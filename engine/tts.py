@@ -153,6 +153,7 @@ def main(ep):
         for b, (s, sr, _) in zip(sc["beats"], res):
             d = len(s) / sr
             hold = (sc.get("end_hold", EXTRA_HOLD) if b is sc["beats"][-1] else EXTRA_HOLD) if (b["id"] in HOLD_AFTER or b is sc["beats"][-1]) else 0
+            if b["id"] in sc.get("holds", {}) and b is not sc["beats"][-1]: hold = float(sc["holds"][b["id"]])  # optional per-beat override
             g = float(sc.get("gaps", {}).get(b["id"], gap))
             beats.append(dict(id=b["id"], start=round(t, 3), end=round(t + d, 3), next=round(t + d + g + hold, 3)))
             t += d + g + hold

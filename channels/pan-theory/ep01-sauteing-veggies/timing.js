@@ -33,6 +33,8 @@ export function makeTiming(tl) {
   T.tGood = W("b12", "good or bad"); T.tTrade = W("b12", "a trade");
   // b13 / b14
   T.tDiet = W("b13", "diet rule"); T.tJust = W("b13", "just what");
+  // b13 pan events about every 2 s: spatula in, carrots toss + flip to their browned faces, strips turn + steam burst
+  T.tSp = S("b13") + .35; T.tToss = S("b13") + 1.25; T.tToss2 = S("b13") + 2.55; T.tBurst = T.tToss2 + .3;
   T.tCard = S("b14") - .05; T.tTheory = W("b14", "carrots want"); T.tPeppers = W("b14", "Peppers can"); T.tSign = END("b14") + .2;
   // ---- sound cues ----
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
@@ -57,6 +59,7 @@ export function makeTiming(tl) {
   cue(T.tRaw, "pop"); cue(T.tTop, "pop", { gain: .9 });
   cue(S("b12") + .3, "plop", { gain: .6 }); cue(T.tGood - .1, "swell", { dur: 1.2 }); cue(T.tTrade, "clink"); cue(T.tTrade + .5, "clink", { gain: .6 });
   cue(S("b13") + .1, "sizzle", { dur: E("b13") - S("b13"), k: .8 }); cue(T.tDiet, "pop");
+  cue(T.tSp, "chop"); cue(T.tToss, "plop", { gain: .8 }); cue(T.tToss + .45, "pop"); cue(T.tToss2, "plop", { gain: .7 }); cue(T.tBurst, "hiss", { dur: 1.0 });
   cue(T.tCard, "whoosh", { dur: .5 }); cue(T.tTheory, "pop"); cue(T.tPeppers, "pop"); cue(T.tSign, "clink", { gain: .7 });
   // music bed: drops out on "Now the flip side" for a bar, and under the first second of the end card
   cue(T.tFlip - .15, "bedgap", { dur: 2.9 }); cue(T.tCard - .1, "bedgap", { dur: 1.5 });

@@ -63,8 +63,8 @@ export function createOverlay(T, TH, cv) {
       if (t < S("b05")) { sticker([["no oil", CAST]], 215, 205, { a, size: 50, fill: rgba(CT, .95) }); sticker([["with oil", CAST]], 233, 905, { a, size: 50, fill: rgba(BUT, 1) }); }
       sticker([["gut lining", CAST]], CX, 1262, { a, size: 52, fill: rgba(CT, .95) }); }
     // b07
-    st(t, T.tVit - .1, E("b07") + .3, [["vitamins E · K", CAST]], CX, 232, { size: 58, fill: rgba(BUT, 1) });
-    st(t, T.tFatH - .1, E("b07") + .3, [["absorbed more easily with ", CAST], ["fat", TOM]], CX, 330, { size: 46, f: NUN, fill: rgba(CT, .97) });
+    st(t, T.tVit - .1, S("b08") - .05, [["vitamins E · K", CAST]], CX, 232, { size: 58, fill: rgba(BUT, 1) });
+    st(t, T.tFatH - .1, S("b08") - .05, [["absorbed more easily with ", CAST], ["fat", TOM]], CX, 330, { size: 46, f: NUN, fill: rgba(CT, .97) });
     // b08
     st(t, T.tVC - .1, T.diveFrom2 + 1.2, [["vitamin C", CT]], CX, 250, { size: 70, fill: rgba(HERB, 1) });
     // b09: pepper cells (vitamin C graphic: tagged)
@@ -76,9 +76,9 @@ export function createOverlay(T, TH, cv) {
       [["microwave", -1.75, -.7], ["steamer", 1.75, -.7], ["pan", 2.15, 1.6]].forEach(([n, x, z2]) => { const p = A.proj(X + x, .2, z2); sticker([[n, CAST]], p.x, p.y, { a, size: 48, fill: rgba(CT, .96) }); }); }
     // b11
     st(t, T.tRaw - .1, E("b11") - .05, [["raw = top vitamin C sources", CAST]], CX, 245, { size: 48, fill: rgba(BUT, 1), padX: 28 });
-    illus(t, S("b11") + .2, E("b11") - .05, 345);
-    if (z === "K" && t >= S("b11") && t < S("b12") && A.proj) { const a = smooth((t - S("b11") - .1) / .3) * (1 - smooth((t - E("b11") + .3) / .3)), X = 40;
-      const pl = A.proj(X - 1.4, .5, -.35), pr = A.proj(X + 1.4, .5, -.35); sticker([["raw", CAST]], pl.x, pl.y, { a, size: 50, fill: rgba(CT, .96) }); sticker([["cooked", CT]], pr.x, pr.y, { a, size: 50, fill: rgba(TOM, 1) }); }
+    illus(t, S("b11") + .02, E("b11") - .05, 345);
+    if (z === "K" && t >= S("b11") && t < S("b12") && A.proj) { const a = smooth((t - S("b11") - .02) / .2) * (1 - smooth((t - E("b11") + .3) / .3)), X = 40;
+      const pl = A.proj(X - 1.3, 1.9, -1.4), pr = A.proj(X + 1.3, 1.9, -1.4); sticker([["raw", CAST]], pl.x, pl.y, { a, size: 50, fill: rgba(CT, .96) }); sticker([["cooked", CT]], pr.x, pr.y, { a, size: 50, fill: rgba(TOM, 1) }); }
     // b12
     st(t, T.tTrade - .05, E("b12") + .2, [["a trade", CAST]], CX, 262, { size: 92, fill: rgba(BUT, 1), padX: 44, rot: -.03 });
   }
@@ -87,7 +87,7 @@ export function createOverlay(T, TH, cv) {
     if (t < T.tCard) return; const lt = t - T.tCard, u = smooth(lt / .45); ctx.save(); ctx.globalAlpha = u * .84; ctx.fillStyle = C.countertop; ctx.fillRect(0, 0, 1080, 1920); ctx.restore();
     const line = (s, base, size, color, d) => { const k = clamp((t - T.tCard - d) / .3); if (k <= 0) return; text(s, CX, base, { size, color, a: smooth(k * 2), sc: 1 + .3 * (1 - eob(k)) * 0 + .35 * (1 - eo3(k)) }); };
     line("THE PAN", 420, 150, CAST, .1); line("THEORY:", 575, 150, TOM, .22);
-    const L = [["carrots + a little oil", 720], ["peppers: some raw", 845]], sz = Math.min(80, ...L.map(l => 770 * 100 / (mw(l[0], 100) + 56 * 100 / 80)));
+    const L = [["carrots + a little oil", 720], ["peppers: more C raw", 845]], sz = Math.min(80, ...L.map(l => 770 * 100 / (mw(l[0], 100) + 56 * 100 / 80)));
     L.forEach(([s_, y], i) => { const w = mw(s_, sz) + 56, kk = clamp((t - T.tCard - .5 - i * .25) / .35); if (kk <= 0) return; ctx.save(); ctx.globalAlpha = smooth(kk * 2); ctx.translate(CX, y - 26); ctx.rotate(-.018 + i * .02); ctx.scale(.85 + .15 * eob(kk), .85 + .15 * eob(kk));
       ctx.fillStyle = C.butter; ctx.shadowColor = "rgba(31,29,27,.22)"; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8; rr(-w / 2, -sz * .72, w, sz * 1.26, 24); ctx.fill(); ctx.restore(); text(s_, CX, y, { size: sz, color: CAST, a: smooth(kk * 2), rot: -.018 + i * .02 }); });
     const k3 = smooth((t - T.tCard - 1.2) / .4); text("Food education, not diet advice.", CX, 1000, { f: NUN, size: 46, color: CAST, a: k3 });
@@ -96,7 +96,7 @@ export function createOverlay(T, TH, cv) {
   function draw(t, A) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
     if (A.veil && A.veil.a > .002) { ctx.save(); ctx.globalAlpha = A.veil.a; ctx.fillStyle = A.veil.col; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); }
-    hook(t); heatWaves(t, A); labels(t, A); card(t);
+    hook(t); labels(t, A); card(t);
     ctx.getImageData(0, 0, 1, 1);
   }
   function drawCover() {

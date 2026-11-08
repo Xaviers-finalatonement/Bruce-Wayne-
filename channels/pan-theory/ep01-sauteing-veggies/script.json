@@ -6,7 +6,7 @@
   "voice": {
     "engine": "kokoro",
     "voice": "af_bella",
-    "speed": 0.86
+    "speed": 0.83
   },
   "beats": [
     {
@@ -162,7 +162,7 @@
       "screen": [
         "The Pan Theory:",
         "carrots + a little oil",
-        "peppers: some raw"
+        "peppers: more C raw"
       ],
       "visual": "Signature card on the Countertop beige: 'The Pan Theory:' in Rubik with Tomato-red key word, two Butter lines below. Food education, not diet advice."
     }
@@ -175,7 +175,8 @@
     "headline": "What sautéing does to your veggies",
     "key_word": "trade"
   },
-  "end_hold": 2.4,
+  "end_hold": 3.2,
+  "holds": {"b13": 0.0},
   "sound": "pan-theory",
   "gaps": {
     "b01": 0.6,
@@ -190,6 +191,6 @@
     "b10": 0.6,
     "b11": 0.9,
     "b12": 0.6,
-    "b13": 0.7
+    "b13": 0.6
   }
 }

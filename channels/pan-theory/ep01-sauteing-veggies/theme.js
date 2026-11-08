@@ -11,7 +11,7 @@ window.THEME = {
     display: { family: "Rubik", faces: [{ weight: 500, url: "/assets/fonts/rubik/rubik-latin-500-normal.woff2" }, { weight: 800, url: "/assets/fonts/rubik/rubik-latin-800-normal.woff2" }] },
     body: { family: "Nunito", faces: [{ weight: 400, url: "/assets/fonts/nunito/nunito-latin-400-normal.woff2" }, { weight: 800, url: "/assets/fonts/nunito/nunito-latin-800-normal.woff2" }] },
   },
-  look: { grain: 0.035, vig: 0.1, hal: 0.2 },
+  look: { grain: 0.05, vig: 0.4, hal: 0.2, fall: 0.4, cool: 1 },
   sound: "pan-theory",
   caption: {
     font: "body", weight: 800, size: 66, lineHeight: 1.14,
