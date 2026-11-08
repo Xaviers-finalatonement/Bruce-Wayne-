@@ -6,6 +6,7 @@ import { createPost } from "../../../engine/film/post.js";
 import * as K from "../../../engine/film/kitchen.js";
 import * as O from "../../../engine/film/onion.js";
 import { evalPath } from "../../../engine/film/camera.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { clamp, smooth, eio, eo3, eob, lerp, hash, makeTiming } from "./timing.js";
 import { createOverlay } from "./overlay.js";
 
@@ -50,18 +51,22 @@ const KZ = { hero: 0, slab: 30, split: 60, over: 90 };
 const GK = new THREE.Group(); scene.add(GK);
 const counter = K.makeCounterWood(260, 5); counter.position.set(0, 0, 45); GK.add(counter);
 // back wall: warm walnut cabinets with a bright window strip behind each set (bokeh + rim)
-const wallMat = new THREE.MeshStandardMaterial({ map: K.woodTex(), color: "#6C513A", roughness: .6, metalness: 0 });
+const wallMat = new THREE.MeshStandardMaterial({ map: K.woodTex(), color: "#8A6A4C", roughness: .6, metalness: 0 });
 const wall = new THREE.Mesh(new THREE.PlaneGeometry(220, 40), wallMat); wall.rotation.y = PI / 2; wall.position.set(-9.5, 12, 45); wall.receiveShadow = true; GK.add(wall);
-const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#FFEBC8").multiplyScalar(3.2), toneMapped: false });
-Object.values(KZ).forEach(z => { const w = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 5.2), glowMat); w.rotation.y = PI / 2; w.position.set(-9.4, 6.2, z - 2.2); GK.add(w);
-  const w2 = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 4.2), glowMat); w2.rotation.y = PI / 2; w2.position.set(-9.4, 6.0, z + 3.6); GK.add(w2); });
+// a real window: sky + soft trees outside, painted mullions and a sill, a curtain edge; lit from behind so it rims the droplets and blade
+const winTex = (() => { const W_ = 1024, H_ = 768, c = document.createElement("canvas"); c.width = W_; c.height = H_; const x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 0, H_); g.addColorStop(0, "#FFF6E2"); g.addColorStop(.55, "#FFE6B8"); g.addColorStop(1, "#F2CF98"); x.fillStyle = g; x.fillRect(0, 0, W_, H_);
+  for (let i = 0; i < 26; i++) { const px = hash(i * 3) * W_, py = H_ * (.55 + .4 * hash(i * 5)), r = 70 + 110 * hash(i * 7), gg = x.createRadialGradient(px, py, 0, px, py, r); gg.addColorStop(0, `rgba(${110 + 50 * hash(i)},${130 + 40 * hash(i * 2)},${70},.55)`); gg.addColorStop(1, "rgba(120,140,80,0)"); x.fillStyle = gg; x.fillRect(px - r, py - r, 2 * r, 2 * r); }
+  x.fillStyle = "#3A2A1E"; x.fillRect(0, 0, W_, 30); x.fillRect(0, H_ - 70, W_, 70); x.fillRect(0, 0, 30, H_); x.fillRect(W_ - 30, 0, 30, H_); x.fillRect(W_ / 2 - 15, 0, 30, H_); x.fillRect(0, H_ * .42, W_, 24);
+  x.fillStyle = "rgba(255,246,226,.55)"; x.fillRect(W_ - 150, 30, 120, H_ - 100); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const glowMat = new THREE.MeshBasicMaterial({ map: winTex, color: new THREE.Color(2.5, 2.4, 2.2), toneMapped: false });
+Object.values(KZ).forEach(z => { const w = new THREE.Mesh(new THREE.PlaneGeometry(11, 8.2), glowMat); w.rotation.y = PI / 2; w.position.set(-9.4, 6.6, z - .4); GK.add(w); });
 const cast = o => { o.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return o; };
 const setG = z => { const g = new THREE.Group(); g.position.z = z; GK.add(g); return g; };
 const GH = setG(KZ.hero), GS = setG(KZ.slab), GP = setG(KZ.split), GO = setG(KZ.over);
 const csh = (par, rx, rz, x, z, op = .5) => { const s = K.makeContactShadow(rx, rz, op); s.position.set(x, .007, z); par.add(s); return s; };
 
 // ---------- HERO SET: steel rig, half onion on the plate, window rim ----------
-const rigH = O.mkRig({ blunt: false, base: true, L: 2.7 }); GH.add(rigH.g);
+const rigH = O.mkRig({ blunt: false, base: true, L: 2.7, H: 1.15 }); GH.add(rigH.g);
 const PLY = .14, TOPY = PLY + O.OH; // dome apex
 const onionH = O.mkOnion(false, 1); onionH.position.y = PLY; GH.add(onionH);
 csh(GH, 3.1, 2.8, -.8, 0, .35);
@@ -71,9 +76,9 @@ const sprH = O.makeSpray(2600, noDepth, camera); GH.add(sprH.g);
 // cut spray: a fan from the cut line (x ~ 0, along z), mostly up, wider and faster for a blunt blade
 function cutBurst(sp, t0, zc, zlen, n, mul, spread, seed, s1, y0) {
   sp.burst({ t0, n, seed, s0: .009, s1: s1 || .04, pow: 3.0, dt: .09, k: .22, g: 2.3, life: 2.9,
-    org: (i, r) => [(r(1) - .5) * .25, y0, zc + (r(2) - .5) * zlen],
-    vel: (i, r) => { const a = (r(3) - .5) * spread, v = (1.8 + 5.4 * Math.pow(r(4), 1.3)) * mul; return [Math.sin(a) * v * .35 + (r(6) - .5) * .6, Math.cos(a) * v, (r(7) - .5) * 2.4]; } }); }
-cutBurst(sprH, T.C1 + .02, 0, 2.0, 520, 1, 1.5, 1, .042, TOPY); cutBurst(sprH, T.C1 + .28, 0, 1.4, 240, .6, 1.9, 2, .03, TOPY);
+    org: (i, r) => [(r(1) - .5) * .2, y0, zc + (r(2) - .5) * zlen * .55],
+    vel: (i, r) => { const a = (r(3) - .5) * spread, v = (2.2 + 6.4 * Math.pow(r(4), 1.2)) * mul; return [(r(6) - .5) * .9, Math.cos(a) * v, Math.sin(a) * v * .95 + (r(7) - .5) * .5]; } }); }
+cutBurst(sprH, T.C1 + .02, 0, 2.0, 640, 1.05, 1.7, 1, .05, TOPY); cutBurst(sprH, T.C1 + .28, 0, 1.4, 240, .6, 1.9, 2, .03, TOPY);
 cutBurst(sprH, T.C2 + .02, 0, 2.0, 420, 1.05, 1.5, 3, .028, TOPY);
 cutBurst(sprH, T.C3 + .02, 0, 2.0, 360, 1, 1.5, 4, .04, TOPY);
 // the tracked droplet (b03): one big drop thrown across the frame
@@ -82,15 +87,18 @@ cutBurst(sprH, T.C4 + .02, 0, 2.0, 420, 1, 1.5, 5, .042, TOPY);
 cutBurst(sprH, T.C8 + .02, 0, 2.0, 520, 1.05, 1.6, 6, .042, TOPY); cutBurst(sprH, T.C8 + .3, 0, 1.4, 220, .6, 1.9, 7, .03, TOPY);
 { // lab context (out of focus): high-speed camera body + lens on a tripod, soft practical lights, more rig uprights
   const anod = new THREE.MeshStandardMaterial({ color: "#2D3035", metalness: .6, roughness: .4, envMapIntensity: 1.5 }), glass = new THREE.MeshPhysicalMaterial({ color: "#0B1218", metalness: 0, roughness: .03, clearcoat: 1, envMapIntensity: 4 });
-  const hs = new THREE.Group(); hs.position.set(-6.4, 3.2, -3.4); GH.add(hs);
+  const hs = new THREE.Group(); hs.position.set(-6.4, 3.2, -3.4); GH.add(hs); var hsG = hs;
   const body = new THREE.Mesh(K.roundBox(1.9, 1.15, 1.3, .1, 4), anod), lens = new THREE.Mesh(new THREE.CylinderGeometry(.46, .52, 1.1, 32), anod), lg = new THREE.Mesh(new THREE.CircleGeometry(.4, 32), glass), ring = new THREE.Mesh(new THREE.TorusGeometry(.5, .05, 10, 32), new THREE.MeshStandardMaterial({ color: "#C8CDD3", metalness: 1, roughness: .25 }));
   lens.rotation.z = -PI / 2; lens.position.x = 1.45; lg.rotation.y = PI / 2; lg.position.x = 2.01; ring.rotation.y = PI / 2; ring.position.x = 2.0; hs.add(body, lens, lg, ring);
   const led = new THREE.Mesh(new THREE.SphereGeometry(.06, 8, 8), new THREE.MeshBasicMaterial({ color: "#FF5A3A" })); led.position.set(.7, .5, .66); hs.add(led);
   [[-.7, -3.2], [.7, -3.8]].forEach(([dz, dy]) => { const l = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, 3.3, 8), anod); l.position.set(-6.4 + dz * 1.2, 1.6, -3.4 + dz); l.rotation.z = dz * .12; GH.add(l); });
-  const lamp = new THREE.MeshBasicMaterial({ color: new THREE.Color("#FFE7BE").multiplyScalar(3), toneMapped: false });
-  [[-8.6, 4.6, -6.2, 1.8, 1.2], [-8.6, 2.2, -.8, 1.2, 1.2], [-8.6, 5.4, 2.6, 2.2, 1.0], [-7.5, 1.4, -5.6, .8, .8]].forEach(([x, y, z, w, h]) => { const q = new THREE.Mesh(new THREE.PlaneGeometry(w, h), lamp); q.rotation.y = PI / 2; q.position.set(x, y, z); GH.add(q); });
+  [[-8.6, 4.6, -6.2, 2.2], [-8.4, 2.2, -.8, 1.4], [-8.4, 3.2, 2.6, 1.8], [-7.5, 1.4, -5.6, 1.0]].forEach(([x, y, z, w]) => { const q = quad(softTex, "#FFE2AE", true, .5); q.rotation.y = PI / 2; q.scale.set(w, w, 1); q.position.set(x, y, z); noDepth.push(q); GH.add(q); });
   [[-5.2, -5.4], [-5.2, 4.6]].forEach(([x, z]) => { const r = new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 7.5, 12), rigH.g.children[1].material); r.position.set(x, 3.75, z); GH.add(r); }); }
-const trailQ = []; for (let i = 0; i < 16; i++) { const q = quad(softTex, "#FFE9BE", true, 0); noDepth.push(q); GH.add(q); trailQ.push(q); }
+const ribTex = (() => { const c = document.createElement("canvas"); c.width = 256; c.height = 64; const x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 256, 0); g.addColorStop(0, "rgba(255,236,190,0)"); g.addColorStop(.7, "rgba(255,240,205,.55)"); g.addColorStop(1, "rgba(255,252,235,1)"); x.fillStyle = g; x.fillRect(0, 0, 256, 64);
+  x.globalCompositeOperation = "destination-in"; const gv = x.createLinearGradient(0, 0, 0, 64); gv.addColorStop(0, "rgba(0,0,0,0)"); gv.addColorStop(.5, "rgba(0,0,0,1)"); gv.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = gv; x.fillRect(0, 0, 256, 64); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const trail = quad(ribTex, "#FFFFFF", true, 0); trail.visible = false; noDepth.push(trail); GH.add(trail); const _bm = new THREE.Matrix4();
+function ribbon(q, P0, P1, w, op) { const d = V(0, 0, 0).subVectors(P1, P0), len = d.length(); if (len < 1e-4 || op <= 0) { q.visible = false; return; } const x_ = d.clone().divideScalar(len), mid = P0.clone().add(P1).multiplyScalar(.5), tc = V(0, 0, 0).subVectors(camera.position, mid), z_ = tc.sub(x_.clone().multiplyScalar(tc.dot(x_))).normalize(), y_ = V(0, 0, 0).crossVectors(z_, x_);
+  _bm.makeBasis(x_, y_, z_); q.quaternion.setFromRotationMatrix(_bm); q.position.copy(mid); q.scale.set(len, w, 1); q.material.opacity = op; q.visible = true; }
 // b05 macro: one large droplet stretches, then bursts into fine satellite drops, which split again
 const PM = [.35, 2.95, .1], sprM = O.makeSpray(1600, noDepth, camera); GH.add(sprM.g);
 const bigDrop = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), new THREE.MeshPhysicalMaterial({ color: "#F6EBC6", roughness: .02, transparent: true, opacity: .72, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 5.5, ior: 1.34, emissive: "#FFE2A0", emissiveIntensity: .1 })); GH.add(bigDrop);
@@ -107,14 +115,15 @@ function bladeEdge(t, evs, top) { let y = PARK; for (const c of evs) { const tau
 const slitAt = (t, evs) => { let a = 0; for (const c of evs) { const tau = t - c; if (tau > 0 && tau < 3) a = Math.max(a, smooth(tau / .2) * (1 - smooth((tau - 2.2) / .6))); } return a; };
 
 // ---------- SLAB SET (b09): a cross-section of one onion layer: tough skin over soft flesh, pressed by a blade edge ----------
-const SW = 4.8, SHF = 1.15, SHS = .16;
-const skinSlabMat = new THREE.MeshPhysicalMaterial({ color: "#4A2E16", roughness: .5, clearcoat: .25, bumpMap: new THREE.CanvasTexture((() => { const c = document.createElement("canvas"); c.width = 256; c.height = 32; const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, 256, 32); for (let i = 0; i < 80; i++) { x.strokeStyle = `rgba(${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},.35)`; x.beginPath(); x.moveTo(0, hash(i * 3) * 32); x.lineTo(256, hash(i * 3) * 32 + 2); x.stroke(); } return c; })()), bumpScale: 1.2 });
+const SW = 4.8, SHF = 1.15, SHS = .26;
+const skinSlabMat = new THREE.MeshPhysicalMaterial({ color: "#2C1A0C", roughness: .36, clearcoat: .7, clearcoatRoughness: .25, envMapIntensity: 1.6, bumpMap: new THREE.CanvasTexture((() => { const c = document.createElement("canvas"); c.width = 256; c.height = 32; const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, 256, 32); for (let i = 0; i < 80; i++) { x.strokeStyle = `rgba(${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},${hash(i) > .5 ? 40 : 200},.35)`; x.beginPath(); x.moveTo(0, hash(i * 3) * 32); x.lineTo(256, hash(i * 3) * 32 + 2); x.stroke(); } return c; })()), bumpScale: 1.2 });
 const fleshTexC = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, "#F2F0CD"); g.addColorStop(1, "#E3E6B8"); x.fillStyle = g; x.fillRect(0, 0, 512, 256);
   for (let i = 0; i < 7; i++) { const r = 60 + i * 34; x.strokeStyle = `rgba(120,100,40,${.95 - i * .04})`; x.lineWidth = 5 + (i % 2) * 3; x.beginPath(); x.ellipse(256, 330, r * 1.9, r, 0, PI, 2 * PI); x.stroke(); x.strokeStyle = "rgba(255,255,240,.45)"; x.lineWidth = 6; x.beginPath(); x.ellipse(256, 330, r * 1.9 + 7, r + 7, 0, PI, 2 * PI); x.stroke(); }
   for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(${hash(i * 2) > .5 ? "255,255,235" : "170,160,100"},${.05 + .06 * hash(i)})`; x.fillRect(hash(i * 3) * 512, hash(i * 5) * 256, 3 + 14 * hash(i * 7), 1.2); } const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
-const fleshMat = new THREE.MeshPhysicalMaterial({ map: fleshTexC, roughness: .28, clearcoat: .7, clearcoatRoughness: .2, emissive: "#E8E3B8", emissiveMap: fleshTexC, emissiveIntensity: .1 });
+const fleshCT = K.cellTexture({ n: 7, seed: 4, wall: "#FFF8E2", wallIn: "#F3E8C2", c0: "#F8EFD4", c1: "#E9DAAE", vac: "#FBF4DC", wallW: .06 }); fleshCT.tex.repeat.set(2.4, .6);
+const fleshMat = new THREE.MeshPhysicalMaterial({ map: fleshCT.tex, roughness: .3, clearcoat: .6, clearcoatRoughness: .2, emissive: "#EFDFAE", emissiveMap: fleshCT.tex, emissiveIntensity: .22 });
 const skinGeo = new THREE.BoxGeometry(SW, SHS, 1.3, 81, 1, 1), fleshGeo = new THREE.BoxGeometry(SW, SHF, 1.3, 81, 8, 1);
-const skinM = new THREE.Mesh(skinGeo, skinSlabMat), fleshM = new THREE.Mesh(fleshGeo, fleshMat); skinM.castShadow = fleshM.castShadow = skinM.receiveShadow = fleshM.receiveShadow = true; GS.add(skinM, fleshM);
+const skinM = new THREE.Mesh(skinGeo, skinSlabMat), fleshM = new THREE.Mesh(fleshGeo, fleshMat); skinM.castShadow = fleshM.castShadow = skinM.receiveShadow = fleshM.receiveShadow = true; GS.rotation.y = PI / 2; GS.add(skinM, fleshM); { const sk2 = new THREE.Mesh(new THREE.BoxGeometry(SW, SHS * .6, 1.3), skinSlabMat); sk2.position.y = -.1; sk2.receiveShadow = true; GS.add(sk2); }
 [skinGeo, fleshGeo].forEach(g => (g.userData.o = g.attributes.position.array.slice()));
 const bladeS = O.mkBlade({ L: 1.9, H: 1.6, t: .1, tE: .004, bev: .26 }), holderS = new THREE.Group(); holderS.rotation.y = PI / 2; bladeS.position.x = -.95; holderS.add(bladeS); GS.add(holderS);
 const sprS = O.makeSpray(700, noDepth, camera); GS.add(sprS.g);
@@ -135,6 +144,9 @@ function animSlab(t) {
 sprS.burst({ t0: T.sBurst + .02, n: 420, seed: 21, s0: .012, s1: .05, pow: 2.2, dt: .07, k: .3, g: 2.6, life: 2.6,
   org: (i, r) => [(r(1) - .5) * .5, SKY + .05, (r(2) - .5) * 1.0], vel: (i, r) => { const a = (r(3) - .5) * 2.2, v = 1.6 + 4.6 * Math.pow(r(4), 1.2); return [Math.sin(a) * v, Math.cos(a) * v, (r(7) - .5) * 1.4]; } });
 
+GH.add(eyeS); eyeS.visible = false; const eyeSet = (t, a, p) => { // small grounded eye: placed on screen at (215, 360) of the b08 camera, shaded by the scene lights
+  eyeS.visible = a > .01; if (!eyeS.visible) return; camera.updateMatrixWorld(true); const f = V(0, 0, -1).applyQuaternion(camera.quaternion), rt_ = V(1, 0, 0).applyQuaternion(camera.quaternion), up_ = V(0, 1, 0).applyQuaternion(camera.quaternion), d = 7, th = Math.tan(camera.fov * PI / 360);
+  eyeS.position.copy(camera.position).addScaledVector(f, d).addScaledVector(rt_, -.6 * th * d * 1080 / 1920).addScaledVector(up_, .625 * th * d); eyeS.quaternion.copy(camera.quaternion); eyeS.scale.setScalar(.4 * a * (.75 + .25 * eob(p))); };
 // ---------- SPLIT SET (b10-b11): blunt (screen-left, +z) vs sharp (screen-right, -z) ----------
 const ZB = 1.5, ZSH = -1.5;
 const rigB = O.mkRig({ blunt: true, base: false }), rigSh = O.mkRig({ blunt: false, base: false }); rigB.g.position.z = ZB; rigSh.g.position.z = ZSH; GP.add(rigB.g, rigSh.g);
@@ -146,11 +158,12 @@ const slit2 = [0, 1].map(() => { const a = new THREE.Mesh(new THREE.BoxGeometry(
 
 // ---------- OVERHEAD SET (dive in b06, then b12-b14 + cover) ----------
 const place = (o, x, z, ry) => { o.position.x = x; o.position.z = z; o.rotation.y += ry; return o; };
-const onCut = place(O.mkOnion(true, 5), -.75, -2.5, .35), onDome = place(O.mkOnion(false, 6), 1.1, -1.9, -.5); GO.add(onCut, onDome); csh(GO, 1.7, 1.6, -.75, -2.5, .38); csh(GO, 1.7, 1.6, 1.1, -1.9, .38);
-const chef = O.mkChef(true); chef.rotation.set(-PI / 2, -PI / 2 - .15, 0); chef.position.set(-1.9, .1, 1.7); GO.add(cast(chef)); // lying on its side, edge toward the card
+const onCut = place(O.mkOnion(true, 5), -.75, -2.5, .35), onDome = place(O.mkOnion(false, 6), 1.1, -1.9, -.5); GO.add(onCut, onDome); const shC = csh(GO, 1.7, 1.6, -.75, -2.5, .38), shD = csh(GO, 1.7, 1.6, 1.1, -1.9, .38);
+const chef = O.mkChef(true); chef.rotation.set(-PI / 2, -PI / 2 - .15, 0); chef.position.set(-1.9, .1, 1.7); GO.add(cast(chef)); chef.visible = false;
+const chefFlat = new THREE.Group(), chefFl = O.mkChef(true); chefFl.rotation.x = -PI / 2; chefFlat.add(chefFl); chefFlat.scale.setScalar(.78); chefFlat.rotation.y = .5; chefFlat.position.set(.2, .1, 3.9); GO.add(cast(chefFlat)); // the sharp knife, flat on the counter, edge toward the viewer
 const chefC = new THREE.Group(), chefIn = O.mkChef(true); chefIn.rotation.y = PI; chefC.add(chefIn); chefC.visible = false; GO.add(cast(chefC)); chefC.scale.setScalar(.8);
 const spillG = []; // a few settled droplets near the cut half
-for (let i = 0; i < 14; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 7), sprH.im.material); d.scale.set(.03 + .04 * hash(i), .014 + .01 * hash(i * 3), .03 + .04 * hash(i * 5)); d.position.set(-.1 + (hash(i * 7) - .5) * 2.8, .02, -1.9 + (hash(i * 9) - .5) * 2.2); GO.add(d); }
+const spillGrp = new THREE.Group(); GO.add(spillGrp); for (let i = 0; i < 14; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), sprH.im.material); d.scale.set(.03 + .04 * hash(i), .014 + .01 * hash(i * 3), .03 + .04 * hash(i * 5)); d.position.set(-.1 + (hash(i * 7) - .5) * 2.8, .02, -1.9 + (hash(i * 9) - .5) * 2.2); spillGrp.add(d); }
 // the card (b12 / b13): Butter, "droplets ✓ / tears ?", then a stamp under it
 const cardG = new THREE.Group(); GO.add(cardG);
 { const base = new THREE.Mesh(K.roundBox(3.9, .1, 2.6, .06, 4), new THREE.MeshStandardMaterial({ color: "#E9B535", roughness: .6 })); base.position.y = .05; base.castShadow = base.receiveShadow = true; cardG.add(base);
@@ -158,7 +171,7 @@ const cardG = new THREE.Group(); GO.add(cardG);
   const t1 = mkTex(1024, 640, (x, w, h) => { x.fillStyle = C.cast; x.textBaseline = "alphabetic"; x.font = `800 150px "Rubik"`; x.fillText("droplets", 70, 190); x.strokeStyle = C.herb; x.lineWidth = 34; x.lineCap = x.lineJoin = "round"; x.beginPath(); x.moveTo(790, 120); x.lineTo(842, 172); x.lineTo(940, 60); x.stroke();
     x.fillStyle = C.cast; x.fillText("tears", 70, 420); x.fillStyle = C.tomato; x.fillText("?", 640, 420); });
   const pl1 = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 2.25), new THREE.MeshBasicMaterial({ map: t1, transparent: true, toneMapped: false })); pl1.rotation.x = -PI / 2; pl1.position.set(0, .104, -.15); cardG.add(pl1);
-  const t2 = mkTex(1024, 220, (x, w, h) => { x.strokeStyle = C.tomato; x.lineWidth = 12; x.beginPath(); x.roundRect(14, 14, w - 28, h - 28, 34); x.stroke(); x.fillStyle = C.tomato; x.font = `800 84px "Rubik"`; x.textAlign = "center"; x.fillText("one study · preprint", w / 2, 142); });
+  const t2 = mkTex(1024, 220, (x, w, h) => { x.strokeStyle = C.tomato; x.lineWidth = 12; x.beginPath(); x.roundRect(14, 14, w - 28, h - 28, 34); x.stroke(); x.fillStyle = C.tomato; x.font = `800 84px "Rubik"`; x.textAlign = "center"; x.fillText("one study · one lab", w / 2, 142); });
   const pl2 = new THREE.Mesh(new THREE.PlaneGeometry(3.4, .73), new THREE.MeshBasicMaterial({ map: t2, transparent: true, toneMapped: false })); pl2.rotation.x = -PI / 2; pl2.position.set(0, .106, .86); cardG.add(pl2); cardG.userData = { pl1, pl2 }; }
 const sprO = O.makeSpray(700, noDepth, camera); GO.add(sprO.g);
 sprO.burst({ t0: 0, n: 460, seed: 41, s0: .012, s1: .05, pow: 2.3, dt: .05, k: .3, g: 2.0, life: 3,
@@ -167,14 +180,15 @@ sprO.burst({ t0: 0, n: 460, seed: 41, s0: .012, s1: .05, pow: 2.3, dt: .05, k: .
 // ============================================================ CELL WORLD (b06) ============================================================
 const MY = { cell: -200, eye: -300 };
 const gC = new THREE.Group(); scene.add(gC); gC.position.y = MY.cell; const Gm = new THREE.Group(); gC.add(Gm); noDepth.push(Gm);
-const cellT = K.cellTexture({ n: 5, seed: 8, wall: "#FFFBEA", wallIn: "#E4EBCB", c0: "#DDE6C0", c1: "#A9B88A", vac: "#EAF0D2", wallW: .07 }); cellT.tex.repeat.set(3, 3);
+const cellT = K.cellTexture({ n: 5, seed: 8, wall: "#FFF8E4", wallIn: "#F3E8C6", c0: "#F8EFD6", c1: "#EAD9AE", vac: "#FBF4DE", wallW: .07 }); cellT.tex.repeat.set(3, 3);
 { const p = new THREE.Mesh(new THREE.PlaneGeometry(48, 48), new THREE.MeshStandardMaterial({ map: cellT.tex, emissiveMap: cellT.tex, emissive: "#ffffff", emissiveIntensity: .6, roughness: .8 })); p.position.set(0, 0, -6); gC.add(p); }
 function cellCentres(cell, W_, H_) { const Ts = 16, out = []; for (let cj = 0; cj < 3; cj++) for (const ci of [1]) cell.pts.forEach((p, k) => { const x = (ci - 1.5 + p[0]) * Ts, y = (1.5 - cj - p[1]) * Ts; if (Math.abs(x) < W_ && Math.abs(y) < H_) out.push([x, y, k]); }); return out; }
 const cc = cellCentres(cellT, 6.6, 11.5);
-const shardGeo = (() => { const g = new THREE.OctahedronGeometry(1, 0); K.mapVerts(g, (x, y, z) => [x * .5, y, z * .5]); g.computeVertexNormals(); return g; })();
-const sulfMat = new THREE.MeshStandardMaterial({ color: "#F0B400", emissive: "#9A6400", emissiveIntensity: .6, roughness: .2, metalness: .1, flatShading: true });
-const irrGeo = (() => { const g = new THREE.TetrahedronGeometry(1, 1); K.mapVerts(g, (x, y, z) => [x * 1.5 + y * .25, y * .7, z * .8 + x * .3]); g.computeVertexNormals(); return g; })();
-const irrMat = new THREE.MeshStandardMaterial({ color: "#C8412A", emissive: "#B53A25", emissiveIntensity: .7, roughness: .18, metalness: .1, flatShading: true });
+const molGeo = (cols) => { const parts = [[0, 0, 0, 1], [1.05, .35, .1, .68], [-.7, .8, .2, .58]].map(([x, y, z, r]) => { const g = new THREE.SphereGeometry(r * .5, 20, 14); g.translate(x * .5, y * .5, z * .5); return g; }); const g = mergeGeometries(parts); g.computeVertexNormals(); return g; };
+const shardGeo = molGeo(); // smooth ball cluster = a sulfur compound
+const sulfMat = new THREE.MeshPhysicalMaterial({ color: "#F0B400", emissive: "#9A6400", emissiveIntensity: .45, roughness: .18, metalness: .05, clearcoat: 1, clearcoatRoughness: .1 });
+const irrGeo = (() => { const g = molGeo(); K.mapVerts(g, (x, y, z) => [x * 1.7, y * 1.3, z * 1.3]); g.computeVertexNormals(); return g; })();
+const irrMat = new THREE.MeshPhysicalMaterial({ color: "#C8412A", emissive: "#B53A25", emissiveIntensity: .6, roughness: .16, clearcoat: 1, clearcoatRoughness: .08 });
 // crack site: the two cells closest to the origin, plus the ring of neighbours whose sulfur compounds run to it
 const nearC = cc.map(c => ({ c, d: Math.hypot(c[0], c[1] + 1) })).sort((a, b) => a.d - b.d); const cA = nearC[0].c, cB = nearC[1].c;
 const CK = [(cA[0] + cB[0]) / 2, (cA[1] + cB[1]) / 2], ckDir = [-(cB[1] - cA[1]), cB[0] - cA[0]], ckL = Math.hypot(...ckDir); ckDir[0] /= ckL; ckDir[1] /= ckL;
@@ -218,12 +232,15 @@ const eyeG = new THREE.Group(); gE.add(eyeG); eyeG.rotation.set(.1, -.42, 0);
   const sclera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48, 0, PI * 2, .49, PI - .49).rotateX(PI / 2), new THREE.MeshPhysicalMaterial({ color: "#EFE9DF", roughness: .34, clearcoat: .5, clearcoatRoughness: .3 })); eyeG.add(sclera);
   const irisGeo = new THREE.CircleGeometry(.48, 64); K.mapVerts(irisGeo, (px, py, pz) => [px, py, .78 + .06 * (1 - Math.hypot(px, py) / .48)]);
   const iris = new THREE.Mesh(irisGeo, new THREE.MeshStandardMaterial({ map: it, roughness: .45, emissive: "#ffffff", emissiveMap: it, emissiveIntensity: .12 })); eyeG.add(iris);
-  const cornea = new THREE.Mesh(new THREE.SphereGeometry(.62, 72, 56), new THREE.MeshPhysicalMaterial({ color: "#ffffff", transparent: true, opacity: .1, roughness: .015, metalness: 0, clearcoat: 1, clearcoatRoughness: .01, envMapIntensity: 3.8, ior: 1.376, depthWrite: false })); cornea.position.z = .38; eyeG.add(cornea); noDepth.push(cornea);
+  const cornea = new THREE.Mesh(new THREE.SphereGeometry(.62, 72, 56), new THREE.MeshPhysicalMaterial({ color: "#ffffff", transparent: true, opacity: .17, roughness: .015, metalness: 0, clearcoat: 1, clearcoatRoughness: .01, envMapIntensity: 3.8, ior: 1.376, depthWrite: false })); cornea.position.z = .38; eyeG.add(cornea); noDepth.push(cornea);
   const skin = new THREE.MeshStandardMaterial({ color: "#DDA98A", roughness: .55, emissive: "#7A3F30", emissiveIntensity: .08 });
   const up = new THREE.Mesh(new THREE.SphereGeometry(1.07, 64, 40, 0, PI * 2, 0, 1.0), skin); up.rotation.x = -.36; eyeG.add(up);
   const lo = new THREE.Mesh(new THREE.SphereGeometry(1.07, 64, 40, 0, PI * 2, PI - .85, .85), skin); lo.rotation.x = .1; eyeG.add(lo);
-  cast(eyeG);
-  var tearM = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 20), new THREE.MeshPhysicalMaterial({ color: "#F4F8FF", roughness: .01, transparent: true, opacity: .55, clearcoat: 1, envMapIntensity: 5, ior: 1.33 })); eyeG.add(tearM);
+  cast(eyeG); var eyeS = eyeG.clone(true); eyeS.traverse(m => { if (m.isMesh && m.material.transparent) noDepth.push(m); });
+  var tearM = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 20), new THREE.MeshPhysicalMaterial({ color: "#CFE3F0", roughness: .0, transparent: true, opacity: .8, clearcoat: 1, clearcoatRoughness: 0, envMapIntensity: 9, ior: 1.33, emissive: "#9DB9CC", emissiveIntensity: .12 })); eyeG.add(tearM);
+  tearM.material.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace("#include <opaque_fragment>", `#include <opaque_fragment>
+    { float fr = pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 1.6); gl_FragColor.a = clamp(mix(.28, 1.0, fr), 0., 1.); gl_FragColor.rgb *= mix(.7, 1.3, fr); }`); };
+  var lidWet = new THREE.Mesh(new THREE.TorusGeometry(.8, .014, 8, 64, 1.9), new THREE.MeshPhysicalMaterial({ color: "#DCEBF4", roughness: 0, transparent: true, opacity: .55, clearcoat: 1, envMapIntensity: 7 })); lidWet.rotation.set(0, 0, PI + (PI - 1.9) / 2 + 0); lidWet.position.z = .6; eyeG.add(lidWet);
   var irrE = new THREE.Mesh(irrGeo, irrMat); eyeG.add(irrE);
   var ripple = new THREE.Mesh(new THREE.TorusGeometry(1, .02, 8, 48), new THREE.MeshBasicMaterial({ color: new THREE.Color("#FFF1B8").multiplyScalar(1.6), transparent: true, opacity: 0, toneMapped: false, depthWrite: false })); eyeG.add(ripple); noDepth.push(ripple);
   var nerves = [], nerveMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#F3C54B"), transparent: true, opacity: .2, toneMapped: false, depthWrite: false });
@@ -241,20 +258,20 @@ function animEye(t, A) {
   const rp = clamp((t - tTouch) / .9); ripple.position.set(0, 0, 1.012); ripple.scale.setScalar(.04 + .55 * eo3(rp)); ripple.material.opacity = (1 - rp) * .9 * (rp > 0 ? 1 : 0);
   const lit = smooth((t - tTouch) / .4); nerveMat.opacity = .2 + .55 * lit;
   pulses.forEach((p, i) => { const k = i % 6, u = ((t - tTouch) * 1.5 + Math.floor(i / 6) * .5 + k * .05) % 1; if (t < tTouch) { p.material.opacity = 0; return; } p.position.copy(nerves[k].getPoint(1 - u)); p.material.opacity = Math.sin(PI * u) * lit; });
-  const tu = clamp((t - (T.tTear - .55)) / .6), roll = clamp((t - T.tTear - .2) / 1.5), psi = lerp(-.52, -1.12, eio(roll));
-  tearM.position.set(.12 + .05 * roll, 1.07 * Math.sin(psi), 1.07 * Math.cos(psi)); const sz = .075 * eob(tu) * (1 + .5 * roll); tearM.scale.set(sz, sz * (1 + 1.1 * roll), sz); tearM.rotation.x = -psi; tearM.visible = tu > 0;
-  A.proj = projector(); A.cornea = A.proj(tg.x, tg.y, tg.z + .1); A.tear = A.proj(tearM.position.x, MY.eye + tearM.position.y, tearM.position.z);
+  const tu = clamp((t - (T.tTear - .25)) / .5), roll = clamp((t - T.tTear - .3) / 1.25), psi = lerp(-.6, -1.2, eio(roll)), rr_ = 1.1 + .05 * (1 - roll);
+  tearM.position.set(.16 + .06 * roll, rr_ * Math.sin(psi), rr_ * Math.cos(psi)); const sz = .11 * eob(tu) * (1 + .25 * roll); tearM.scale.set(sz, sz * (1 + .9 * roll), sz); tearM.rotation.x = -psi; tearM.visible = tu > 0;
+  A.proj = projector(); A.cornea = (() => { const e_ = eyeG.localToWorld(V(.4, .34, .72)); return A.proj(e_.x, e_.y, e_.z); })(); A.tear = A.proj(tearM.position.x, MY.eye + tearM.position.y, tearM.position.z);
 }
 
 // ============================================================ STAGE ============================================================
 const zoneAt = t => t < S("b06") ? "hero" : t < T.cellIn ? "over" : t < S("b07") ? "cells" : t < S("b08") ? "eye" : t < S("b09") ? "hero" : t < S("b10") ? "slab" : t < S("b12") ? "split" : "over";
 const setKey = (x, z, hi = 8.4) => { key.position.set(x - 3, hi, z + 8); key.target.position.set(x, 0, z); key.target.updateMatrixWorld(); rim.position.set(x - 10, 7, z - 3); rim.target.position.set(x, 1.5, z); rim.target.updateMatrixWorld(); };
 const HC = (k) => k; // hero camera keys (camera on +x looking toward the wall, onion axis horizontal)
-const camHero = [{ t: 0, p: [7.8, 3.3, .1], l: [0, 1.9, 0], f: 36, fp: [.8, 1.1, 0], ap: .008 }, { t: 3.4, p: [6.9, 2.9, .05], l: [0, 2.2, 0], f: 40, fp: [.8, 1.6, 0], ap: .01 }];
+const camHero = [{ t: 0, p: [4.6, 2.3, 3.5], l: [0, 1.75, -.1], f: 42, fp: [0, 1.4, 0], ap: .006 }, { t: 3.4, p: [4.0, 2.1, 3.1], l: [0, 1.9, -.1], f: 46, fp: [0, 1.5, 0], ap: .007 }];
 function stage(t, A) {
   const z = zoneAt(t), kz = z === "hero" || z === "slab" || z === "split" || z === "over"; A.zone = z;
   GK.visible = kz; GH.visible = z === "hero"; GS.visible = z === "slab"; GP.visible = z === "split"; GO.visible = z === "over"; gC.visible = z === "cells"; gE.visible = z === "eye"; key.visible = rim.visible = kz; mLight.intensity = 0;
-  filmPass.uniforms.fall.value = kz ? .34 : .12; bloom.strength = kz ? .22 : .45; bloom.radius = .55; bloom.threshold = kz ? 1.0 : .85; bokeh.enabled = true;
+  filmPass.uniforms.fall.value = kz ? .06 : .12; filmPass.uniforms.vig.value = kz ? .12 : TH.look.vig; filmPass.uniforms.halK.value = kz ? .05 : TH.look.hal; bloom.strength = kz ? .12 : .45; bloom.radius = .55; bloom.threshold = kz ? 1.0 : .85; bokeh.enabled = true;
   renderer.toneMappingExposure = z === "over" ? .95 : 1.3; scene.background.set(kz ? "#2B2119" : z === "cells" ? "#CFC9A0" : "#4A2E26");
   const evs = [T.C1, T.C2, T.C3, T.C4, T.C8];
   if (z === "hero") {
@@ -265,7 +282,8 @@ function stage(t, A) {
     { const u = clamp((t - T.f0) / (T.f1 - T.f0)), sw = Math.sin(t * 9) * .02 * u; bigDrop.position.set(PM[0], PM[1], PM[2]); bigDrop.scale.set(.34 * (1 + .55 * eio(u)) , .34 * (1 - .22 * eio(u)) * (1 + sw), .34 * (1 - .15 * eio(u))); bigDrop.visible = mac && t < T.f1 + .02; }
     // tracked drop trail
     const tp = V(0, 0, 0); sprH.pos(TRK, t - TRK.t0, tp); const trk = t > TRK.t0 && t < S("b04");
-    trailQ.forEach((q, i) => { if (!trk) { q.visible = false; return; } const p = sprH.pos(TRK, t - TRK.t0 - (i + 1) * .035, V(0, 0, 0)); q.visible = true; q.position.copy(p); q.quaternion.copy(camera.quaternion); const s_ = .2 * (1 - i / 16); q.scale.set(s_, s_, 1); q.material.opacity = .55 * (1 - i / 16) * smooth((t - TRK.t0) / .1); });
+    if (trk) ribbon(trail, sprH.pos(TRK, Math.max(0, t - TRK.t0 - .16), V(0, 0, 0)), sprH.pos(TRK, t - TRK.t0, V(0, 0, 0)), .16, .8 * smooth((t - TRK.t0) / .1)); else trail.visible = false;
+    hsG.visible = !(t >= S("b03") && t < S("b04")); if (t < S("b08") || t >= S("b09")) eyeS.visible = false;
     let c;
     if (t < S("b02")) { c = path(camHero, t); const sh = Math.exp(-(t - T.C1) * 7) * (t > T.C1 ? 1 : 0) * .035; camera.position.y += Math.sin(t * 90) * sh; camera.position.x += Math.cos(t * 70) * sh; camera.updateMatrixWorld(true); }
     else if (t < S("b03")) { const u = eio((t - S("b02")) / (T.C2 - .15 - S("b02"))); c = { p: [lerp(2.2, .3, u), lerp(3.6, 1.12, u), lerp(8.6, 7.6, u)] }; setCam(c.p, [0, lerp(1.7, 1.18, u), 0], lerp(46, 58, u), [0, 1.1, 0], lerp(.006, .01, u)); const sh = Math.exp(-(t - T.C2) * 7) * (t > T.C2 ? 1 : 0) * .02; camera.position.y += Math.sin(t * 90) * sh; camera.updateMatrixWorld(true); }
@@ -273,18 +291,19 @@ function stage(t, A) {
       setCam([cp.x, cp.y, cp.z], [Lk.x, Lk.y, Lk.z], lerp(46, 60, lag), [P.x, P.y, P.z], .01); A.drop = projector()(P.x, P.y, P.z); }
     else if (t < S("b05")) { const u = eio((t - S("b04")) / (T.C4 - 1.2 - S("b04"))); c = path([{ t: S("b04"), p: [3.6, 1.9, 2.0], l: [0, 1.4, .3], f: 62, fp: [0, 1.2, 0], ap: .01 }, { t: T.C4 - 1.2, p: [10.2, 4.4, 3.9], l: [-1.2, 2.5, .1], f: 32, fp: [-.8, 1.8, 0], ap: .005 }], t); }
     else if (t < S("b06")) { setCam([PM[0] + 3.1 + .12 * Math.sin(t * .4), PM[1] + .1, PM[2] + .12 * Math.cos(t * .3)], [PM[0] - .1, PM[1] - .02, PM[2]], 92, [PM[0], PM[1], PM[2]], .02); }
-    else { setCam([6.2, .95, -1.6], [-.2, 2.7, .5], 34, [-.2, 2.2, .3], .008); }
+    else { setCam([6.2, .95, -1.6], [-.2, 2.7, .5], 34, [-.2, 2.2, .3], .008); { const a = smooth((t - T.tChem) / .3) * (1 - smooth((t - S("b09") + .3) / .3)); eyeSet(t, t >= S("b08") && t < S("b09") ? a : 0, clamp((t - T.tChem) / 1.1)); } }
     A.proj = projector();
   } else if (z === "over") {
     setKey(0, KZ.over - 1); GO.position.z = KZ.over; const dive = t < T.cellIn;
+    const lay = dive ? 0 : 1; onCut.position.set(lay ? -1.15 : -.75, O.OH, lay ? 3.1 : -2.5); onCut.rotation.y = PI / 2 + (lay ? .15 : .35); onDome.position.set(lay ? 1.25 : 1.1, 0, lay ? 3.3 : -1.9); shC.position.set(onCut.position.x, .007, onCut.position.z); shD.position.set(onDome.position.x, .007, onDome.position.z); spillGrp.position.set(lay ? -.2 : 0, 0, lay ? 5.2 : 0); chefFlat.visible = !!lay; chefC.visible = false;
     sprO.g.visible = COVER; cardG.visible = !dive && t >= S("b12") - .3 && t < T.tCard + .3;
     if (dive) { const u = eio((t - T.dive0) / (T.cellIn - T.dive0)); setCam([-.75, lerp(8, 2.0, u), KZ.over - 2.5 + 1.3 + lerp(3.1, 0, u)], [-.75, 0, KZ.over - 2.5], lerp(34, 38, u), [-.75, .9, KZ.over - 2.5], lerp(.006, .012, u), [0, 0, -1]); }
-    else { const dr = t - S("b12"); setCam([Math.sin(dr * .3) * .08, 9.6 - .15 * smooth(dr / 8), KZ.over + .35 + 9.6 * .1 + Math.cos(dr * .2) * .05], [0, 0, KZ.over + .35], 40, [0, .2, KZ.over], .007, [0, 0, -1]);
+    else { const dr = t - S("b12"); setCam([Math.sin(dr * .3) * .08, 9.6 - .15 * smooth(dr / 8) - .9 * smooth((t - T.tCard) / 7), KZ.over + .35 + 9.6 * .1 + Math.cos(dr * .2) * .05], [0, 0, KZ.over + .35], 40, [0, .2, KZ.over], .007, [0, 0, -1]);
       const su = eo3((t - S("b12") + .05) / .5), sd = smooth((t - T.tCard + .1) / .4); cardG.position.set(lerp(5.2, 0, su) + sd * -6, 0, .45); cardG.rotation.y = (1 - su) * .12 - .02; cardG.userData.pl2.visible = t >= T.tStudy - .05; const st = 1 + .35 * (1 - eob((t - T.tStudy) / .25)) ; cardG.userData.pl2.scale.set(st, st, st); cardG.userData.pl2.material.opacity = smooth((t - T.tStudy) / .08); }
     sprO.update(COVER ? .8 : 99); A.proj = projector();
   } else if (z === "slab") {
-    setKey(0, KZ.slab); animSlab(t); sprS.update(t); const b = Math.sin(t * .3) * .04;
-    setCam([b, 1.4, KZ.slab + 8.2], [0, 1.9, KZ.slab], 36, [0, 1.2, KZ.slab], .006); A.proj = projector();
+    setKey(0, KZ.slab); animSlab(t); sprS.update(t); const b = Math.sin(t * .3) * .05;
+    setCam([8.4, 1.5, KZ.slab + b], [0, 1.35, KZ.slab], 44, [0, 1.2, KZ.slab], .006); A.proj = projector();
   } else if (z === "split") {
     setKey(0, KZ.split + 0); const edB = bladeEdge(t, [T.D1, T.D2], TOP2), edS = bladeEdge(t, [T.D1, T.D3], TOP2); rigB.carr.position.y = edB; rigSh.carr.position.y = edS;
     sprB.update(t); sprSh.update(t); [[ZB, [T.D1, T.D2]], [ZSH, [T.D1, T.D3]]].forEach(([zz, ev], i) => { const sl = slitAt(t, ev), [a, b] = slit2[i]; a.visible = b.visible = sl > .01; a.scale.set(.5 + 1.6 * sl, 1, 1.9 * sl); b.scale.set(1.2 + 1.6 * sl, 1, 1.9 * sl); a.position.set(0, TOP2, zz); b.position.set(0, TOP2 + .008, zz); });

@@ -54,13 +54,13 @@
     },
     {
       "id": "b05",
-      "vo": "Within a fiftieth of a second, they split into hundreds, even thousands, of smaller drops.",
+      "vo": "Within a fiftieth of a second, they split into hundreds of smaller drops.",
       "claims": [
         "C5"
       ],
       "screen": [
         "< 0.02 s",
-        "hundreds → thousands"
+        "hundreds of drops"
       ],
       "visual": "Macro of one big droplet bursting into a fine mist of smaller ones in slow motion, each catching a speck of light. Static macro, no shake."
     },
@@ -102,7 +102,7 @@
     },
     {
       "id": "b09",
-      "vo": "The tough outer skin lets the flesh under it get squeezed first. Then it bursts.",
+      "vo": "The thin, tough skin on each layer lets the flesh under it get squeezed first. Then it bursts.",
       "claims": [
         "C10"
       ],
@@ -149,12 +149,12 @@
     },
     {
       "id": "b13",
-      "vo": "And it's one study, still a preprint.",
+      "vo": "And it's one study, in one lab.",
       "claims": [
         "C13"
       ],
       "screen": [
-        "one study · preprint"
+        "one study · one lab"
       ],
       "visual": "Same card; a second line stamps in beneath it. Hold still, no move."
     },
@@ -163,7 +163,8 @@
       "vo": "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears.",
       "claims": [
         "C11",
-        "C12"
+        "C12",
+        "C14"
       ],
       "screen": [
         "The Pan Theory:",
@@ -178,7 +179,7 @@
   },
   "cover": {
     "headline": "Why onions make you cry",
-    "key_word": "droplets"
+    "key_word": "DROPLETS", "tag": "your knife throws DROPLETS"
   },
   "end_hold": 3.0,
   "sound": "pan-theory",

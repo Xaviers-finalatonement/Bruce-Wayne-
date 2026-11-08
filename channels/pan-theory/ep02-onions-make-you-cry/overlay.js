@@ -61,22 +61,22 @@ export function createOverlay(T, TH, cv) {
     if (t >= S("b05") && t < E("b05")) { const a = smooth((t - T.f1 + .3) / .2) * (1 - smooth((t - E("b05") + .3) / .3)), el = .02 * clamp((t - T.f1) / 1.0);
       sticker([["after the burst starts  ", CAST], [el.toFixed(3) + " s", TOM]], 505, 1150, { a, size: 46, f: NUN, fill: rgba(CT, .96), padX: 28 }); }
     st(t, T.tFift, T.f2 + .1, [["< 0.02 s", CAST]], CX, 270, { size: 90, fill: rgba(BUT, 1), padX: 46, rot: -.03 });
-    st(t, T.f2 + .1, E("b05") - .05, [["hundreds → thousands", CAST]], CX, 270, { size: 58, fill: rgba(BUT, 1), padX: 40, rot: -.02 });
+    st(t, T.f2 + .1, E("b05") - .05, [["hundreds of drops", CAST]], CX, 270, { size: 58, fill: rgba(BUT, 1), padX: 40, rot: -.02 });
     // b06: cell-scale view
     if (z === "cells") { st(t, T.tSulf - .1, T.tIrr + .2, [["sulfur compounds", CAST]], CX, 330, { size: 62, fill: rgba(BUT, 1), padX: 38 });
       st(t, T.tIrr + .1, E("b06") - .05, [["→ propanethial S-oxide", TOM]], CX, 330, { size: 50, fill: rgba(CT, .97), padX: 30 }); }
     if (t >= T.cellIn && t < S("b08")) illus(t, T.cellIn + .1, S("b08") - .2, 1262);
     // b07: cornea + tears
     if (z === "eye" && A.cornea) {
-      const e = env(t, T.tCor - .05, E("b07") - .05); if (e) { dotLine(CX, 410, A.cornea.x, A.cornea.y - 40, e.a * .9, CAST, [1, 16]); sticker([["cornea", CAST]], CX, 340, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }
+      const e = env(t, T.tCor - .05, E("b07") - .05); if (e) { dotLine(CX, 410, A.cornea.x, A.cornea.y - 6, e.a * .9, CAST, [1, 16]); sticker([["cornea", CAST]], CX, 340, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }
       const e2 = env(t, T.tTear, E("b07") - .05); if (e2) sticker([["→ tears", TOM]], CX, 1190, { a: e2.a, sc: e2.sc, size: 64, fill: rgba(CT, .97), padX: 40 }); }
     // b08: the theory is a dashed arrow to an eye line at the frame edge
     if (t >= S("b08") && t < S("b09")) { const a = smooth((t - T.tChem) / .3) * (1 - smooth((t - S("b09") + .3) / .3)), p = clamp((t - T.tChem) / 1.1);
-      if (a > .01) { const x0 = 560, y0 = 880, x1 = 300, y1 = 470; dotLine(x0, y0, lerp(x0, x1, eo3(p)), lerp(y0, y1, eo3(p)), a, TOM, [4, 22]); eyeGlyph(215, 360, a, .75 + .25 * eob(p)); }
+      if (a > .01) { const x0 = 560, y0 = 880, x1 = 300, y1 = 470; dotLine(x0, y0, lerp(x0, x1, eo3(p)), lerp(y0, y1, eo3(p)), a, TOM, [4, 22]);  }
       st(t, T.tChem + .3, S("b09") - .05, [["suggested, not shown here", CAST]], CX, 1170, { size: 52, fill: rgba(BUT, 1), padX: 36, rot: -.015 }); }
     // b09: three stage tags pointing at the section
     if (z === "slab" && A.proj) { const tags = [[T.sSkin, T.sFlesh, "skin holds", CAST, [0, 1.28 + .05, 0]], [T.sFlesh, T.sBurst, "flesh squeezed", CAST, [0, .55, 0]], [T.sBurst, E("b09") - .05, "bursts", TOM, [0, 1.3, 0]]];
-      tags.forEach(([t0, t1, s_, col, wp]) => { const e = env(t, t0 - .05, t1); if (!e) return; const p = A.proj(wp[0] + .9, wp[1], 30); dotLine(CX, 400, p.x, p.y, e.a * .9, CAST, [1, 16]); sticker([[s_, col]], CX, 330, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }); }
+      tags.forEach(([t0, t1, s_, col, wp]) => { const e = env(t, t0 - .05, t1); if (!e) return; const p = A.proj(0, wp[1], 30 - (wp[0] + .9)); dotLine(CX, 400, p.x, p.y, e.a * .9, CAST, [1, 16]); sticker([[s_, col]], CX, 330, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }); }
     // b10 / b11 split
     if (z === "split" && A.split) { const a = smooth((t - S("b10")) / .25) * (1 - smooth((t - E("b11") + .3) / .3));
       text("the study's comparison", CX, 215, { size: 46, f: NUN, color: CAST, a }); 
@@ -88,7 +88,7 @@ export function createOverlay(T, TH, cv) {
   }
   // ---- end card ----
   function card(t) {
-    if (t < T.tCard) return; const u = smooth((t - T.tCard) / .45); ctx.save(); ctx.globalAlpha = u * .8; ctx.fillStyle = C.countertop; ctx.fillRect(0, 0, 1080, 1920); ctx.restore();
+    if (t < T.tCard) return; const u = smooth((t - T.tCard) / .45); ctx.save(); ctx.globalAlpha = u * .93; ctx.fillStyle = C.countertop; ctx.shadowColor = "rgba(31,29,27,.3)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 12; rr(48, 280, 984, 930, 56); ctx.fill(); ctx.restore();
     const line = (s, base, size, color, d) => { const k = clamp((t - T.tCard - d) / .3); if (k <= 0) return; text(s, CX, base, { size, color, a: smooth(k * 2), sc: 1 + .35 * (1 - eo3(k)) }); };
     line("THE PAN", 420, 150, CAST, .1); line("THEORY:", 575, 150, TOM, .22);
     const L = [[[["sharpen", TOM], [" your knife", CAST]], 725], [[["sharp knife → fewer droplets", CAST]], 850]];
@@ -109,7 +109,7 @@ export function createOverlay(T, TH, cv) {
     const lines = [["WHY ONIONS", CAST], ["MAKE YOU", CAST], ["CRY", CAST]], size = Math.min(138, ...lines.map(l => 880 * 100 / mw(l[0], 100)));
     ctx.save(); const g = ctx.createLinearGradient(0, 230, 0, 840); g.addColorStop(0, "rgba(247,241,230,.7)"); g.addColorStop(.8, "rgba(247,241,230,.5)"); g.addColorStop(1, "rgba(247,241,230,0)"); ctx.fillStyle = g; ctx.fillRect(0, 230, 1080, 640); ctx.restore();
     lines.forEach((l, i) => text(l[0], CX, 385 + i * size * 1.05, { size, color: l[1], ls: -1 }));
-    sticker([["it’s the ", CAST], ["DROPLETS", TOM]], CX, 385 + 3 * size * 1.05 + 10, { size: 78, fill: rgba(BUT, 1), padX: 44, rot: -.03 });
+    sticker([["your knife throws ", CAST], ["DROPLETS", TOM]], CX, 385 + 3 * size * 1.05 + 10, { size: 56, fill: rgba(BUT, 1), padX: 40, rot: -.03 });
     sticker([["PAN THEORY", CT]], 285, 205, { size: 46, fill: rgba(CAST, 1), padX: 30 });
     ctx.save(); ctx.fillStyle = C.tomato; ctx.beginPath(); ctx.arc(133, 205, 11, 0, 6.3); ctx.fill(); ctx.restore();
   }

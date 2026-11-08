@@ -7,7 +7,7 @@ export function makeTiming(tl) {
   const T = { B, S, E, END, W, DUR };
   T.hookEnd = END("b01") + .3;
   // blade drops on the rig (hero set): each is one cut event; the camera cuts between angles of the same rig
-  T.C1 = .7; T.C2 = S("b02") + 1.0; T.C3 = S("b03") + .3; T.C4 = S("b04") + 2.9; T.C8 = S("b08") + .75;
+  T.C1 = .62; T.C2 = S("b02") + 1.0; T.C3 = S("b03") + .3; T.C4 = S("b04") + 2.9; T.C8 = S("b08") + .75;
   // b02 labels
   T.tFps = W("b02", "far faster");
   // b03: the tracked droplet, speed label, mph
@@ -15,7 +15,7 @@ export function makeTiming(tl) {
   // b04 lab rig
   T.tRig = W("b04", "lab rig"); T.tChef = W("b04", "not a chef");
   // b05 macro: one big drop stretches, bursts, then the fragments split again
-  T.f0 = S("b05") + .15; T.f1 = W("b05", "they split") - .1; T.f2 = W("b05", "hundreds"); T.tTh = W("b05", "thousands"); T.tFift = W("b05", "Within a fiftieth");
+  T.f0 = S("b05") + .15; T.f1 = W("b05", "they split") - .1; T.f2 = W("b05", "hundreds"); T.tTh = W("b05", "smaller"); T.tFift = W("b05", "Within a fiftieth");
   // b06 dive into the cut face, cells, reaction
   T.dive0 = S("b06") - .05; T.cellIn = W("b06", "Cutting") - .1; T.tBreak = W("b06", "breaks open"); T.tReact = W("b06", "A reaction"); T.tSulf = W("b06", "sulfur"); T.tIrr = W("b06", "eye irritant");
   // b07 eye
@@ -23,11 +23,11 @@ export function makeTiming(tl) {
   // b08 theory
   T.tChem = W("b08", "One chemist"); T.tCarry = W("b08", "carry");
   // b09 cross-section
-  T.sSkin = W("b09", "The tough"); T.sFlesh = W("b09", "get squeezed"); T.sBurst = W("b09", "Then it bursts");
+  T.sSkin = W("b09", "The thin"); T.sFlesh = W("b09", "get squeezed"); T.sBurst = W("b09", "Then it bursts");
   // b10 / b11 split
   T.tBlunt = W("b10", "A blunter"); T.tFast = W("b10", "faster cuts"); T.D1 = S("b10") + .55; T.D2 = T.tFast - .1; T.D3 = S("b11") + .55;
   // b12 / b13 / b14
-  T.tTrk = W("b12", "tracked"); T.tNotT = W("b12", "not tears"); T.tStudy = W("b13", "one study"); T.tPre = W("b13", "preprint");
+  T.tTrk = W("b12", "tracked"); T.tNotT = W("b12", "not tears"); T.tStudy = W("b13", "one study"); T.tPre = W("b13", "one lab");
   T.tCard = S("b14") - .05; T.tTheory = W("b14", "sharpen your"); T.tFewer = W("b14", "Fewer"); T.tSign = END("b14") + .2;
   // ---- sound cues ----
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
