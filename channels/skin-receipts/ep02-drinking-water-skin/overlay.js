@@ -194,7 +194,7 @@ export function createOverlay(T, TH, cv) {
       [["face", 0], ["arm", 1], ["hand", 2], ["leg", 3]].forEach(([s, k]) => { const a = prog01(t, T.probeT[k] - .05, T.probeT[k] + .15) * out; if (a > 0) tag(s, 530 + (k % 2) * 200, 270 + Math.floor(k / 2) * 84, { size: 44, a, color: k === 1 ? TEAL : NAVY, line: k === 1 ? TEAL : SLATE, sc: 1 + .15 * (1 - eo3((t - T.probeT[k]) / .25)) }); }); }
     groupSlip(t); crossLabels(t, A);
     winBar(t); // drawn first so the "one small study" tag sits on top of the bar card (reviewer r2 note)
-    if (t >= W("b10", "one small") - .1 && t < E("b10") + .2) { const a = prog01(t, W("b10", "one small"), W("b10", "one small") + .2) * (1 - prog01(t, E("b10") - .1, E("b10") + .2)); tag("one small study", 690, 330, { size: 60, a, color: NAVY, sc: 1 + .15 * (1 - eo3((t - W("b10", "one small")) / .25)) }); }
+    if (t >= W("b10", "one small") - .1 && t < E("b10") + .2) { const a = prog01(t, W("b10", "one small"), W("b10", "one small") + .2) * (1 - prog01(t, E("b10") - .1, E("b10") + .2)); tag("one small study", 540, 830, { size: 60, a, color: NAVY, sc: 1 + .15 * (1 - eo3((t - W("b10", "one small")) / .25)) }); }
     reviewSlips(t);
     if (A.patch && t >= S("b12")) { const a = prog01(t, W("b12", "unclear") - .5, W("b12", "unclear") - .1) * (1 - prog01(t, E("b12") - .1, E("b12") + .2)), c = A.patch; ctx.save(); ctx.globalAlpha = a; ctx.setLineDash([16, 12]); ctx.strokeStyle = NAVY; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, 6.3); ctx.stroke(); ctx.restore(); tag("noticeable? unclear", c.x, c.y - c.r - 60, { size: 46, a, color: SLATE }); }
   }
