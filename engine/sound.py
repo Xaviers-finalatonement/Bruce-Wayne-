@@ -387,6 +387,11 @@ def main(ep):
     pal = PALETTES.get(name)
     if pal:
         pal["bed"](sfx, tl["duration"])
+        if name == "skin-receipts":  # bed drops out ~1 s before the UNKNOWN stamp so the hit lands dry (wider loudness range)
+            hits = [c["t"] for c in cues if c["type"] == "hit" and c.get("gain", 1) >= 1]
+            if hits:
+                tt = np.arange(N) / SR; ts = hits[0]
+                sfx *= 1 - np.clip((tt - (ts - 1.0)) / 0.3, 0, 1) * (1 - np.clip((tt - (ts + 0.05)) / 0.5, 0, 1))
         for c in cues:
             k = c["type"]
             if k == "hit": put(hb if name == "skin-receipts" else sfx, pal["hit"](c.get("gain", 1.0)), c["t"])

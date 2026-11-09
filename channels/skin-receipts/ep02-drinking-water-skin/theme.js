@@ -14,7 +14,7 @@ window.THEME = {
     body: { family: "Albert Sans", faces: [] },
     mono: { family: "Courier Prime", faces: [{ weight: 400, url: "/assets/fonts/courier-prime/courier-prime-latin-400-normal.woff2" }, { weight: 700, url: "/assets/fonts/courier-prime/courier-prime-latin-700-normal.woff2" }] },
   },
-  look: { grain: 0.03, vignette: 0.12, vig: 0.12, hal: 0 },
+  look: { grain: 0.045, vignette: 0.16, vig: 0.16, hal: 0.25, fall: 0.12, cool: 0.6 },
   sound: "skin-receipts",
   caption: {
     font: "body", weight: 700, size: 66, lineHeight: 1.16,

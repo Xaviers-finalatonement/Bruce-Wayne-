@@ -62,7 +62,7 @@ export function createOverlay(T, TH, cv) {
 
   function receipt(t, o) {
     o = o || {}; ensureStamps();
-    const slide = o.cover ? 0 : 1 - eo3((t - (T.hookEnd - .05)) / .55); if (slide >= 1) return;
+    const slide = 0;
     const scroll = o.cover ? 0 : scrollAt(t);
     // stamp jolt
     let jolt = 0; for (const s of stampDefs) { const a = t - s.t; if (a > 0 && a < .4) jolt += 5 * Math.exp(-a * 16) * Math.cos(a * 55); }
@@ -119,13 +119,10 @@ export function createOverlay(T, TH, cv) {
   const LX = 700; // centre of the free area right of the receipt
   const prog01 = (t, a, b) => smooth((t - a) / (b - a));
   function hook(t) {
-    if (t > T.hookEnd + .4) return; const fade = 1 - smooth((t - T.hookEnd) / .3), size = 120;
-    const L = [[["Drinking ", NAVY], ["water", TEAL]], [["for skin?", NAVY]]], wmax = Math.max(...L.map(ln => ln.reduce((a, p) => a + mw(p[0], size, 700, ALB, -3), 0)));
-    ctx.save(); ctx.globalAlpha = fade; plate(40, 170, Math.min(900, wmax + 80), 430, 1);
-    L.forEach((ln, i) => mix(ln, 0, 345 + i * 130, size, { left: 78, ls: -3 }));
-    txt("SKIN RECEIPTS · No. 002", 78, 215, { f: MONO, size: 28, color: SLATE, align: "left", ls: 3 });
-    const a = prog01(t, W("b01", "Forty-nine"), W("b01", "Forty-nine") + .2); // printed strip, static number from its first frame
-    if (a > 0) { ctx.globalAlpha = fade * a; ctx.fillStyle = TEAL; rrect(78, 486, 600, 74, 14); ctx.fill(); txt("49 women tested it", 378, 538, { f: MONO, size: 44, color: REC, w: 700 }); }
+    if (t > T.hookEnd + .4) return; const fade = 1 - smooth((t - T.hookEnd) / .3), size = 78;
+    const L = [[["Drinking ", NAVY], ["water", TEAL]], [["for skin?", NAVY]]], wmax = Math.max(...L.map(ln => ln.reduce((a, p) => a + mw(p[0], size, 700, ALB, -2), 0)));
+    ctx.save(); ctx.globalAlpha = fade; plate(462, 176, Math.min(560, wmax + 64), 214, 1);
+    L.forEach((ln, i) => mix(ln, 0, 270 + i * 90, size, { left: 494, ls: -2 }));
     ctx.restore();
   }
   // paper card with a faint print texture (shared by slips)
@@ -136,16 +133,16 @@ export function createOverlay(T, TH, cv) {
     const t0 = S("b07") + .08, t1 = END("b08") + .4; if (t < t0 || t > t1 + .4) return;
     const out = 1 - smooth((t - t1) / .35), inn = eo3((t - t0) / .5), X = 440, Y = 190, WS = 500, p2 = prog01(t, S("b08") + .05, S("b08") + .55), HS = lerp(590, 1040, p2);
     ctx.save(); ctx.globalAlpha = out * Math.min(1, inn * 1.4); ctx.translate(0, (1 - inn) * -60); slipPaper(X, Y, WS, HS, true, 1);
-    txt("38 lighter drinkers", X + 28, Y + 56, { align: "left", f: MONO, size: 36, color: NAVY }); dots(38, 19, X + 36, Y + 100, 24, 8, TEAL, 1);
+    txt("38 · less water overall", X + 28, Y + 56, { align: "left", f: MONO, size: 30, color: NAVY }); dots(38, 19, X + 36, Y + 100, 24, 8, TEAL, 1);
     const base = Y + 482, sc = 2.9, bw = 104, cx0 = X + 100, cx1 = X + 236, gB = prog01(t, W("b07", "forty") - .5, W("b07", "forty") + .2);
     ctx.strokeStyle = SLATE; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X + 28, base); ctx.lineTo(X + WS - 28, base); ctx.stroke();
     [[cx0, 54, NAVY, 1], [cx1, 76, TEAL, eo3(gB)]].forEach(([cx, v, colr, g]) => { const h = v * sc * g; ctx.save(); ctx.fillStyle = colr; ctx.globalAlpha *= colr === NAVY ? .85 : 1; ctx.fillRect(cx - bw / 2, base - h, bw, h); ctx.fillStyle = "rgba(255,255,255,.2)"; for (let yy = base - h; yy < base; yy += 5) ctx.fillRect(cx - bw / 2, yy, bw, 1.5); ctx.restore();
       if (g > .5) txt(String(v), cx, base - v * sc - 14, { size: 46, color: colr, w: 700 }); });
     txt("start", cx0, base + 42, { size: 36, color: SLATE }); txt("week 4", cx1, base + 42, { size: 36, color: TEAL });
-    const au = smooth((t - W("b07", "forty")) / .22); if (au > 0) txt("+40%", X + 392, base - 120, { size: 64, color: TEAL, sc: 1 + .2 * (1 - eo3((t - W("b07", "forty")) / .25)), a: au });
+    const au = smooth((t - W("b07", "forty")) / .22); if (au > 0) { txt("about", X + 392, base - 178, { size: 34, color: TEAL, a: au, w: 400 }); txt("+40%", X + 392, base - 122, { size: 64, color: TEAL, sc: 1 + .2 * (1 - eo3((t - W("b07", "forty")) / .25)), a: au }); }
     txt("forehead reading · probe units", X + 28, base + 84, { align: "left", size: 32, w: 400, color: SLATE });
     if (p2 > 0) { const Y2 = Y + 610; ctx.save(); ctx.globalAlpha = p2; ctx.strokeStyle = "rgba(90,98,117,.5)"; ctx.setLineDash([8, 7]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X + 28, Y2 - 22); ctx.lineTo(X + WS - 28, Y2 - 22); ctx.stroke(); ctx.setLineDash([]);
-      txt("11 heavy drinkers", X + 28, Y2 + 30, { align: "left", f: MONO, size: 36, color: NAVY }); dots(11, 11, X + 36, Y2 + 70, 24, 8, SLATE, 1);
+      txt("11 · more water overall", X + 28, Y2 + 30, { align: "left", f: MONO, size: 30, color: NAVY }); dots(11, 11, X + 36, Y2 + 70, 24, 8, SLATE, 1);
       const b2 = Y2 + 330, h0 = 148, h1 = 178, wf = prog01(t, S("b08") + .6, S("b08") + 1.1);
       ctx.strokeStyle = SLATE; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(X + 28, b2); ctx.lineTo(X + WS - 28, b2); ctx.stroke();
       ctx.fillStyle = SLATE; ctx.globalAlpha = p2 * .8; ctx.fillRect(cx0 - bw / 2, b2 - h0, bw, h0);
@@ -156,8 +153,20 @@ export function createOverlay(T, TH, cv) {
   }
   // beat 9: labels over the cross-section illustration
   function crossLabels(t, A) { if (!A.xp) return; const a = prog01(t, S("b09") + .15, S("b09") + .5) * (1 - prog01(t, END("b09") + .1, END("b09") + .4));
-    ["start", "week 4"].forEach((s, i) => txt(s, A.xp[i].x, A.xp[i].y, { size: 44, color: i ? TEAL : NAVY, a, w: 700 }));
+    ["start", "week 4"].forEach((s, i) => txt(s, A.xp[i].x, A.xp[i].y, { size: 46, color: NAVY, a, w: 700 }));
     tag("illustration, not to scale", 700, 300, { size: 38, a, color: NAVY }); }
+  // beat 10, "Sounds like a win": the +40 % bar comes back; the "one small study" tag lands over it
+  function winBar(t) {
+    const t0 = S("b10") - .05, t1 = E("b10") + .15; if (t < t0 || t > t1 + .4) return; const inn = eo3((t - t0) / .35), out = 1 - smooth((t - t1) / .35), gB = prog01(t, t0 + .1, t0 + .6);
+    const X = 458, Y = 200, WS = 470, base = Y + 400;
+    ctx.save(); ctx.globalAlpha = out * Math.min(1, inn * 1.4); ctx.translate(0, (1 - inn) * -50); slipPaper(X, Y, WS, 560, true, 1);
+    txt("forehead reading", X + 28, Y + 54, { align: "left", f: MONO, size: 32, color: NAVY });
+    ctx.strokeStyle = SLATE; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X + 28, base); ctx.lineTo(X + WS - 28, base); ctx.stroke();
+    [[X + 100, 54, NAVY, 1], [X + 236, 76, TEAL, eo3(gB)]].forEach(([cx, v, colr, g]) => { const h = v * 3.1 * g; ctx.save(); ctx.fillStyle = colr; ctx.globalAlpha *= colr === NAVY ? .85 : 1; ctx.fillRect(cx - 52, base - h, 104, h); ctx.restore(); if (g > .5) txt(String(v), cx, base - v * 3.1 - 14, { size: 44, color: colr }); });
+    txt("start", X + 100, base + 40, { size: 34, color: SLATE }); txt("week 4", X + 236, base + 40, { size: 34, color: TEAL });
+    txt("about", X + 392, base - 186, { size: 34, color: TEAL, w: 400, a: gB }); txt("+40%", X + 392, base - 130, { size: 64, color: TEAL, a: gB });
+    ctx.restore();
+  }
   // beat 11: five slips printed one by one, WEAK note inked on a paper patch
   function reviewSlips(t) {
     const t0 = S("b11") + .1, t1 = END("b11") + .45; if (t < t0 || t > t1 + .4) return; const out = 1 - smooth((t - t1) / .35), sl = lerp(0, -46, prog01(t, t0, t1));
@@ -173,7 +182,7 @@ export function createOverlay(T, TH, cv) {
   function calendar(t) { // 4 weeks x 7 days (a count of days: 28, nothing animated but the week rows being ticked)
     const t0 = W("b03", "They added") - .1, t1 = S("b04") + .25; if (t < t0 || t > t1) return; const inn = eo3((t - t0) / .4), out = 1 - prog01(t, t1 - .3, t1), a = inn * out, X = 458, Y = 190, WS = 480;
     ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - inn) * -50); slipPaper(X, Y, WS, 420, true, 1);
-    mix([["4 weeks", TEAL]], 0, Y + 70, 56, { left: X + 28, ls: -1 }); txt("+2 L a day", X + WS - 28, Y + 66, { size: 36, color: NAVY, align: "right" });
+    mix([["4 weeks", TEAL]], 0, Y + 70, 56, { left: X + 28, ls: -1 }); txt("about", X + WS - 28, Y + 40, { size: 28, color: SLATE, align: "right", w: 400 }); txt("+2 L a day", X + WS - 28, Y + 76, { size: 36, color: NAVY, align: "right" });
     for (let r = 0; r < 4; r++) { const fr = prog01(t, W("b03", "four weeks") - .2 + r * .22, W("b03", "four weeks") + .1 + r * .22); for (let c = 0; c < 7; c++) { const x = X + 30 + c * 62, y = Y + 110 + r * 66; ctx.fillStyle = "rgba(90,98,117,.14)"; rrect(x, y, 54, 54, 10); ctx.fill(); if (fr > 0) { ctx.save(); ctx.globalAlpha = a * fr; ctx.fillStyle = TEAL; rrect(x, y, 54, 54, 10); ctx.fill(); ctx.strokeStyle = REC; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(x + 14, y + 28); ctx.lineTo(x + 23, y + 38); ctx.lineTo(x + 41, y + 16); ctx.stroke(); ctx.restore(); } } }
     ctx.restore();
   }
@@ -185,6 +194,7 @@ export function createOverlay(T, TH, cv) {
       [["face", 0], ["arm", 1], ["hand", 2], ["leg", 3]].forEach(([s, k]) => { const a = prog01(t, T.probeT[k] - .05, T.probeT[k] + .15) * out; if (a > 0) tag(s, 530 + (k % 2) * 200, 270 + Math.floor(k / 2) * 84, { size: 44, a, color: k === 1 ? TEAL : NAVY, line: k === 1 ? TEAL : SLATE, sc: 1 + .15 * (1 - eo3((t - T.probeT[k]) / .25)) }); }); }
     groupSlip(t); crossLabels(t, A);
     if (t >= W("b10", "one small") - .1 && t < E("b10") + .2) { const a = prog01(t, W("b10", "one small"), W("b10", "one small") + .2) * (1 - prog01(t, E("b10") - .1, E("b10") + .2)); tag("one small study", 690, 330, { size: 60, a, color: NAVY, sc: 1 + .15 * (1 - eo3((t - W("b10", "one small")) / .25)) }); }
+    winBar(t);
     reviewSlips(t);
     if (A.patch && t >= S("b12")) { const a = prog01(t, W("b12", "unclear") - .5, W("b12", "unclear") - .1) * (1 - prog01(t, E("b12") - .1, E("b12") + .2)), c = A.patch; ctx.save(); ctx.globalAlpha = a; ctx.setLineDash([16, 12]); ctx.strokeStyle = NAVY; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, 6.3); ctx.stroke(); ctx.restore(); tag("noticeable? unclear", c.x, c.y - c.r - 60, { size: 46, a, color: SLATE }); }
   }
@@ -193,9 +203,8 @@ export function createOverlay(T, TH, cv) {
     const t0 = T.stamps[0].t, a = t - t0, tf = S("b14") + .35; if (a < 0 || t > tf + .5) return; ensureStamps();
     const u = clamp(a / .12), sc = (1 + .5 * (1 - eo3(u))) * 1.14, fade = 1 - smooth((t - tf) / .45), img = stampImg.end;
     ctx.save(); if (a < .12) { ctx.globalAlpha = .22 * (1 - a / .12); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, 1080, 1920); } ctx.restore();
-    ctx.save(); ctx.globalAlpha = .42 * smooth(a / .15) * fade; ctx.fillStyle = "#141a30"; ctx.fillRect(0, 0, 1080, 1920); ctx.restore(); // dim the picture while the stamp lands
     ctx.save(); ctx.translate(540, 940); ctx.rotate(-.07); const k2 = sc * (1 - .1 * (1 - fade)); ctx.scale(k2, k2); ctx.globalAlpha = clamp(a / .06) * fade;
-    ctx.shadowColor = "rgba(20,26,50,.35)"; ctx.shadowBlur = 30; ctx.shadowOffsetY = 10; ctx.fillStyle = "#FBFAF6"; rrect(-img.width / 2 - 22, -img.height / 2 - 22, img.width + 44, img.height + 44, 20); ctx.fill(); ctx.shadowColor = "transparent";
+    ctx.shadowColor = "rgba(14,20,36,.5)"; ctx.shadowBlur = 64 - 30 * smooth(a / .25); ctx.shadowOffsetX = 14; ctx.shadowOffsetY = 34 - 20 * smooth(a / .25); ctx.fillStyle = "#FBFAF6"; rrect(-img.width / 2 - 22, -img.height / 2 - 22, img.width + 44, img.height + 44, 20); ctx.fill(); ctx.shadowColor = "transparent";
     ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha *= 1; ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
     if (a < .6) { ctx.save(); ctx.globalAlpha = (1 - a / .6) * .4; ctx.strokeStyle = SLATE; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(540, 940, 330 + 200 * eo3(a / .6), 100 + 70 * eo3(a / .6), -.07, 0, 6.3); ctx.stroke(); ctx.restore(); }
   }
@@ -209,8 +218,8 @@ export function createOverlay(T, TH, cv) {
     txt("RECEIPT TOTAL", SX, 300, { f: MONO, size: 44, color: SLATE, ls: 6 }); dashed(150, 860, 340, .8 * k);
     const a = t - (T.tEnd + .15), u = clamp(a / .13);
     if (a >= 0) { const img = stampImg.end, sc = 1 + .42 * (1 - eo3(u)); ctx.save(); ctx.translate(SX, 480); ctx.rotate(-.06); ctx.scale(sc, sc); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = clamp(a / .06) * .95; ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore(); }
-    const lines = [[["In one small study,", NAVY]], [["extra ", NAVY], ["water", TEAL], [" raised skin", NAVY]], [["hydration readings,", NAVY]], [["mostly in people who", NAVY]], [["drank less. A 2018 review", NAVY]], [["called the evidence ", NAVY], ["weak.", SLATE]]];
-    lines.forEach((ln, i) => { const aa = smooth((t - T.tEnd - .4 - i * .09) / .25); if (aa > 0) mix(ln, SX, 690 + i * 76 + (i > 0 ? 18 : 0), 54, { a: aa * k, ls: -.5 }); });
+    const lines = [[["In one small study,", NAVY]], [["skin hydration readings", NAVY]], [["rose after extra ", NAVY], ["water,", TEAL]], [["mostly in people who", NAVY]], [["took in less water.", NAVY]], [["A 2018 review called", NAVY]], [["the evidence ", NAVY], ["weak.", SLATE]]];
+    lines.forEach((ln, i) => { const aa = smooth((t - T.tEnd - .4 - i * .09) / .25); if (aa > 0) mix(ln, SX, 668 + i * 72 + (i > 0 ? 14 : 0), 54, { a: aa * k, ls: -.5 }); });
     const as = smooth((t - T.tEnd - .95) / .3);
     ctx.save(); ctx.globalAlpha = as; ctx.fillStyle = TEAL; ctx.beginPath(); ctx.arc(SX - 192, 1243, 11, 0, 6.3); ctx.fill(); ctx.restore();
     txt("Skin Receipts", SX + 20, 1260, { size: 64, color: NAVY, a: as, ls: -1 });

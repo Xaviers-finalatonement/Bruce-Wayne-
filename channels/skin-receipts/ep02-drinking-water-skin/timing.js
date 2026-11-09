@@ -13,22 +13,25 @@ export function makeTiming(tl) {
     ["b01", W("b01", "Forty-nine") + .1, ["49 women tested it"], "line"],
     ["b02", W("b02", "drink more") + .05, ["CLAIM: more water, hydrated skin"], "line"],
     ["b03", S("b03") + .05, ["LINE 1 · 49 healthy women"], "head"],
-    ["b03", W("b03", "two liters") + .1, ["+2 L a day · 4 weeks"], "line"],
+    ["b03", W("b03", "aged") + .05, ["aged 22–34"], "line"],
+    ["b03", W("b03", "two liters") + .1, ["about +2 L a day · 4 weeks"], "line"],
     ["b04", W("b04", "Nobody") + .05, ["no comparison group"], "line"],
     ["b05", W("b05", "Over half") + .05, ["over half of their water: food, soup, juice"], "line"],
     ["b06", S("b06") + .1, ["skin hydration probe"], "line"],
     ["b06", W("b06", "Forehead") + .1, ["face · arm · hand · leg"], "line"],
-    ["b07", S("b07") + .05, ["38 lighter drinkers"], "head"],
-    ["b07", W("b07", "forehead reading"), ["forehead hydration reading: +40%"], "line"],
-    ["b08", S("b08") + .05, ["11 heavy drinkers"], "head"],
+    ["b07", S("b07") + .05, ["LINE 2 · results"], "head"],
+    ["b07", W("b07", "took in"), ["38 · less water overall"], "line"],
+    ["b07", W("b07", "forehead reading"), ["forehead reading: about +40%"], "line"],
+    ["b08", S("b08") + .05, ["11 · more water overall"], "line"],
     ["b08", W("b08", "wasn't clear"), ["change not clear"], "line"],
     ["b09", S("b09") + .15, ["water loss through skin: no relevant change"], "line"],
     ["b10", W("b10", "one small") + .05, ["one small study"], "line"],
-    ["b11", S("b11") + .25, ["2018 review · 5 studies"], "line"],
+    ["b11", S("b11") + .05, ["LINE 3 · review"], "head"],
+    ["b11", S("b11") + .3, ["2018 review · 5 studies"], "line"],
     ["b11", W("b11", "weak"), ["evidence: weak"], "line"],
     ["b12", W("b12", "unclear") - .1, ["noticeable? unclear"], "line"],
     ["b13", S("b13") + .05, ["RECEIPT TOTAL"], "total"],
-    ["b14", W("b14", "might nudge"), ["might help · mostly if you drink little"], "sum"],
+    ["b14", W("b14", "might nudge"), ["might nudge readings · mostly if you drink little"], "sum"],
     ["b14", W("b14", "Proven"), ["proven? not yet"], "sum"],
   ];
   T.stamps = [{ id: "unk", text: "UNKNOWN", color: "slate", t: W("b13", "unknown") - .05, at: "total" }];
@@ -39,7 +42,7 @@ export function makeTiming(tl) {
   T.pour = { t0: W("b02", "drink more") - .1, t1: W("b02", "hydrate") + .5 };
   T.probeT = [W("b06", "Forehead"), W("b06", "forearm"), W("b06", "hand"), W("b06", "leg")];
   const cues = [], cue = (t, type, x) => cues.push(Object.assign({ t, type }, x || {}));
-  cue(.1, "drop", { gain: .9 }); cue(1.2, "swell", { dur: 1.5 });
+  cue(.34, "drop", { gain: .9 }); cue(1.2, "swell", { dur: 1.5 });
   cue(T.pour.t0, "pour", { dur: T.pour.t1 - T.pour.t0 });
   for (let i = 0; i < 8; i++) cue(T.fill0 + i * T.fillDt, "pour", { dur: .4 });
   T.probeT.forEach(p => cue(p + .1, "pop"));

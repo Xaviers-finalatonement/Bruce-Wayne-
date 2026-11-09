@@ -1,5 +1,5 @@
 {
- "duration": 70.31,
+ "duration": 70.712,
  "fps": 30,
  "speed": 0.97,
  "gap": 0.45,
@@ -90,8 +90,8 @@
   {
    "id": "b03",
    "start": 8.269,
-   "end": 15.602,
-   "next": 16.052,
+   "end": 16.004,
+   "next": 16.454,
    "sents": [
     {
      "s": 8.269,
@@ -107,9 +107,9 @@
     },
     {
      "s": 11.987,
-     "e": 15.602,
+     "e": 16.004,
      "c0": 57,
-     "c1": 122
+     "c1": 130
     }
    ],
    "captions": [
@@ -132,39 +132,40 @@
      "end": 11.987
     },
     {
-     "text": "They added two liters a day,",
+     "text": "They added about two liters a day,",
      "start": 11.987,
-     "key": 3,
-     "end": 13.6
+     "key": 4,
+     "end": 13.913
     },
     {
-     "text": "about eight glasses, for four weeks.",
-     "start": 13.6,
-     "key": 2,
-     "end": 15.602
+     "text": "roughly eight glasses, for four weeks.",
+     "start": 13.913,
+     "key": 0,
+     "end": 16.004
     }
    ],
-   "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added two liters a day, about eight glasses, for four weeks.",
+   "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added about two liters a day, roughly eight glasses, for four weeks.",
    "screen": [
     "LINE 1 · 49 healthy women",
-    "+2 L a day · 4 weeks"
+    "aged 22–34",
+    "about +2 L a day · 4 weeks"
    ]
   },
   {
    "id": "b04",
-   "start": 16.052,
-   "end": 19.927,
-   "next": 20.377,
+   "start": 16.454,
+   "end": 20.329,
+   "next": 20.779,
    "sents": [
     {
-     "s": 16.052,
-     "e": 17.73,
+     "s": 16.454,
+     "e": 18.133,
      "c0": 0,
      "c1": 29
     },
     {
-     "s": 17.87,
-     "e": 19.927,
+     "s": 18.273,
+     "e": 20.329,
      "c0": 30,
      "c1": 62
     }
@@ -172,15 +173,15 @@
    "captions": [
     {
      "text": "Everyone got the extra water.",
-     "start": 16.052,
+     "start": 16.454,
      "key": 0,
-     "end": 17.87
+     "end": 18.273
     },
     {
      "text": "Nobody was left as a comparison.",
-     "start": 17.87,
+     "start": 18.273,
      "key": 5,
-     "end": 19.927
+     "end": 20.329
     }
    ],
    "vo": "Everyone got the extra water. Nobody was left as a comparison.",
@@ -190,19 +191,19 @@
   },
   {
    "id": "b05",
-   "start": 20.377,
-   "end": 24.726,
-   "next": 25.176,
+   "start": 20.779,
+   "end": 25.128,
+   "next": 25.578,
    "sents": [
     {
-     "s": 20.377,
-     "e": 21.562,
+     "s": 20.779,
+     "e": 21.964,
      "c0": 0,
      "c1": 17
     },
     {
-     "s": 21.702,
-     "e": 24.727,
+     "s": 22.104,
+     "e": 25.129,
      "c0": 18,
      "c1": 71
     }
@@ -210,21 +211,21 @@
    "captions": [
     {
      "text": "Food counted too.",
-     "start": 20.377,
+     "start": 20.779,
      "key": 0,
-     "end": 21.702
+     "end": 22.104
     },
     {
      "text": "Over half their water came from food,",
-     "start": 21.702,
+     "start": 22.104,
      "key": 6,
-     "end": 23.871
+     "end": 24.273
     },
     {
      "text": "soup and juice.",
-     "start": 23.871,
+     "start": 24.273,
      "key": 2,
-     "end": 24.726
+     "end": 25.128
     }
    ],
    "vo": "Food counted too. Over half their water came from food, soup and juice.",
@@ -234,19 +235,19 @@
   },
   {
    "id": "b06",
-   "start": 25.176,
-   "end": 29.134,
-   "next": 29.584,
+   "start": 25.578,
+   "end": 29.536,
+   "next": 29.986,
    "sents": [
     {
-     "s": 25.176,
-     "e": 27.225,
+     "s": 25.578,
+     "e": 27.627,
      "c0": 0,
      "c1": 37
     },
     {
-     "s": 27.365,
-     "e": 29.134,
+     "s": 27.767,
+     "e": 29.536,
      "c0": 38,
      "c1": 67
     }
@@ -254,15 +255,15 @@
    "captions": [
     {
      "text": "A probe then measured skin hydration.",
-     "start": 25.176,
+     "start": 25.578,
      "key": 1,
-     "end": 27.365
+     "end": 27.767
     },
     {
      "text": "Forehead, forearm, hand, leg.",
-     "start": 27.365,
+     "start": 27.767,
      "key": 0,
-     "end": 29.134
+     "end": 29.536
     }
    ],
    "vo": "A probe then measured skin hydration. Forehead, forearm, hand, leg.",
@@ -273,13 +274,13 @@
   },
   {
    "id": "b07",
-   "start": 29.584,
-   "end": 34.935,
-   "next": 35.385,
+   "start": 29.986,
+   "end": 35.337,
+   "next": 35.787,
    "sents": [
     {
-     "s": 29.584,
-     "e": 34.934,
+     "s": 29.986,
+     "e": 35.336,
      "c0": 0,
      "c1": 98
     }
@@ -287,44 +288,45 @@
    "captions": [
     {
      "text": "In the thirty-eight who",
-     "start": 29.584,
+     "start": 29.986,
      "key": 2,
-     "end": 30.894
+     "end": 31.296
     },
     {
      "text": "took in less water overall,",
-     "start": 30.894,
+     "start": 31.296,
      "key": 4,
-     "end": 32.423
+     "end": 32.825
     },
     {
      "text": "the forehead reading",
-     "start": 32.423,
+     "start": 32.825,
      "key": 1,
-     "end": 33.569
+     "end": 33.971
     },
     {
      "text": "rose about forty percent.",
-     "start": 33.569,
+     "start": 33.971,
      "key": 2,
-     "end": 34.935
+     "end": 35.337
     }
    ],
    "vo": "In the thirty-eight who took in less water overall, the forehead reading rose about forty percent.",
    "screen": [
-    "38 lighter drinkers",
-    "forehead hydration reading: +40%"
+    "LINE 2 · results",
+    "38 · less water overall",
+    "forehead reading: about +40%"
    ]
   },
   {
    "id": "b08",
-   "start": 35.385,
-   "end": 38.79,
-   "next": 39.24,
+   "start": 35.787,
+   "end": 39.192,
+   "next": 39.642,
    "sents": [
     {
-     "s": 35.385,
-     "e": 38.79,
+     "s": 35.787,
+     "e": 39.192,
      "c0": 0,
      "c1": 63
     }
@@ -332,32 +334,32 @@
    "captions": [
     {
      "text": "In the eleven who already drank a lot,",
-     "start": 35.385,
+     "start": 35.787,
      "key": 2,
-     "end": 37.493
+     "end": 37.895
     },
     {
      "text": "the change wasn't clear.",
-     "start": 37.493,
+     "start": 37.895,
      "key": 1,
-     "end": 38.79
+     "end": 39.192
     }
    ],
    "vo": "In the eleven who already drank a lot, the change wasn't clear.",
    "screen": [
-    "11 heavy drinkers",
+    "11 · more water overall",
     "change not clear"
    ]
   },
   {
    "id": "b09",
-   "start": 39.24,
-   "end": 42.761,
-   "next": 43.211,
+   "start": 39.642,
+   "end": 43.163,
+   "next": 43.613,
    "sents": [
     {
-     "s": 39.24,
-     "e": 42.761,
+     "s": 39.642,
+     "e": 43.163,
      "c0": 0,
      "c1": 61
     }
@@ -365,15 +367,15 @@
    "captions": [
     {
      "text": "Skin's barrier, how fast water escapes,",
-     "start": 39.24,
+     "start": 39.642,
      "key": 1,
-     "end": 41.549
+     "end": 41.951
     },
     {
      "text": "didn't really change.",
-     "start": 41.549,
+     "start": 41.951,
      "key": 0,
-     "end": 42.761
+     "end": 43.163
     }
    ],
    "vo": "Skin's barrier, how fast water escapes, didn't really change.",
@@ -383,19 +385,19 @@
   },
   {
    "id": "b10",
-   "start": 43.211,
-   "end": 45.746,
-   "next": 46.196,
+   "start": 43.613,
+   "end": 46.148,
+   "next": 46.598,
    "sents": [
     {
-     "s": 43.211,
-     "e": 44.244,
+     "s": 43.613,
+     "e": 44.646,
      "c0": 0,
      "c1": 18
     },
     {
-     "s": 44.384,
-     "e": 45.747,
+     "s": 44.786,
+     "e": 46.149,
      "c0": 19,
      "c1": 44
     }
@@ -403,15 +405,15 @@
    "captions": [
     {
      "text": "Sounds like a win.",
-     "start": 43.211,
+     "start": 43.613,
      "key": 0,
-     "end": 44.384
+     "end": 44.786
     },
     {
      "text": "But it's one small study.",
-     "start": 44.384,
+     "start": 44.786,
      "key": 3,
-     "end": 45.746
+     "end": 46.148
     }
    ],
    "vo": "Sounds like a win. But it's one small study.",
@@ -421,13 +423,13 @@
   },
   {
    "id": "b11",
-   "start": 46.196,
-   "end": 50.394,
-   "next": 50.844,
+   "start": 46.598,
+   "end": 50.796,
+   "next": 51.246,
    "sents": [
     {
-     "s": 46.196,
-     "e": 50.394,
+     "s": 46.598,
+     "e": 50.796,
      "c0": 0,
      "c1": 63
     }
@@ -435,32 +437,33 @@
    "captions": [
     {
      "text": "A 2018 review of five studies like",
-     "start": 46.196,
+     "start": 46.598,
      "key": 5,
-     "end": 48.528
+     "end": 48.93
     },
     {
      "text": "it called the evidence weak.",
-     "start": 48.528,
+     "start": 48.93,
      "key": 4,
-     "end": 50.394
+     "end": 50.796
     }
    ],
    "vo": "A 2018 review of five studies like it called the evidence weak.",
    "screen": [
+    "LINE 3 · review",
     "2018 review · 5 studies",
     "evidence: weak"
    ]
   },
   {
    "id": "b12",
-   "start": 50.844,
-   "end": 53.675,
-   "next": 54.125,
+   "start": 51.246,
+   "end": 54.077,
+   "next": 54.527,
    "sents": [
     {
-     "s": 50.844,
-     "e": 53.675,
+     "s": 51.246,
+     "e": 54.077,
      "c0": 0,
      "c1": 65
     }
@@ -468,15 +471,15 @@
    "captions": [
     {
      "text": "And it's unclear whether you'd",
-     "start": 50.844,
+     "start": 51.246,
      "key": 2,
-     "end": 52.194
+     "end": 52.596
     },
     {
      "text": "notice the difference in a mirror.",
-     "start": 52.194,
+     "start": 52.596,
      "key": 5,
-     "end": 53.675
+     "end": 54.077
     }
    ],
    "vo": "And it's unclear whether you'd notice the difference in a mirror.",
@@ -486,13 +489,13 @@
   },
   {
    "id": "b13",
-   "start": 54.125,
-   "end": 55.748,
-   "next": 56.998,
+   "start": 54.527,
+   "end": 56.15,
+   "next": 57.4,
    "sents": [
     {
-     "s": 54.125,
-     "e": 55.748,
+     "s": 54.527,
+     "e": 56.15,
      "c0": 0,
      "c1": 23
     }
@@ -500,9 +503,9 @@
    "captions": [
     {
      "text": "Receipt total: unknown.",
-     "start": 54.125,
+     "start": 54.527,
      "key": 2,
-     "end": 55.748
+     "end": 56.15
     }
    ],
    "vo": "Receipt total: unknown.",
@@ -513,25 +516,25 @@
   },
   {
    "id": "b14",
-   "start": 56.998,
-   "end": 62.744,
-   "next": 63.194,
+   "start": 57.4,
+   "end": 63.146,
+   "next": 63.596,
    "sents": [
     {
-     "s": 56.998,
-     "e": 61.032,
+     "s": 57.4,
+     "e": 61.434,
      "c0": 0,
      "c1": 70
     },
     {
-     "s": 61.172,
-     "e": 61.809,
+     "s": 61.574,
+     "e": 62.211,
      "c0": 71,
      "c1": 78
     },
     {
-     "s": 62.049,
-     "e": 62.744,
+     "s": 62.451,
+     "e": 63.146,
      "c0": 79,
      "c1": 87
     }
@@ -539,44 +542,44 @@
    "captions": [
     {
      "text": "Water might nudge skin hydration readings,",
-     "start": 56.998,
+     "start": 57.4,
      "key": 4,
-     "end": 59.476
+     "end": 59.878
     },
     {
      "text": "mostly if you drink little.",
-     "start": 59.476,
+     "start": 59.878,
      "key": 0,
-     "end": 61.172
+     "end": 61.574
     },
     {
      "text": "Proven?",
-     "start": 61.172,
+     "start": 61.574,
      "key": 0,
-     "end": 62.049
+     "end": 62.451
     },
     {
      "text": "Not yet.",
-     "start": 62.049,
+     "start": 62.451,
      "key": 0,
-     "end": 62.744
+     "end": 63.146
     }
    ],
    "vo": "Water might nudge skin hydration readings, mostly if you drink little. Proven? Not yet.",
    "screen": [
-    "might help · mostly if you drink little",
+    "might nudge readings · mostly if you drink little",
     "proven? not yet"
    ]
   },
   {
    "id": "b15",
-   "start": 63.194,
-   "end": 66.81,
-   "next": 70.31,
+   "start": 63.596,
+   "end": 67.212,
+   "next": 70.712,
    "sents": [
     {
-     "s": 63.194,
-     "e": 66.811,
+     "s": 63.596,
+     "e": 67.213,
      "c0": 0,
      "c1": 56
     }
@@ -584,15 +587,15 @@
    "captions": [
     {
      "text": "If your skin stays dry,",
-     "start": 63.194,
+     "start": 63.596,
      "key": 3,
-     "end": 64.744
+     "end": 65.146
     },
     {
      "text": "a dermatologist can check yours.",
-     "start": 64.744,
+     "start": 65.146,
      "key": 1,
-     "end": 66.81
+     "end": 67.212
     }
    ],
    "vo": "If your skin stays dry, a dermatologist can check yours.",

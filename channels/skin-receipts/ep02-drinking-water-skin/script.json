@@ -18,7 +18,7 @@
       "screen": [
         "49 women tested it"
       ],
-      "visual": "Clean white frame. A glass of water on a bathroom counter in soft window light; a receipt strip prints '49' at the frame edge. Slow lateral slide past the glass. Reads in under 2 s."
+      "visual": "Close-up of a single drop hitting the water in a glass (crown splash, ripples) for the first second; slide out to the glass on the counter in window light. '49 women' prints on the receipt on 'Forty-nine'. No hands."
     },
     {
       "id": "b02",
@@ -29,20 +29,21 @@
       "screen": [
         "CLAIM: more water → hydrated skin"
       ],
-      "visual": "Receipt prints the claim in Courier Prime with printer ticks. A hand of deep brown skin tone lifts the glass (touch motivates the move)."
+      "visual": "Receipt prints the claim in Courier Prime with printer ticks. Water pours into the glass from an out-of-frame stream. No hands."
     },
     {
       "id": "b03",
-      "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added two liters a day, about eight glasses, for four weeks.",
+      "vo": "Line one. Healthy women, aged twenty-two to thirty-four. They added about two liters a day, roughly eight glasses, for four weeks.",
       "claims": [
         "C1",
         "C2"
       ],
       "screen": [
         "LINE 1 · 49 healthy women",
-        "+2 L a day · 4 weeks"
+        "aged 22–34",
+        "about +2 L a day · 4 weeks"
       ],
-      "visual": "Receipt line 1 prints. Eight glasses fill in a row on a counter, one per printer tick, held by hands of varied skin tones. Lateral slide along the row."
+      "visual": "Receipt line 1 prints, then 'aged 22-34'. Eight glasses fill in a row from an out-of-frame pour stream, one per printer tick, sliding in and settling on their own. Lateral slide along the row. No hands."
     },
     {
       "id": "b04",
@@ -86,8 +87,9 @@
         "C6"
       ],
       "screen": [
-        "38 lighter drinkers",
-        "forehead hydration reading: +40%"
+        "LINE 2 · results",
+        "38 · less water overall",
+        "forehead reading: about +40%"
       ],
       "visual": "A Verified Teal bar prints on the strip rising from 54 to 76 on a simple scale. Locked-off; the bar grows on the word forty."
     },
@@ -98,7 +100,7 @@
         "C7"
       ],
       "screen": [
-        "11 heavy drinkers",
+        "11 · more water overall",
         "change not clear"
       ],
       "visual": "A second bar, short and Slate, prints beside the first with a small 'not clear' tag. Static."
@@ -124,7 +126,7 @@
       "screen": [
         "one small study"
       ],
-      "visual": "The receipt strip prints 'one small study' as a tag; camera pulls back slightly to show the two bars and the empty slot together."
+      "visual": "The teal +40 % bar flashes back on 'Sounds like a win'; the 'one small study' tag lands over it."
     },
     {
       "id": "b11",
@@ -133,6 +135,7 @@
         "C9"
       ],
       "screen": [
+        "LINE 3 · review",
         "2018 review · 5 studies",
         "evidence: weak"
       ],
@@ -147,7 +150,7 @@
       "screen": [
         "noticeable? unclear"
       ],
-      "visual": "A person of medium-tan skin looks at their cheek in a bathroom mirror, soft light, the glass at their elbow. Slow push-in."
+      "visual": "A real bathroom mirror on the tile wall reflects the forearm and the glass (no face). Slow push-in."
     },
     {
       "id": "b13",
@@ -171,7 +174,7 @@
         "C11"
       ],
       "screen": [
-        "might help · mostly if you drink little",
+        "might nudge readings · mostly if you drink little",
         "proven? not yet"
       ],
       "visual": "Calm pull-back from the stamp to the full receipt and the glass on the counter, soft light."
@@ -189,7 +192,7 @@
     }
   ],
   "end_card": {
-    "text": "Receipt total: UNKNOWN · In one small study, extra water raised skin hydration readings, mostly in people who drank less. A 2018 review called the evidence weak. Education, not medical advice.",
+    "text": "Receipt total: UNKNOWN · In one small study, skin hydration readings rose after extra water, mostly in people who took in less water. A 2018 review called the evidence weak. Education, not medical advice.",
     "channel": "Skin Receipts"
   },
   "cover": {
@@ -197,5 +200,12 @@
     "key_word": "water"
   },
   "end_hold": 3.5,
-  "sound": "skin-receipts"
+  "sound": "skin-receipts",
+  "caption_keep": [
+    "tested it",
+    "a day",
+    "small study",
+    "drink little",
+    "evidence weak"
+  ]
 }
