@@ -132,3 +132,109 @@
    - **Foley:** swap the procedural `sr_pour` and `sr_drop` for recorded CC0 water foley.
    - **SRT:** re-break lines so no cue ends on a one-word line ("it.", "day,", "study.", "weak.", "little.").
    - **After a pass:** Bruce spot-checks C2, C6, C7 and C13 against S1. I could not re-open it.
+
+## Round 2 — 2026-11-09
+
+**Reviewer:** the same independent gate pass, with the same rules and the same ep01 calibration ((h) = 4 low: "polished stylised CG with real-object detail, depth, grain").
+
+**Lead decisions applied, not held against the film:**
+- The hook uses the MINIMUM option: a macro of a drop hitting water, VO unchanged.
+- No hands anywhere.
+- A real mirror at b12.
+- Forearm skin is reused for the end slide.
+
+**Reviewed:**
+- `out/wip/ep02.mp4` (70.70 s, 1080×1920, 30 fps)
+- `out/ep02.srt`, `script.json`, `claims.md`, `platform.json`, `out/timeline.json`, `out/cues.json`, `out/render-report.md`, `out/cover.png`
+- `overlay.js` and `timing.js` (every label string), `scene.js`, and the `engine/sound.py` diff since round 1
+
+**Method:**
+- Hook tile at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s.
+- Two contact sheets, one frame every 1.5 s, with the timestamps burned from pts.
+- 540-wide frames at 0.4, 3, 13, 36, 44, 53, 57, 65 and 69 s, plus the cover.
+- 400-wide frames at 41, 45.6, 51.8 and 64 s.
+
+**Audio caveat:** I still cannot hear the film. Timings below are round-2 times, about 0.4 s later than round 1.
+
+### Scores
+
+| | Criterion | R1 | R2 | Evidence |
+|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | **4** (low) | **Works:** frame 0 is a macro of a drop striking the water (`drop` cue at 0.34), with a crown, droplets and ripples at 0.4–1.0. It slides out and reveals the glass on the counter (1.5–2.0). "49 women tested it" prints on the receipt on "Forty-nine" (it is mid-print at 2.0). The title is now a compact top-right card, so the picture owns the frame. This is the minimum route from round 1, delivered. **Weak:** the macro is pale beige-on-beige and low-contrast. At phone size, 0.0 reads as an abstract white ring until the ripples at 0.5. The words are still a topic line. |
+| b | One thread | 4 | **4** | **Fixed:** the receipt device now completes: LINE 1 (8.3), LINE 2 · results (30.0), LINE 3 · review (46.6), RECEIPT TOTAL (54.5). **Still mild:** "Food counted too" (20.8–25.1) is a side trip that pays off only through "overall". |
+| c | Picture moves with the sentence | 4 | **4** | **On the word:** the teal +40 % card flashes back on "Sounds like a win" (43.6). "aged 22–34" prints on "aged" (10.1). The rest is as in round 1. **Misses:** <br>• **One small study (44.8–46.1):** the "one small study" tag is drawn *under* the bar card. At 45.6 only a sliver of it peeks out at the card's left edge, so "But it's one small study" plays over a clean "+40 %" win. <br>• **Mirror (51.2–54.1):** "in a mirror" shows a tan forearm on the counter in front of a plain grey panel. At review size it does not read as a mirror: no frame and no visible reflection. The dashed "noticeable?" circle sits on the forearm. |
+| d | Motivated camera | 4 | **4** | **Fixed:** the hook move is now motivated (drop → slide-out reveal, 0–2). The idle 43–46 shot now carries the bar flash. The pull-back from the stamp (57–62) is as before. |
+| e | Voice meaning, screen figures | 3 | **4** | **Fixed:** the screen figures now match the VO's meaning: "38 · less water overall" and "11 · more water overall" (30–39, chart and strip), "aged 22–34" (10.1), "about +2 L a day" (12–16), "about +40%" (34–46). **Weak:** the VO still speaks about ten numbers itself. Each one now has a screen echo. |
+| f | Rhythm | 4 | **4** | About 150 wpm. Gaps are 0.45 s. There is a 1.25 s breath after "unknown" (56.15–57.4) and a 3.4 s end hold (67.3–70.7). No black frames and no freezes (render report). The opening is no longer one static 8 s composition: drop, reveal, pour. **Captions:** the burned-in captions carry the same widows as the SRT ("study." 45.6, "weak." 49.5, "little." 60.5). |
+| g | Ending | 4 | **4** | **Works:** <br>• The UNKNOWN stamp lands on "unknown" (55.5) as a raised card with a local shadow, not a grey full-frame dim (57). <br>• The strip prints C11 verbatim: "might nudge readings · mostly if you drink little" and "proven? not yet". <br>• The end card is correctly non-causal: "In one small study, skin hydration readings rose after extra water, mostly in people who took in less water. A 2018 review called the evidence weak." It is followed by the disclaimer. <br>**Weak:** the skin-tone slide under the dermatologist line (63.6–67.2) is flat. |
+| h | Production value | 3 | **4** (low) | **Now at ep01's bar for the hero set (about 60 % of runtime):** <br>• **Tiles:** irregular glazed tiles with per-tile tint, uneven grout and focus falloff. <br>• **Counter:** terrazzo with chips and depth. <br>• **Glasses:** rim highlights, meniscus and bubbles. <br>• **Light:** a window-light streak at 51–54 and 57. <br>• **Stamp:** a shadowed card (57). <br>• **Probe:** a metal probe with a teal band (27–29, cover), no longer a marker. <br>• **End slide (64–66):** now reads as skin, with hair and creases in three or more tones, not cork. <br>**Still below the bar:** <br>• **Barrier diagram (39.6–43.2):** a flat cartoon brick slide on a mint backdrop, outside the counter world. It is no longer blown-out white. <br>• **End slide:** flat vertical panels separated by teal gaps, with no roundness or rim light. <br>• **Mirror beat:** reads as a grey panel. <br>• **Grade:** pale and hazy overall. <br>• **Grain:** not visible at review size, and there is no grain pass in `scene.js`. |
+
+### Round-1 fix list: status
+
+1. **Facts text pass: DONE.**
+   - **End card:** "readings rose after extra water … took in less water".
+   - **Strip:** C11 verbatim.
+   - **Labels:** "38 / 11 · less / more water overall".
+   - **Hedges:** "about +40%" and "about +2 L a day". The VO also says "about two liters".
+   - **TikTok:** the copy carries "Education, not medical advice.".
+   - **Instagram:** "took in less water".
+   - **`claims.md`:** C2/C7/C11 hedges updated. C13 is confirmed as the baseline (habitual) diet, re-checked 2026-11-09.
+2. **Hook: DONE (minimum route).** Drop macro at 0–1.0, slide-out to the glass by 1.5–2.0, "49 women tested it" on the receipt on "Forty-nine", and a shrunk title card. **Note:** the macro's contrast is soft.
+3. **Bathroom set: MOSTLY DONE.**
+   - **Done:** tiles, focus falloff, terrazzo, glass rim and meniscus, window light, and a local shadow under the stamp.
+   - **Waived:** hands, by lead decision.
+   - **Partly:** the barrier diagram is still an off-world slide (mint, not white). Grain is not seen. Fingerprint and condensation are not seen.
+4. **End skin slide and probe: MOSTLY DONE.**
+   - **Done:** the probe is now metal.
+   - **Partly:** the slide now reads as forearm skin in several tones, but as flat vertical panels on teal, not five rounded forearms with a rim light.
+5. **Picture/word fixes: PARTLY.**
+   - **Done:** LINE 2 and LINE 3, "aged 22–34", and the "Sounds like a win" bar flash.
+   - **Partly:** the "one small study" tag is hidden under the bar card (44.8–46.1). The mirror does not read as a mirror (51.2–54.1).
+6. **Sound and captions (not heard): PARTLY.**
+   - **Done:** the bed now drops out about 1 s before the UNKNOWN hit (`engine/sound.py`).
+   - **Not moved:** LRA is still 1.9 LU (target ≥ 3–4).
+   - **Not done:** the `sr_pour` and `sr_drop` foley are still procedural.
+   - **SRT widows remain:** "it." (cue 2), "water," (3), "study." (27), "weak." (29), "little." (34), plus the "like / it" and "whether / you'd" splits (28–31). "day," was fixed by the rewording.
+
+### Facts and ethics, round 2
+
+**Checked against the claims rows:** every on-screen string in `timing.js` and `overlay.js`, on the cover and in `platform.json` is an OK row in `claims.md`, with a matching hedge:
+- **C0:** "CLAIM: more water, hydrated skin".
+- **C1:** "49 women tested it".
+- **C2:** "LINE 1 · 49 healthy women", "aged 22–34", "about +2 L a day · 4 weeks".
+- **C3:** "no comparison group" and "one small study".
+- **C13:** "over half of their water: food, soup, juice".
+- **C4:** "skin hydration probe" and "face · arm · hand · leg".
+- **C5 / C6:** "38 · less water overall", 54 → 76 "forehead reading · probe units", "about +40%".
+- **C7:** "11 · more water overall" and "change not clear" (dashed "?").
+- **C8:** "water loss through skin: no relevant change", with "illustration, not to scale".
+- **C9:** "2018 review · 5 studies" and WEAK.
+- **C10:** "noticeable? unclear".
+- **C11:** RECEIPT TOTAL / UNKNOWN, "might nudge readings · mostly if you drink little", "proven? not yet", and the end card.
+
+**What the film does not imply:**
+- **Causation:** nothing says water caused the rise. The end card uses "rose after", the chart is start → week 4 with "about", "no comparison group" is shown at 18–20, and the YouTube and Instagram copy say "readings rose".
+- **Disclaimer:** "Education, not medical advice." is visible from 0.05 s, in every sampled frame, on the end card, on the cover and in all three platform copies.
+- **Clean:** no brands, products, dosing or diagnosis.
+
+**Open items:** none, factual or ethical. Akdeniz 2018 stays OPEN-unused, as in round 1.
+
+### Verdict: **PASS**
+
+- No score is below 3.
+- (a) = 4, (g) = 4 and (h) = 4 all meet the bar. (a) and (h) are both 4 low.
+- Nothing factual or ethical is open.
+
+### Pre-upload notes (not gating, in priority order)
+
+1. **Unhide the "one small study" tag (`overlay.js`).** In `labels()` it is drawn before `winBar(t)`, so the bar card covers it at 44.8–46.1. Draw the tag after `winBar`, or fade the bar card out on "But", so the counterweight lands over the +40 % win.
+2. **Make the mirror read (51.2–54.1).**
+   - **Mirror:** give it a visible frame or bevel edge and a clear reflection of the glass and the forearm.
+   - **Circle:** move the "noticeable? unclear" circle onto the reflection.
+   - **Fallback:** if neither works, change the tag position so the beat isn't promising a mirror the picture lacks.
+3. **Hook contrast (0–1.0).** Darken the water and backdrop under the drop and add a rim light on the crown, so frame 0 reads as "drop hitting water" at phone size before the ripples arrive.
+4. **Captions, sound and source.**
+   - **Captions:** re-break the SRT and burned-in captions so no cue ends on a one-word line ("it.", "water,", "study.", "weak.", "little.") and "like it" / "you'd notice" stay together.
+   - **Sound (if time allows):** widen the LRA (the bed dropout did not move it off 1.9 LU) and swap in recorded CC0 water foley.
+   - **Source:** Bruce spot-checks C2, C6 and C7 against S1 before upload.
+   - **Cover:** the disclaimer pill slightly overlaps the title card's bottom edge. Nudge it down.
