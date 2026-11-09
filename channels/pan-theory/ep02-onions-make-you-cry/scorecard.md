@@ -133,3 +133,104 @@ Loudness and peaks are on target. The chop → spray → pop triplet fires four 
 - **Faster cuts (53.5):** if possible, show speed on the "fast" side, e.g. a longer blade travel streak.
 - **Sound:** the chop → spray → pop triplet repeats four times. Vary the gain and pitch.
 - **Release copy:** copy the approved render to `out/ep02.mp4`. Today only `out/wip/` exists.
+
+## Round 2 — 2026-11-09
+
+**Reviewer:** independent gate pass (did not build the episode). I used the same method and calibration as round 1, and ep01 R5 again sets the bar: (h) = 4 means "polished stylised CG with real-object detail, depth and grain".
+
+**Reviewed:**
+- The film: `out/wip/ep02.mp4` (72.82 s, 1080×1920, 30 fps, 2184 frames).
+- Text and data: `out/ep02.srt`, `script.json`, `claims.md`, `platform.json`, `out/cues.json`, `out/render-report.md`.
+- The cover: `out/cover.png`.
+- Code: label sizes in `overlay.js` (every label is 46 px or larger) and the `pt_*` functions in `engine/sound.py`.
+
+**Method:**
+- A tile of stills at 0.0 / 0.5 / 1.0 / 1.5 / 2.0 s.
+- A 0.7 s crop of the contact point.
+- Two contact sheets, one frame every 1.5 s from 2.5 s. The burned-in clock starts at 0, so I added 2.5 s to every reading. All times below are true video times.
+- Frames 540 px wide at 0.8, 10, 12, 16, 22, 38, 42, 48, 51, 54, 63 and 70 s, plus the cover.
+
+**Fact spot-check:**
+- **PMC:** curl to the PMC page (browser user agent) hit a bot check twice. I did not try to get around it, and Europe PMC is blocked by the proxy.
+- **Preprint:** the arXiv preprint (2505.06016v1 HTML) has the exact wording for C1–C4, C9–C11 and C14. Its methods say "The outermost dry layer (brown skin) was removed", so the onions were peeled. The preprint itself says "hundreds to thousands", so the film's "hundreds" is the safe wording whichever text rules.
+- **Publication:** one web search found the APS March Meeting 2026 listing, which cites *PNAS* 122(42), e2512779122.
+- **Ledger:** the "Claude (full page opened)" convention is the one ep01 passed with.
+
+**Audio (from the report and code only):**
+- **Report:** −14.0 LUFS, LRA 2.5 LU, true peak −1.2 dBTP. There are no black or frozen frames.
+- **Repeated cues:** the chop → spray → pop triplet still fires at 0.54, 4.6, 8.9 and 16.0 s with the same cue gains.
+- **Variation in the synth:** `pt_hit` takes a per-cut `k` (pitch and brightness), `pt_var` adds variation per cue, and `pt_spray` seeds each spray from its cue time. The four should differ, but listen for sameness.
+
+### Scores
+
+| | Criterion | R1 | R2 | Evidence |
+|---|---|---|---|---|
+| a | Hook in first 2 s | 3 | **4** | **What works:** <br>• **Words:** unchanged and strong. The title "YOUR ONION SHOOTS TINY DROPLETS" is up by 0.5. <br>• **Picture:** it now delivers "shoots". The blade comes down at 0.5–0.7 s, and a fan of droplets with motion streaks rises from the blade–onion contact at 0.7. It clears the top of the blade against the dark wall at 0.8–1.0 and passes the title. <br>• **Blade:** brushed steel. <br>• **Contrast:** the haze is cut and the window has mullions. <br>• **Onion:** peeled, pale and veined. <br>**Not 5:** <br>• **First frames:** at 0.7 the fan is white streaks over light steel, so the first frames are low contrast. <br>• **Droplets:** by 1.5–2.0 they drift like soap bubbles. <br>• **Angle:** still counter-level. The scripted overhead or high 3/4 is not used. <br>• **Blade edge:** a pale bar floats at the blade's edge. |
+| b | One thread | 4 | **4** | **The thread:** droplets → speed and count → why cry (23.8–37.3) → the chemist's link, hedged (38.2–42.6) → blunt or fast vs sharp → limits → "sharpen your knife". **The setup line:** b13 is now true ("And it's one study, in one lab.", 61.6–63.8), so it sets up the payoff cleanly. **Side trip:** the skin-squeeze mechanism (43.2–49.6) is still a small detour. |
+| c | Picture moves with the sentence | 4 | **4** | **Fixed:** <br>• **"Tears." (36.64):** a clear, refractive tear bead forms under the eye on the word (37–38), with a plop cue. <br>• **13.0:** the dead frame is now the rig reveal on "lab rig" (13.2). <br>**Also on the word:** <br>• the big glassy drop on "fiftieth" (19); <br>• the burst and the 0.017 → 0.020 s counter on "hundreds" (20.5–22); <br>• the "Why cry?" cut face (23.5); <br>• the dent on "squeezed" (47.5); <br>• "fast" on "faster cuts" (52.3); <br>• the stamp on "one lab" (62.5). <br>**Misses:** <br>• **11.5–12.5:** "about ninety miles an hour" plays over rods and stickers, with no droplet in frame. <br>• **"faster cuts":** still only a sticker. No speed difference is shown. <br>• **The "cornea" pointer:** it ends on the iris, not the dome edge (34–38). |
+| d | Motivated camera | 4 | **4** | **Moves you can name:** <br>• a follow on the drop (9–11); <br>• a 3/4 pull-back reveal of the rig (13–18); <br>• a static macro of the burst (19–23); <br>• a drop to cell scale (24.8); <br>• a push on the eye (32–38); <br>• a locked split (50–54); <br>• an overhead counter for the card and end card (58–72.8), with a slow push. <br>**Weak spot:** the overhead default is still used only from 58 s on. The hook and b08 are side-on. |
+| e | Voice carries meaning, screen carries figures | 4 | **4** | **Figures on screen:** <br>• 5,000–20,000 fps; <br>• up to 40 m/s ≈ 90 mph; <br>• < 0.02 s; <br>• the 0.017 / 0.020 s counter; <br>• "hundreds of drops"; <br>• "propanethial S-oxide" while the voice says "eye irritant". <br>**Captions:** "up to about ninety…" is now on one card (10.2–12.5), and the orphan "the" is gone (43.2–48.6). **Labels:** every one is 46 px or larger (`overlay.js`). **Repeats:** stickers still repeat the caption: "lab rig · not a chef", "sharp = fewer, slower", "droplets ✓ / tears ?", and the new "one study · one lab" (62.5–64). |
+| f | Rhythm | 4 | **4** | **Pace:** 167 words in 72.8 s is ≈ 138 wpm overall. Gaps are 0.6–0.9 s. The 13.0 dead frame is gone. **End card (64.0–72.8):** the onions and knife are now at full strength under the card, with a slow push. The handle fades in at ≈ 70. **Weak spots:** <br>• **Last 3.0 s:** still a silent hold (69.8–72.8). <br>• **11.5–12.5:** a thin frame with no droplet in it. |
+| g | Ending | 4 | **4** | **Payoff:** "The Pan Theory: sharpen your knife tonight. Fewer droplets, and maybe fewer tears." (64.4–69.8). It answers both the hook and the title, with the right hedge. The line before it is now true. **End card:** "sharpen your knife" / "sharp knife → fewer droplets" / "Food education, not diet advice.", over overhead onion halves and a knife. **Not 5:** <br>• **The knife:** it reads as a flat white cutout with no bevel or steel (58–72.8). <br>• **No clean cut:** the payoff never shows a clean slice. <br>• **At 63.0:** the knife tip covers the end of the "one lab" stamp. |
+| h | Production value | 3 | **4** | **Every asset flagged in R1 is rebuilt or clearly improved:** <br>• **Droplets:** clear and refractive, with streaks (0.8, 10). The big glassy drop at 19 is good, and the burst field reads at 22. The black ring and the faceted grey ball are gone. <br>• **Blade:** brushed steel (0.8, 16). <br>• **Set:** a real window with mullions behind the rig (0–2, 16, 48). <br>• **Cell world:** pale, translucent cells with clustered molecules that turn red (25–31). <br>• **Cross-section:** a skin band over polygonal flesh cells, dented by a blade (43–49.6). <br>• **b08:** a 3D eyeball replaces the flat badge (38.5–42.6). <br>• **Eye:** a refractive tear bead (37–38). <br>• **"Why cry?" cut face:** the rings read (23.5). <br>• **Cover:** a solid onion half with rings. <br>• **Look:** DOF and grain throughout. <br>This meets the ep01 bar. **4, not 5:** <br>• **b08 (38.5–42.6):** large flat white panels still fill the upper half, and the eyeball floats on one. <br>• **Droplets:** they read as soap bubbles more than liquid (10, 22). <br>• **End-card knife:** flat (58–72.8). <br>• **Blade designs:** three of them, not matched (0.8 plate, 4–7 hanging knife, 50–56 boxes). <br>• **b09:** a thick dark band for a "thin" skin. |
+
+### Round 1 fix-list status
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| 1 | F1: cover and platform text | **Done** | **Cover:** the tag is "your knife throws DROPLETS" and the onion half is solid and ringed. **YouTube title:** "Why onions make you cry, and the droplets you can't see #Shorts". **TikTok title:** "…A sharper blade threw fewer droplets in one lab". **Ledger:** C15 covers this wording. |
+| 2 | F2: preprint | **Done** | **VO and sticker:** b13 is now "And it's one study, in one lab." and the sticker is "one study · one lab". "Preprint" appears nowhere: not in the VO, on screen, in platform copy or in the ledger. **Ledger:** S1 is now the PNAS paper, C5 now says "hundreds" (the safe wording) and C13 is rewritten. **Publication:** confirmed by the APS listing. The PMC verbatim spot-check was blocked by a bot check (see above). |
+| 3 | F3: ledger and wording | **Done** | **New row:** C14 covers "maybe fewer tears". **Peeled:** confirmed in the preprint methods, and the film shows peeled halves at 0–2, 4–8, 13–18 and 50–57. **b09 line:** now "The thin, tough skin on each layer…". |
+| 4 | (a) The hook | **Mostly done** | **Done:** the fan visibly erupts at 0.7–1.0, the blade is steel and the haze is cut. **Not done:** the overhead or high 3/4 angle, and the fan's first frames are low contrast. |
+| 5 | (h) Droplets and set | **Mostly done** | **Done:** droplets, cells, the cross-section and the window. **Still there:** white panels at 38.5–42.6, and no droplet in frame at 11.5–12.5. |
+| 6 | Eye beat and payoff picture | **Mostly done** | **Done:** the tear bead on "Tears.", the 3D eye for b08, and the end card with the onions and knife at full strength plus a push. **Partly done:** the "cornea" pointer ends on the iris, not the dome edge, and there is no clean slice. |
+
+**Non-gating notes from R1:**
+- **Caption breaks:** fixed.
+- **Sticker repeats:** still there.
+- **Faster cuts:** still shown by a sticker only.
+- **Sound:** the variation is in the synth code, so listen to confirm.
+- **Release copy:** not done. `out/ep02.mp4` does not exist yet.
+
+### Factual and ethical items
+
+- **F1:** CLOSED.
+- **F2:** CLOSED.
+- **F3:** CLOSED.
+- **Every on-screen label and number has an OK row:**
+  - C2 for the fps figure;
+  - C3 for 40 m/s and ≈ 90 mph;
+  - C5 for < 0.02 s, the 0.017 / 0.020 s counter and "hundreds";
+  - C4 for "lab rig · not a chef";
+  - C6 for the two chemistry labels;
+  - C7 and C8 for "cornea" and "→ tears";
+  - C9 for "suggested, not shown here";
+  - C10 for "skin holds / flesh squeezed / bursts";
+  - C11 for blunt / fast / sharp / "more droplets" / "the study's comparison";
+  - C12 for "droplets ✓ / tears ?";
+  - C13 for "one study · one lab";
+  - C11 and C14 for the end card;
+  - C15 for the cover.
+- **Hedges match.**
+- **Clear:** there are no brands and no diet or medical advice. "Food education, not diet advice." is on the end card.
+- **Not blocking, wording only (pre-upload):** the Instagram caption reads "Why onions make you cry: a lab filmed cut onions throwing tiny droplets." The colon can be read as "the droplets are why". The caption itself ends "droplets not tears", so I am not counting it as an open claim.
+
+### Verdict: **PASS**
+
+1. **Scores:** none is below 3, and (a), (g) and (h) are each 4.
+2. **Facts:** no factual or ethical item is open.
+
+### Pre-upload notes (not gating)
+
+1. **Release copy:** copy the approved render to `out/ep02.mp4`. Only `out/wip/ep02.mp4` exists.
+2. **Instagram caption:** change the colon to a comma clause, e.g. "Why onions make you cry, and what a lab saw: cut onions throwing tiny droplets."
+3. **At 62.5–64.0:** the knife tip covers "lab" on the "one study · one lab" stamp. Move the knife or put the stamp above it.
+4. **Listen:**
+   - **Chop / spray / pop:** check the four triplets (0.54, 4.6, 8.9, 16.0) for sameness.
+   - **Voice:** at speed 0.83, check that it does not drag.
+5. **Optional polish for later episodes:**
+   - **b08 (38.5–42.6):** replace the white panels.
+   - **11.5–12.5:** keep the droplet in frame.
+   - **The knife:** give it a steel bevel.
+   - **The hook:** shoot it from overhead or a high 3/4.
+   - **b09:** make the skin band thinner.

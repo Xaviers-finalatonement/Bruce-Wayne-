@@ -134,20 +134,36 @@
       "id": "pan-theory-ep02",
       "channel": "pan-theory",
       "number": 2,
-      "title": "Why onions make you cry",
-      "status": "planned",
+      "title": "Why onions make you cry, and the droplets you can't see",
+      "status": "passed gate",
       "youtube": {
-        "title": "TODO",
-        "description": "TODO\n\n#Shorts #PanTheory"
+        "title": "Why onions make you cry, and the droplets you can't see #Shorts",
+        "description": "A lab study filmed an onion being cut and saw tiny droplets burst out at up to about 90 mph. A reaction in the cut onion makes an eye irritant that sets off tears. A sharper blade threw fewer, slower droplets, but this is one study in one lab that tracked droplets, not tears.\n\n#PanTheory #CookingScience #Onions #Shorts"
       },
       "tiktok": {
-        "title": "TODO",
-        "hashtags": []
+        "title": "Your onion shoots tiny droplets when you cut it. A sharper blade threw fewer droplets in one lab",
+        "hashtags": [
+          "#cookingscience",
+          "#onions",
+          "#foodscience",
+          "#learnontiktok",
+          "#pantheory"
+        ]
       },
       "instagram": {
-        "caption": "Pan Theory · Ep 2\n\nTODO",
-        "hashtags": []
-      }
+        "caption": "Pan Theory · Ep 2\nWhy onions make you cry, and what one lab saw when it filmed cut onions: tiny droplets flying out. A sharper blade gave fewer, slower ones. One study in one lab, droplets not tears.",
+        "hashtags": [
+          "#cookingscience",
+          "#onions",
+          "#foodscience",
+          "#pantheory",
+          "#kitchenscience"
+        ]
+      },
+      "gate": "PASS (round 2): a4 b4 c4 d4 e4 f4 g4 h4",
+      "video": "channels/pan-theory/ep02-onions-make-you-cry/out/ep02.mp4",
+      "cover": "channels/pan-theory/ep02-onions-make-you-cry/out/cover.png",
+      "srt": "channels/pan-theory/ep02-onions-make-you-cry/out/ep02.srt"
     },
     {
       "id": "pan-theory-ep03",
