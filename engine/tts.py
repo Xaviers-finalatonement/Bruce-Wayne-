@@ -39,10 +39,12 @@ def wrap(words, width=LINE_MAX):
     return lines
 
 
-def split_chunks(text):
+def split_chunks(text, keep=()):
     """Split into chunks of <=2 lines of <=LINE_MAX chars, preferring punctuation breaks;
     long phrases are split into evenly sized pieces (no orphan words)."""
     text = text.replace("U.S.", "U\u00b7S\u00b7")
+    for k in keep:  # script "caption_keep": phrases that must not be split across caption lines (opt-in per episode)
+        text = text.replace(k, k.replace(" ", "\u2423"))
     phrases = [p for p in re.findall(r"[^.?!,]+[.?!,]?\s*", text) if p.strip()]
     chunks = []
     for ph in phrases:
@@ -66,7 +68,7 @@ def split_chunks(text):
             merged[-1] = merged[-1] + c
         else:
             merged.append(c)
-    return [" ".join(c).replace("\u00b7", ".") for c in merged]
+    return [" ".join(c).replace("\u00b7", ".").replace("\u2423", " ") for c in merged]
 
 
 def speech_segments(s, sr, t0, thr_db=-42, min_pause=0.12):
@@ -177,7 +179,7 @@ def main(ep):
     # write wavs, captions
     for b, bt, (s, sr, sents) in zip(sc["beats"], beats, res):
         sf.write(os.path.join(wavs, b["id"] + ".wav"), s, sr)
-        chunks = split_chunks(b["vo"])
+        chunks = split_chunks(b["vo"], sc.get("caption_keep", ()))
         wanted = set(norm(x) for x in kws.get(b["id"], []))
         bt["sents"] = [dict(s=round(bt["start"] + x["s"], 3), e=round(bt["start"] + x["e"], 3), c0=x["c0"], c1=x["c1"]) for x in sents]
         def at(ci):

@@ -179,7 +179,8 @@
   },
   "cover": {
     "headline": "Why onions make you cry",
-    "key_word": "DROPLETS", "tag": "your knife throws DROPLETS"
+    "key_word": "droplets",
+    "tag": "your knife throws DROPLETS"
   },
   "end_hold": 3.0,
   "sound": "pan-theory",
@@ -200,5 +201,9 @@
   },
   "holds": {
     "b13": 0.0
-  }
+  },
+  "caption_keep": [
+    "up to about ninety",
+    "the flesh under it"
+  ]
 }

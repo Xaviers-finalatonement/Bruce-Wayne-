@@ -142,10 +142,14 @@ def ua_bed(sfx, dur):
 def pt_env(n, a, r): t = np.arange(n) / SR; return np.minimum(1, t / max(a, 1e-4)) * np.minimum(1, np.maximum(0, (n / SR - t)) / max(r, 1e-4))
 
 
-def pt_hit(gain=1.0):  # knife on board: dry wooden transient + short body
+def pt_hit(gain=1.0, k=1.0):  # knife on board: dry wooden transient + short body; k varies pitch/brightness per cut
     n = int(0.18 * SR); t = np.arange(n) / SR
-    tr = bandnoise(n, 1200, 6500) * env_exp(n, 0.006); body = np.sin(2 * np.pi * (170 - 60 * t / 0.05 * (t < 0.05)) * t) * env_exp(n, 0.035)
+    tr = bandnoise(n, 1200 * k, 6500 * k) * env_exp(n, 0.006 * (2 - k)); body = np.sin(2 * np.pi * ((170 - 60 * t / 0.05 * (t < 0.05)) * k) * t) * env_exp(n, 0.035)
     return (0.8 * tr + 0.6 * body) * db(-19) * gain
+
+
+def pt_var(t, a=0.8, b=1.25):  # deterministic per-cue variation factor in [a, b] from the cue time
+    return a + (b - a) * ((np.sin(t * 12.9898 + 78.233) * 43758.5453) % 1.0)
 
 
 def pt_swell(dur):  # soft steam breath
@@ -166,9 +170,12 @@ def pt_tick(tock=False):  # wooden spoon tap
     return (bandnoise(n, 1500, 5000) * env_exp(n, 0.004) * 0.6 + np.sin(2 * np.pi * (620 if tock else 800) * t) * env_exp(n, 0.012) * 0.5) * db(-29)
 
 
-def pt_pop():  # oil bubble pop
-    n = int(0.08 * SR); t = np.arange(n) / SR
-    return (np.sin(2 * np.pi * (900 - 6000 * t) * t) * env_exp(n, 0.012) + 0.3 * bandnoise(n, 2000, 8000) * env_exp(n, 0.004)) * db(-27)
+_PT_POP = [0]
+
+
+def pt_pop():  # oil bubble pop (pitch varies pop to pop)
+    n = int(0.08 * SR); t = np.arange(n) / SR; k = [1.0, 0.8, 1.22, 0.9, 1.12, 0.72][_PT_POP[0] % 6]; _PT_POP[0] += 1
+    return (np.sin(2 * np.pi * ((900 - 6000 * t) * k) * t) * env_exp(n, 0.012) + 0.3 * bandnoise(n, 2000, 8000) * env_exp(n, 0.004)) * db(-27)
 
 
 def pt_sizzle(c):  # filtered noise bed with crackle; k = intensity
@@ -201,8 +208,8 @@ def pt_hiss(c):
 
 
 def pt_spray(c):  # droplet spray: bright fine hiss with a fast attack and a scatter of tiny ticks
-    dur = c.get("dur", 1.4); n = int(dur * SR); x = bandnoise(n, 5000, 13000) * env_exp(n, dur * 0.35) * db(-27)
-    rng = np.random.default_rng(7)
+    dur = c.get("dur", 1.4); n = int(dur * SR); k = pt_var(c.get("t", 0), 0.75, 1.3); x = bandnoise(n, 5000 * k, min(13000 * k, 21000)) * env_exp(n, dur * 0.35 * (2 - k)) * db(-27)
+    rng = np.random.default_rng(int(c.get("t", 0) * 100) % 1000 + 7)
     for _ in range(int(dur * 22)):
         i = int(rng.random() ** 1.6 * n * 0.9); m = min(n - i, int(0.004 * SR)); x[i:i + m] += (rng.random(m) - 0.5) * db(-30) * (1 - np.arange(m) / max(m, 1))
     return x
@@ -355,7 +362,7 @@ def sr_bed(sfx, dur):  # airy pad, chord moves every 8 bars (80 bpm, 4/4: 24 s),
 PALETTES = {
     "unreal-actually": dict(hit=ua_hit, swell=ua_swell, riser=ua_riser, sweep=ua_sweep, tick=ua_tick, pop=ua_pop, bed=ua_bed, duck=0.6),
     "pan-theory": dict(hit=pt_hit, swell=pt_swell, riser=pt_riser, sweep=pt_sweep, tick=pt_tick, pop=pt_pop, bed=pt_bed, duck=0.55,
-                       custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, spray=pt_spray, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0)))),
+                       custom=dict(sizzle=pt_sizzle, sizzleup=pt_sizzleup, pour=pt_pour, plop=pt_plop, hiss=pt_hiss, spray=pt_spray, clink=pt_clink, whoosh=pt_whoosh, chop=lambda c: pt_hit(c.get("gain", 1.0) * pt_var(c.get("t", 0) + 3, 0.88, 1.1), pt_var(c.get("t", 0), 0.82, 1.22)))),
     "skin-receipts": dict(hit=sr_hit, swell=sr_swell, riser=sr_riser, sweep=sr_sweep, tick=sr_tick, pop=sr_pop, bed=sr_bed, duck=0.93, custom=dict(rub=sr_rub, wet=sr_wet, pour=sr_pour, drop=sr_drop)),
 }
 

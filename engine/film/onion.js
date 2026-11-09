@@ -39,7 +39,7 @@ function cutCanvas() {
     else {
       const alt = (li % 2) ? 1 : 0; r = 240 - 16 * alt; g = 232 - 12 * alt; b = 192 - 8 * alt; // translucent warm cream
       const line = Math.exp(-Math.pow((fr - .03) / .05, 2)), hi_ = Math.exp(-Math.pow((fr - .16) / .07, 2)), edgeL = smooth((fr - .75) / .25) * .25;
-      r = r - 70 * line + 14 * hi_ - 26 * edgeL; g = g - 74 * line + 10 * hi_ - 24 * edgeL; b = b - 118 * line + 10 * hi_ - 48 * edgeL;
+      r = r - 92 * line + 14 * hi_ - 26 * edgeL; g = g - 96 * line + 10 * hi_ - 24 * edgeL; b = b - 130 * line + 10 * hi_ - 48 * edgeL;
       r += fib * 10; g += fib * 9; b += fib * 12;
       if (rho < .1) { const k = 1 - rho / .1; r = r - 14 * k; g = g - 10 * k; b = b - 26 * k; }
     }
@@ -67,7 +67,7 @@ export function mkOnion(cutUp, seed = 1, brown = false) { // brown=false: outer 
   inn.add(body, cut);
   // dry neck (papery, striped) at +s, root disc + whiskers at -s
   const neck = new THREE.Mesh(new THREE.ConeGeometry(.1, .34, 10, 1, true), new THREE.MeshStandardMaterial({ map: st, color: brown ? "#E0B168" : "#F0E2B0", roughness: .6, side: THREE.DoubleSide })); neck.rotation.z = -PI / 2 + .05; neck.position.set(OL + .12, -.02, 0); inn.add(neck);
-  const rootM = new THREE.MeshStandardMaterial({ color: "#C7A878", roughness: .8 }); const rd = new THREE.Mesh(new THREE.CylinderGeometry(.17, .15, .06, 14), new THREE.MeshStandardMaterial({ color: "#7A5326", roughness: .7 })); rd.rotation.z = PI / 2; rd.position.set(-OL + .01, -.04, 0); inn.add(rd);
+  const rootM = new THREE.MeshStandardMaterial({ color: brown ? "#C7A878" : "#E6D8B0", roughness: .8 }); const rd = new THREE.Mesh(new THREE.CylinderGeometry(.17, .15, .06, 14), new THREE.MeshStandardMaterial({ color: brown ? "#7A5326" : "#C9B27A", roughness: .7 })); rd.rotation.z = PI / 2; rd.position.set(-OL + .01, -.04, 0); inn.add(rd);
   for (let i = 0; i < 14; i++) { const a = hash(i * 3.3 + seed) * 6.28, ln = .16 + .2 * hash(i * 5.1), w = new THREE.Mesh(new THREE.CylinderGeometry(.006, .012, ln, 4), rootM); w.position.set(-OL - ln * .4, -.04 + Math.cos(a) * .1, Math.sin(a) * .1); w.rotation.set(0, 0, PI / 2 + (hash(i) - .5) * .5); w.rotation.y = a * .2; inn.add(w); }
   inn.rotation.x = cutUp ? 0 : PI; g.rotation.y = PI / 2; g.position.y = cutUp ? OH : 0;
   g.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
@@ -77,7 +77,7 @@ export function mkOnion(cutUp, seed = 1, brown = false) { // brown=false: outer 
 // ---------------- steel blades ----------------
 let _brush;
 function brushTex() { if (_brush) return _brush; const c = cv(256, 256), x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, 256, 256);
-  for (let i = 0; i < 1400; i++) { const y = hash(i * 1.3) * 256, v = 60 + 170 * hash(i * 2.9); x.strokeStyle = `rgba(${v},${v},${v},${.2 + .4 * hash(i * 4.1)})`; x.lineWidth = .4 + hash(i * 6.1) * .9; x.beginPath(); x.moveTo(0, y); x.lineTo(256, y + (hash(i) - .5) * 3); x.stroke(); }
+  for (let i = 0; i < 1400; i++) { const y = hash(i * 1.3) * 256, v = 112 + 56 * hash(i * 2.9); x.strokeStyle = `rgba(${v},${v},${v},${.12 + .22 * hash(i * 4.1)})`; x.lineWidth = .4 + hash(i * 6.1) * .7; x.beginPath(); x.moveTo(0, y); x.lineTo(256, y + (hash(i) - .5) * 3); x.stroke(); }
   _brush = tx(c, false); _brush.wrapS = _brush.wrapT = THREE.RepeatWrapping; return _brush; }
 // blade lies in x (length) and y (height, edge at the low side), thickness along z. tip>0: chef's-knife point over the last `tip` fraction.
 export function bladeGeos({ L = 2.6, H = 1.5, t = .07, tE = .004, bev = .2, tip = 0, N = 44 } = {}) {
@@ -91,7 +91,7 @@ export function bladeGeos({ L = 2.6, H = 1.5, t = .07, tE = .004, bev = .2, tip 
 }
 export function mkBlade(o = {}, blunt = false) {
   const { flat, bevel, bs } = bladeGeos(o), g = new THREE.Group();
-  const mf = new THREE.MeshPhysicalMaterial({ color: "#E3E7EB", metalness: 1, roughness: .3, roughnessMap: bs, bumpMap: bs, bumpScale: .08, anisotropy: .85, anisotropyRotation: 0, envMapIntensity: 3.4, side: THREE.DoubleSide });
+  const mf = new THREE.MeshPhysicalMaterial({ color: "#F4F6F8", metalness: 1, roughness: .24, roughnessMap: bs, bumpMap: bs, bumpScale: .05, anisotropy: .85, anisotropyRotation: 0, envMapIntensity: 4.6, side: THREE.DoubleSide });
   const mb = new THREE.MeshStandardMaterial({ color: blunt ? "#8E949B" : "#FFFFFF", metalness: 1, roughness: blunt ? .42 : .08, envMapIntensity: blunt ? 2.2 : 5.5, emissive: blunt ? "#000000" : "#FFE9C4", emissiveIntensity: blunt ? 0 : .35, side: THREE.DoubleSide });
   const a = new THREE.Mesh(flat, mf), b = new THREE.Mesh(bevel, mb); a.castShadow = b.castShadow = true; g.add(a, b); g.userData = { L: o.L || 2.6, H: o.H || 1.5 }; return g;
 }
@@ -104,7 +104,7 @@ export function mkChef(sharp = true) { // chef's knife: blade along +x (edge dow
 }
 // guillotine rig: base plate, two posts behind the onion (x = -2.2), a carriage that holds the blade. carr.position.y = blade edge height.
 export function mkRig({ blunt = false, base = true, L = 2.7, H = 1.5 } = {}) {
-  const g = new THREE.Group(), steel = new THREE.MeshPhysicalMaterial({ color: "#C4C9CF", metalness: 1, roughness: .36, roughnessMap: brushTex(), bumpMap: brushTex(), bumpScale: .4, anisotropy: .9, envMapIntensity: 3.6 }), anod = new THREE.MeshStandardMaterial({ color: "#4A4F55", metalness: .6, roughness: .42, envMapIntensity: 2 });
+  const g = new THREE.Group(), steel = new THREE.MeshPhysicalMaterial({ color: "#D4D8DD", metalness: 1, roughness: .3, roughnessMap: brushTex(), bumpMap: brushTex(), bumpScale: .12, anisotropy: .9, envMapIntensity: 3.8 }), anod = new THREE.MeshStandardMaterial({ color: "#4A4F55", metalness: .6, roughness: .42, envMapIntensity: 2 });
   const add = (m, par = g) => { m.castShadow = m.receiveShadow = true; par.add(m); return m; };
   if (base) { const bp = add(new THREE.Mesh(roundBox(5.4, .14, 4.8, .035, 3), steel)); bp.position.set(-.8, .07, 0); }
   [-1, 1].forEach(s => { const p = add(new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 8.6, 16), steel)); p.position.set(-2.2, 4.4, s * (L / 2 + .3)); const f = add(new THREE.Mesh(new THREE.CylinderGeometry(.2, .22, .1, 20), anod)); f.position.set(-2.2, .17, s * (L / 2 + .3)); });
@@ -125,7 +125,7 @@ export function makeSpray(cap, noDepth, camera) {
   const geo = new THREE.SphereGeometry(1, 14, 10), mat = new THREE.MeshPhysicalMaterial({ color: "#E8F0F4", roughness: .02, metalness: 0, transparent: true, opacity: .5, clearcoat: 1, clearcoatRoughness: .01, envMapIntensity: 7, ior: 1.34, emissive: "#FFE9B8", emissiveIntensity: .03 });
   // clear glass bead: transparent centre, bright reflective fresnel rim (wet and refractive-looking, no matte face)
   mat.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace("#include <opaque_fragment>", `#include <opaque_fragment>
-    { float fr = pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 2.2); gl_FragColor.a = clamp(mix(.07, 1.0, fr), 0., 1.); gl_FragColor.rgb *= mix(.55, 1.25, fr); }`); };
+    { float fr = pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 2.2), ring = smoothstep(.3, .6, fr) * (1.0 - smoothstep(.8, 1., fr)); gl_FragColor.rgb = mix(gl_FragColor.rgb * mix(.7, 1.25, fr), vec3(.16, .12, .08), ring * .55); gl_FragColor.a = clamp(mix(.08, 1.0, fr) + ring * .5, 0., 1.); }`); };
   const im = new THREE.InstancedMesh(geo, mat, cap); im.frustumCulled = false; im.count = 0;
   const gq = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: glintTex(), color: "#FFF3D2", transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), cap); gq.frustumCulled = false; gq.count = 0; noDepth.push(gq);
   const g = new THREE.Group(); g.add(im, gq); const D = [], M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), Z = new THREE.Matrix4().makeScale(0, 0, 0);

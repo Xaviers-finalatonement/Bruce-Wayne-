@@ -82,15 +82,15 @@
    ],
    "captions": [
     {
-     "text": "Droplets burst out at up to",
+     "text": "Droplets burst out at",
      "start": 8.71,
      "key": 0,
-     "end": 10.641
+     "end": 10.228
     },
     {
-     "text": "about ninety miles an hour.",
-     "start": 10.641,
-     "key": 1,
+     "text": "up to about ninety miles an hour.",
+     "start": 10.228,
+     "key": 3,
      "end": 12.503
     }
    ],
@@ -320,15 +320,15 @@
    ],
    "captions": [
     {
-     "text": "The thin, tough skin on each layer lets the",
+     "text": "The thin, tough skin on each layer lets",
      "start": 43.248,
      "key": 2,
-     "end": 46.178
+     "end": 45.912
     },
     {
-     "text": "flesh under it get squeezed first.",
-     "start": 46.178,
-     "key": 4,
+     "text": "the flesh under it get squeezed first.",
+     "start": 45.912,
+     "key": 5,
      "end": 48.582
     },
     {

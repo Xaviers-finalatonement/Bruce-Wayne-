@@ -68,8 +68,8 @@ export function createOverlay(T, TH, cv) {
     if (t >= T.cellIn && t < S("b08")) illus(t, T.cellIn + .1, S("b08") - .2, 1262);
     // b07: cornea + tears
     if (z === "eye" && A.cornea) {
-      const e = env(t, T.tCor - .05, E("b07") - .05); if (e) { dotLine(CX, 410, A.cornea.x, A.cornea.y - 6, e.a * .9, CAST, [1, 16]); sticker([["cornea", CAST]], CX, 340, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }
-      const e2 = env(t, T.tTear, E("b07") - .05); if (e2) sticker([["→ tears", TOM]], CX, 1190, { a: e2.a, sc: e2.sc, size: 64, fill: rgba(CT, .97), padX: 40 }); }
+      const e = env(t, T.tCor - .05, E("b07") - .05); if (e) { dotLine(CX, 410, Math.max(170, Math.min(900, A.cornea.x)), Math.max(470, Math.min(1150, A.cornea.y - 6)), e.a * .9, CAST, [1, 16]); sticker([["cornea", CAST]], CX, 340, { a: e.a, sc: e.sc, size: 64, fill: rgba(BUT, 1), padX: 40 }); }
+      const e2 = env(t, T.tTear, E("b07") - .05); if (e2) sticker([["→ tears", TOM]], 760, 560, { a: e2.a, sc: e2.sc, size: 64, fill: rgba(CT, .97), padX: 40 }); }
     // b08: the theory is a dashed arrow to an eye line at the frame edge
     if (t >= S("b08") && t < S("b09")) { const a = smooth((t - T.tChem) / .3) * (1 - smooth((t - S("b09") + .3) / .3)), p = clamp((t - T.tChem) / 1.1);
       if (a > .01) { const x0 = 560, y0 = 880, x1 = 300, y1 = 470; dotLine(x0, y0, lerp(x0, x1, eo3(p)), lerp(y0, y1, eo3(p)), a, TOM, [4, 22]);  }
